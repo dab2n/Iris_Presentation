@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IRIS 발표</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* 피그마 폰트는 맥에 설치된 로컬 폰트를 그대로 쓴다 (웹폰트 대체 시 줄바꿈 어긋남) */
+@font-face { font-family: KR; font-weight: 500; src: local("SFProKR-Medium"), local("SFProKRDisplay-Medium"); }
+@font-face { font-family: KR; font-weight: 600; src: local("SFProKR-Semibold"), local("SFProKRDisplay-Semibold"); }
+@font-face { font-family: KR; font-weight: 700; src: local("SFProKR-Bold"), local("SFProKRDisplay-Bold"); }
+@font-face { font-family: Aeonik; font-weight: 500; src: local("Aeonik_OVERVIEW-Medium"); }
+@font-face { font-family: HND; font-weight: 500; src: local("HelveticaNowDisplay-Medium"); }
+
+:root {
+  --blue: #98c5e4; --ink: #22232a; --olive: #c1c898; --black: #0c0c0c;
+  --ease: cubic-bezier(.22, 1, .36, 1); /* 오버슈트 없이 부드럽게 감속 */
+  --dur: 800ms;
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; background: #000; overflow: hidden; }
+
+#stage {
+  position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px;
+  background: #fcfcfc; overflow: hidden;
+  transform: translate(-50%, -50%) scale(var(--s, 1));
+  font-family: KR, Pretendard, sans-serif; font-weight: 500; color: var(--black);
+}
+.abs { position: absolute; }
+/* 2→3 전환: 2 가 제자리에서 위로 살짝 늘어나고, 곧바로 3 이 아래에서 덮으며 올라옴 */
+.slide { position: absolute; inset: 0; }
+/* 2→3: 2 의 그래프만 제자리에서 위로 살짝 늘어남 → 3 으로 바로 컷 → 3 의 요소들이 아래에서 올라와 자리 잡음 */
+.slide:not(.on) { visibility: hidden; }
+#chartSlide.stretch .bars { transform: scaleY(1.12); transition: transform 220ms cubic-bezier(.5, 0, 1, 1); } /* 가속하다가 멈추기 전에 컷 */
+.bars { transform-origin: 50% 100%; }
+#stage.ready #s3.on .rise { animation: rise 700ms var(--ease) both; animation-delay: var(--r, 0ms); }
+@keyframes rise { from { opacity: 0; translate: 0 80px; } }
+/* 위쪽 Insight 는 아래 그래픽이 다 들어온 뒤 위에서 아래로 */
+#stage.ready #s3.on .drop { animation: drop 700ms var(--ease) both; animation-delay: var(--r, 0ms); }
+@keyframes drop { from { opacity: 0; translate: 0 -30px; } }
+/* 패턴: 아래 줄부터 한 줄씩 다다닥 차오름 (줄 간격 17.82px, 16단계) */
+#stage.ready #s3.on .crosses { animation: fillUp 560ms steps(16, jump-none) 420ms both; }
+@keyframes fillUp { from { clip-path: inset(266.96px 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* 레이아웃 그리드 오버레이 (G 키) — 피그마: 5열 · 마진 120 · 거터 20 */
+#grid { position: absolute; inset: 0; z-index: 9; pointer-events: none; display: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,0,0,.1) 0 320px, transparent 320px 340px) 120px 0 / 1680px 100% no-repeat; }
+#stage.grid #grid { display: block; }
+
+/* ── 공통 텍스트 ── */
+.eyebrow { top: 79px; left: calc(50% - .5px); transform: translateX(-50%);
+  font-size: 24px; line-height: 1.4; letter-spacing: -.96px; white-space: nowrap; }
+.title { left: calc(50% - 2px); transform: translateX(-50%); text-align: center;
+  font-size: 64px; letter-spacing: -2.56px; white-space: nowrap; }
+.title p { white-space: pre; }
+.title b { font-weight: 700; }
+
+/* ── 슬라이드 1·2 : 같은 도형을 스마트 애니메이트 ── */
+#chartSlide .band { left: 0; top: 448px; width: 1920px; height: 632px; background: #f5f5f5; }
+#chartSlide .eyebrow { color: #848484; }
+#chartSlide .title { top: 167px; line-height: 1.3; }
+/* 바뀐 글자만 제자리에서 다시 써짐: 옛 글자는 사라지고 새 글자가 왼쪽부터 한 자씩. 공통 글자는 그대로 */
+.swap { display: inline-grid; vertical-align: top; transition: width 300ms cubic-bezier(.16, 1, .3, 1); }
+.swap > * { grid-area: 1 / 1; justify-self: start; white-space: pre; transition: opacity 150ms ease; }
+.swap > :not(.on) { opacity: 0; }
+#stage.ready .swap > .on .ch { animation: write 200ms ease both; animation-delay: calc(120ms + var(--i) * 35ms); }
+@keyframes write { from { opacity: 0; } }
+
+.legend { left: 120px; display: flex; gap: 12px; align-items: center;
+  font-family: HND, "Apple SD Gothic Neo", Pretendard, sans-serif; font-size: 20px; letter-spacing: -.4px; color: #bebebe; }
+.legend i { width: 24px; height: 24px; }
+
+.chart { left: 120px; top: 706px; display: flex; }
+.col { position: relative; width: 336px; }
+.bars { position: relative; height: 187.765px; overflow: hidden; }
+.col + .col .bars { box-shadow: -1px 0 0 #f4f8fb; transition: box-shadow var(--dur); } /* 피그마 구분선은 칸 바로 왼쪽 1px */
+[data-state="1"] .col + .col .bars { box-shadow: -1px 0 0 #fff; }
+.seg { position: absolute; left: 0; right: 0;
+  transition: top var(--dur) var(--ease), bottom var(--dur) var(--ease),
+              height var(--dur) var(--ease), background-color 600ms ease;
+  transition-delay: var(--d, 0ms); } /* --d: 글자가 먼저 바뀐 뒤, 왼쪽 칸부터 차례로 */
+.seg.p { top: 0; background: var(--blue); }
+[data-state="1"] .seg.p { background: rgba(152,197,228,.19); }
+.seg.n { background: var(--ink); }
+.seg.m { bottom: 0; background: var(--olive); }
+.col .label { margin-top: 14.5px; font-family: "Apple SD Gothic Neo", Pretendard, sans-serif; font-weight: 500; font-size: 28.607px; line-height: 1.5; } /* 피그마는 한글 대체 글꼴에 자간을 안 먹임 */
+.pct { position: absolute; font-family: Aeonik, HND, Pretendard, sans-serif; font-size: 28.607px; letter-spacing: -.5721px;
+  color: var(--ink); white-space: nowrap;
+  transition: left var(--dur) var(--ease) var(--d, 0ms), top var(--dur) var(--ease) var(--d, 0ms), color 300ms ease; }
+
+/* ── 슬라이드 3 ── */
+#s3 { background: #f5f5f5; }
+#s3 .panel { left: 0; top: 456px; width: 1920px; height: 624px; background: #fcfcfc; }
+#s3 .eyebrow { color: #575757; }
+#s3 .title { top: 157px; font-weight: 600; line-height: 1.5; }
+#s3 .rule { left: -26px; width: 1972px; height: 1px; margin-top: -.5px; background: #848484; }
+#s3 .blk { left: 0; width: 440px; }
+#s3 .big { left: 460px; font-family: Aeonik, Pretendard, sans-serif; font-size: 68px; letter-spacing: -2.04px; white-space: nowrap; }
+#s3 .note { left: 460px; width: 507px; font-family: "SF Pro Display", "Apple SD Gothic Neo", Pretendard, sans-serif; font-weight: 400; font-size: 22px; line-height: 1.4; color: #8a8a8a; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="grid"></div>
+
+  <!-- 슬라이드 1·2 -->
+  <section class="slide" id="chartSlide" data-state="0">
+    <div class="abs band"></div>
+    <p class="abs eyebrow">[ Research ]</p>
+    <div class="abs title">
+      <p>AI 활용 이후,<b> </b></p><!-- 피그마 원본의 끝 공백까지 가운데 정렬에 포함 -->
+      <p><span class="swap"><span class="on"><b>개별 업무</b>가</span><span><b>팀 협업</b>이</span></span> 어떻게 변화했나요?</p>
+    </div>
+    <div class="abs legend" style="top:484px"><i style="background:var(--blue)"></i>긍정적 변화</div>
+    <div class="abs legend" style="top:525px"><i style="background:var(--ink)"></i>변화 없음</div>
+    <div class="abs legend" style="top:566px"><i style="background:var(--olive)"></i>부정적 변화</div>
+    <div class="abs chart" id="chart"></div>
+  </section>
+
+  <!-- 슬라이드 3 -->
+  <section class="slide" id="s3">
+    <div class="abs panel rise"></div>
+    <p class="abs eyebrow drop" style="--r:1000ms">[ Insight ]</p>
+    <div class="abs title drop" style="--r:1080ms"><p>의견 조율과 아이디어 교류와 같은</p><p>인간의 업무로 남아있어요.</p></div>
+    <div class="abs blk rise" style="top:456px;height:376px;background:var(--blue);--r:60ms"></div>
+    <!-- 피그마 Pattern grid 셰이더(cross, 간격 17.82, 크기 10)를 SVG 패턴으로 옮김 -->
+    <svg class="abs blk rise" style="top:564px;--r:60ms" width="440" height="268">
+      <defs><pattern id="cross" width="17.8206" height="17.8206" patternUnits="userSpaceOnUse" x="6.1597" y="-0.3394">
+        <g fill="#d3df8c"><rect x="7.16" y="3.91" width="3.5" height="10"/><rect x="3.91" y="7.16" width="10" height="3.5"/></g>
+      </pattern></defs>
+      <rect class="crosses" width="440" height="268" fill="url(#cross)"/>
+    </svg>
+    <div class="abs blk rise" style="top:832px;height:248px;background:var(--ink)"></div>
+    <div class="abs rule rise" style="top:456px"></div>
+    <div class="abs rule rise" style="top:832px;--r:40ms"></div>
+    <p class="abs big rise" style="top:476px;--r:160ms">50%</p>
+    <p class="abs note rise" style="top:574px;--r:200ms">5가지 척도 중 - ‘좋아짐, 매우 좋아짐’ 을 선택한 사람의 비<br>율</p>
+    <p class="abs big rise" style="top:852px;--r:80ms">43.3%</p>
+    <p class="abs note rise" style="top:950px;--r:120ms">5가지 척도 중 - ‘좋아짐, 매우 좋아짐’ 을 선택한 사람의 비<br>율</p>
+  </section>
+</div>
+
+<script>
+// 피그마 수치 그대로: [변화없음 높이, 부정 높이, 퍼센트 글자, 퍼센트 x, 퍼센트 y]
+const COLS = [
+  { label: ['작업 속도', '협업 속도'],       s: [[0, 0, '100%', 16, 12],          [34.588, 22, '', 16, 12]] },
+  { label: ['결과물 완성도', '결과물 완성도'], s: [[28, 0, '86.7%', 19.765, 12],     [64.235, 13.176, '', 19.765, 12]] },
+  { label: ['정보 이해', '의견 조율'],       s: [[28, 13.176, '83.3%', 13, 12],    [100.471, 13.176, '56.6%', 7, 74.582]] },
+  { label: ['아이디어 발상', '아이디어 교류'], s: [[52.706, 13.176, '66.7%', 19.765, 12], [98, 26, '60.0%', 19.765, 64]] },
+  { label: ['문제 해결', '공동 문제 해결'],   s: [[44.471, 31.294, '70%', 19.765, 12], [111, 13, '60.0%', 19.765, 64]] },
+];
+const TEXT_LEAD = 320, STAGGER = 90; // 글자가 먼저, 그다음 그래프가 왼쪽부터 STAGGER 간격으로
+
+// 두 글자열에서 앞뒤 공통 부분은 고정, 가운데 바뀐 부분만 .swap 으로 감싼다
+const chars = t => [...t].map((c, i) => `<span class="ch" style="--i:${i}">${c}</span>`).join('');
+function diffMarkup(a, b) {
+  let p = 0; while (p < a.length && p < b.length && a[p] === b[p]) p++;
+  let q = 0; while (q < a.length - p && q < b.length - p && a[a.length - 1 - q] === b[b.length - 1 - q]) q++;
+  const am = a.slice(p, a.length - q), bm = b.slice(p, b.length - q);
+  if (!am && !bm) return a;
+  return a.slice(0, p) + `<span class="swap"><span class="on">${chars(am)}</span><span>${chars(bm)}</span></span>` + a.slice(a.length - q);
+}
+
+const chart = document.getElementById('chart');
+chart.innerHTML = COLS.map((c, i) => `
+  <div class="col" style="--d:${TEXT_LEAD + i * STAGGER}ms">
+    <div class="bars"><div class="seg p"></div><div class="seg n"></div><div class="seg m"></div></div>
+    <p class="label">${diffMarkup(c.label[0], c.label[1])}</p>
+    <p class="pct">${diffMarkup(c.s[0][2], c.s[1][2])}</p>
+  </div>`).join('');
+// 제목은 굵기가 섞여 있어 직접 적은 마크업의 글자만 쪼갬
+document.querySelectorAll('.title .swap > span').forEach(sp => {
+  let i = 0;
+  const walk = n => [...n.childNodes].forEach(c => c.nodeType === 3
+    ? c.replaceWith(document.createRange().createContextualFragment([...c.data].map(ch => `<span class="ch" style="--i:${i++}">${ch}</span>`).join('')))
+    : walk(c));
+  walk(sp);
+});
+
+
+// 바뀐 부분의 폭만 바꿔서 뒤따르는 공통 글자가 자연스럽게 자리 이동
+const stage = document.getElementById('stage');
+function fitSwaps(state) {
+  const k = stage.getBoundingClientRect().width / 1920;
+  document.querySelectorAll('#chartSlide .swap').forEach(sw => {
+    [...sw.children].forEach((c, n) => c.classList.toggle('on', n === state));
+    sw.style.width = sw.children[state].getBoundingClientRect().width / k + 'px';
+  });
+}
+
+function setChart(state) {
+  document.getElementById('chartSlide').dataset.state = state;
+  [...chart.children].forEach((col, i) => {
+    const [n, m, , x, y] = COLS[i].s[state];
+    const [p, nEl, mEl] = col.querySelectorAll('.seg');
+    p.style.bottom = (n + m) + 'px';
+    nEl.style.bottom = m + 'px'; nEl.style.height = n + 'px';
+    mEl.style.height = m + 'px';
+    Object.assign(col.querySelector('.pct').style, { left: x + 'px', top: y + 'px', color: state ? 'var(--blue)' : '' });
+  });
+  fitSwaps(state);
+}
+
+// 장 구성: 0·1 은 같은 차트 화면의 두 상태, 2 는 별도 화면
+const N = 3;
+let cur = Math.min(Math.max(+location.hash.slice(1) - 1 || 0, 0), N - 1);
+const chartSlide = document.getElementById('chartSlide'), s3 = document.getElementById('s3');
+let cutTimer;
+function show(three) { chartSlide.classList.toggle('on', !three); s3.classList.toggle('on', three); chartSlide.classList.remove('stretch'); }
+function go(i, animate = true) {
+  const prev = cur;
+  cur = Math.min(Math.max(i, 0), N - 1);
+  clearTimeout(cutTimer);
+  if (cur === 2 && prev === 1 && animate) {
+    chartSlide.classList.add('stretch');            // 그래프가 위로 늘어난 뒤
+    cutTimer = setTimeout(() => show(true), 200);   // 트랜지션 없이 3 으로 컷
+  } else show(cur === 2);
+  if (cur < 2) setChart(cur);
+  history.replaceState(null, '', '#' + (cur + 1));
+}
+go(cur, false);
+
+addEventListener('keydown', e => {
+  if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) go(cur + 1);
+  else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) go(cur - 1);
+  else return e.key === 'f' ? (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen())
+    : e.key === 'g' && stage.classList.toggle('grid');
+  stage.classList.add('ready'); // 첫 화면에서는 글자 쓰기 애니메이션 생략
+});
+
+const fit = () => stage.style.setProperty('--s', Math.min(innerWidth / 1920, innerHeight / 1080));
+addEventListener('resize', fit); fit();
+// 폰트가 늦게 로드되면 폭을 다시 잼 (첫 측정이 대체 글꼴 기준일 수 있음)
+document.fonts.ready.then(() => {
+  const sw = document.querySelectorAll('.swap');
+  sw.forEach(e => e.style.transition = 'none'); fitSwaps(Math.min(cur, 1));
+  stage.offsetWidth; sw.forEach(e => e.style.transition = '');
+});
+</script>
+</body>
+</html>
