@@ -119,12 +119,12 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #map .guideSet { opacity: 0; }
 #cur { left: 1327px; top: 804.5px; width: 35.4577px; height: 36.1523px; }
 #cur img { left: 0; top: 0; width: 100%; height: 100%; transform: rotate(-36.34deg); }
-#map .cardOn, #map .listB, #map .stripB { opacity: 0; }
+#map .cardOn, #map .listB, #map .stripB, #map .listBlur { opacity: 0; }
 
 /* 5→6 끝 상태 (애니메이션 없이 바로 열었을 때도 이 모습) */
 #map[data-step="flow"] #cur { translate: -122.12px -131.74px; }
 #map[data-step="flow"] .cardOn, #map[data-step="flow"] .listB, #map[data-step="flow"] .stripB { opacity: 1; }
-#map[data-step="flow"] .listLong { translate: 0 -152.5px; }
+#map[data-step="flow"] .listMove { translate: 0 -2136.5px; }
 #map[data-step="flow"] .thumb { top: 153px; width: 5px; height: 28px; }
 
 /* 5→6 흐름 (6.6초): '실시간 확인하기' 쪽으로 줌인 → 하단 안내가 일렁이며 등장 → 원래 크기로 줌아웃
@@ -168,11 +168,14 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #stage.ready #map[data-step="flow"] .listB { animation: hiIn 6600ms linear both; }
 @keyframes cardIn { 0%, 71.97% { opacity: 0; animation-timing-function: ease; } 75.00%, 100% { opacity: 1; } }
 @keyframes stripIn { 0%, 74.24% { opacity: 0; animation-timing-function: ease; } 78.79%, 100% { opacity: 1; } }
-@keyframes hiIn { 0%, 90.91% { opacity: 0; animation-timing-function: ease; } 96.97%, 100% { opacity: 1; } }
-#stage.ready #map[data-step="flow"] .listLong { animation: scrollList 6600ms linear both; }
-@keyframes scrollList { 0%, 74.24% { translate: 0 0; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 90.91%, 100% { translate: 0 -152.5px; } }
+@keyframes hiIn { 0%, 93.94% { opacity: 0; animation-timing-function: ease; } 99.24%, 100% { opacity: 1; } }
+/* 원문: 여러 발언을 건너뛰듯 빠르게 내려갔다가 해당 발언에서 부드럽게 멈춤 */
+#stage.ready #map[data-step="flow"] .listMove { animation: scrollList 6600ms linear both; }
+@keyframes scrollList { 0%, 74.24% { translate: 0 0; animation-timing-function: cubic-bezier(.55, 0, .1, 1); } 93.94%, 100% { translate: 0 -2136.5px; } }
+#stage.ready #map[data-step="flow"] .listBlur { animation: blurOn 6600ms linear both; }
+@keyframes blurOn { 0%, 75.00% { opacity: 0; } 79.55%, 85.61% { opacity: 1; } 90.91%, 100% { opacity: 0; } }
 #stage.ready #map[data-step="flow"] .thumb { animation: thumb 6600ms linear both; }
-@keyframes thumb { 0%, 74.24% { top: 0; width: 4px; height: 27px; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 90.91%, 100% { top: 153px; width: 5px; height: 28px; } }
+@keyframes thumb { 0%, 74.24% { top: 0; width: 4px; height: 27px; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 93.94%, 100% { top: 153px; width: 5px; height: 28px; } }
 
 /* ── 4~7: 그리드 시스템 (g1 대지 → 축 그리기 → g2 유동 그리드 → g3 미리보기 카드 → g4 실제 UI + 연결선) ── */
 #gs { background: #f4f8fb; }
@@ -453,8 +456,12 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <img src="assets/map/base.png" style="left:0;top:0;width:1920px;height:1080px" alt="">
       <div class="abs" id="left">
         <div class="abs" id="win">
-          <img class="listLong" src="assets/map/listLong.png" style="left:0;top:0;width:384px" alt="">
-          <img class="listB" src="assets/map/listB.png" style="left:0;top:0;width:384px" alt="">
+          <!-- 원문 → 건너뛰는 발언들 → 원문(도착) 을 이어 붙인 긴 띠. 빠르게 넘어가는 동안만 세로 잔상 -->
+          <div class="abs listMove" style="left:0;top:0;width:384px;height:2692px">
+            <img src="assets/map/listStrip.png" style="left:0;top:0;width:384px;height:2692px" alt="">
+            <img class="listBlur" src="assets/map/listStripBlur.png" style="left:0;top:0;width:384px;height:2692px" alt="">
+            <img class="listB" src="assets/map/listHi.png" style="left:0;top:1984px;width:384px;height:708px" alt="">
+          </div>
           <div class="abs thumb"></div>
         </div>
         <div class="abs shade"></div>
