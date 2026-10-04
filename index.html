@@ -127,14 +127,21 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #map[data-step="flow"] .listLong { translate: 0 -152.5px; }
 #map[data-step="flow"] .thumb { top: 153px; width: 5px; height: 28px; }
 
-/* 5→6 흐름 (3.8초): 하단 안내 일렁이며 등장 → 커서가 카드로 → 클릭 → 원문이 스르륵 내려가 해당 발언을 찾음 */
-#stage.ready #map[data-step="flow"] .guideSet { animation: guide 3800ms linear both; }
+/* 5→6 흐름 (6.6초): '실시간 확인하기' 쪽으로 줌인 → 하단 안내가 일렁이며 등장 → 원래 크기로 줌아웃
+   → 커서가 카드로 → 클릭 → 원문이 스르륵 내려가 해당 발언을 찾고 하이라이트 */
+#stage.ready #map[data-step="flow"] #dev { animation: cam 6600ms linear both; }
+@keyframes cam {
+  0% { transform: none; animation-timing-function: cubic-bezier(.65, 0, .35, 1); }
+  13.64%, 39.39% { transform: translate(-1698.7px, -1365.2px) scale(2.2); animation-timing-function: cubic-bezier(.65, 0, .35, 1); }
+  53.03%, 100% { transform: none; }
+}
+#stage.ready #map[data-step="flow"] .guideSet { animation: guide 6600ms linear both; }
 #stage.ready #map[data-step="flow"] .pillSet { animation-delay: 150ms; }
 @keyframes guide {
-  0% { opacity: 0; translate: 0 36px; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
-  18.4% { opacity: 1; translate: 0 0; }
-  55.3% { opacity: 1; animation-timing-function: ease; }
-  68.4%, 100% { opacity: 0; }
+  0%, 10.61% { opacity: 0; translate: 0 36px; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
+  22.73% { opacity: 1; translate: 0 0; }
+  72.73% { opacity: 1; animation-timing-function: ease; }
+  80.30%, 100% { opacity: 0; }
 }
 #board .glow { animation: sway 3.4s ease-in-out infinite alternate; transform-origin: 50% 50%; }
 @keyframes sway { /* 일렁임: 좌우로 흘러가며 위아래로 숨 쉬듯 */
@@ -142,23 +149,23 @@ html, body { height: 100%; background: #000; overflow: hidden; }
   50% { transform: translateX(6px) scale(.97, 1.08); }
   100% { transform: translateX(18px) scale(1.02, .94); }
 }
-#stage.ready #map[data-step="flow"] #cur { animation: cursor 3800ms linear both; }
+#stage.ready #map[data-step="flow"] #cur { animation: cursor 6600ms linear both; }
 @keyframes cursor {
-  0%, 23.68% { translate: 0 0; scale: 1; animation-timing-function: cubic-bezier(.65, 0, .35, 1); }
-  47.37%, 52.63% { translate: -119.73px -136.37px; scale: 1; animation-timing-function: ease-out; }
-  55.79% { translate: -120.9px -134px; scale: .86; animation-timing-function: ease-out; }
-  58.95%, 100% { translate: -122.12px -131.74px; scale: 1; }
+  0%, 54.55% { translate: 0 0; scale: 1; animation-timing-function: cubic-bezier(.65, 0, .35, 1); }
+  68.18%, 71.21% { translate: -119.73px -136.37px; scale: 1; animation-timing-function: ease-out; }
+  73.03% { translate: -120.9px -134px; scale: .86; animation-timing-function: ease-out; }
+  74.85%, 100% { translate: -122.12px -131.74px; scale: 1; }
 }
-#stage.ready #map[data-step="flow"] .cardOn { animation: fadeIn 3800ms linear both; --a: 53.9%; --b: 59.2%; }
-#stage.ready #map[data-step="flow"] .stripB { animation: stripIn 3800ms linear both; }
-#stage.ready #map[data-step="flow"] .listB { animation: hiIn 3800ms linear both; }
-@keyframes fadeIn { 0%, 53.9% { opacity: 0; animation-timing-function: ease; } 59.2%, 100% { opacity: 1; } }
-@keyframes stripIn { 0%, 57.9% { opacity: 0; animation-timing-function: ease; } 65.8%, 100% { opacity: 1; } }
-@keyframes hiIn { 0%, 86.8% { opacity: 0; animation-timing-function: ease; } 97.4%, 100% { opacity: 1; } }
-#stage.ready #map[data-step="flow"] .listLong { animation: scrollList 3800ms linear both; }
-@keyframes scrollList { 0%, 57.9% { translate: 0 0; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 86.8%, 100% { translate: 0 -152.5px; } }
-#stage.ready #map[data-step="flow"] .thumb { animation: thumb 3800ms linear both; }
-@keyframes thumb { 0%, 57.9% { top: 0; width: 4px; height: 27px; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 86.8%, 100% { top: 153px; width: 5px; height: 28px; } }
+#stage.ready #map[data-step="flow"] .cardOn { animation: cardIn 6600ms linear both; }
+#stage.ready #map[data-step="flow"] .stripB { animation: stripIn 6600ms linear both; }
+#stage.ready #map[data-step="flow"] .listB { animation: hiIn 6600ms linear both; }
+@keyframes cardIn { 0%, 71.97% { opacity: 0; animation-timing-function: ease; } 75.00%, 100% { opacity: 1; } }
+@keyframes stripIn { 0%, 74.24% { opacity: 0; animation-timing-function: ease; } 78.79%, 100% { opacity: 1; } }
+@keyframes hiIn { 0%, 90.91% { opacity: 0; animation-timing-function: ease; } 96.97%, 100% { opacity: 1; } }
+#stage.ready #map[data-step="flow"] .listLong { animation: scrollList 6600ms linear both; }
+@keyframes scrollList { 0%, 74.24% { translate: 0 0; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 90.91%, 100% { translate: 0 -152.5px; } }
+#stage.ready #map[data-step="flow"] .thumb { animation: thumb 6600ms linear both; }
+@keyframes thumb { 0%, 74.24% { top: 0; width: 4px; height: 27px; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 90.91%, 100% { top: 153px; width: 5px; height: 28px; } }
 </style>
 </head>
 <body>
