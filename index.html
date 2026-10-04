@@ -103,19 +103,25 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #s3 .eyebrow { color: #575757; }
 #s3 .title { left: calc(50% - 1px); top: 157px; font-weight: 600; line-height: 1.4; }
 #s3 .rule { left: -26px; width: 1972px; height: 1px; margin-top: -.5px; background: #848484; }
-#s3 .w { left: 0; width: 761px; overflow: hidden; transition: width 800ms var(--ease); }
+#s3 .w { left: 0; width: 761px; overflow: hidden; transition: width 900ms cubic-bezier(.65, 0, .35, 1); }
 #s3[data-step="b"] .w { width: 440px; }
 #s3 .grad { background: radial-gradient(90.38% 128.09% at 50% 0, #70c2f9 68.664%, #addeff 92.628%); }
 #s3 .lbl { left: 26px; width: 336px; font-weight: 600; font-size: 28.607px; line-height: 1.5; letter-spacing: -1.1443px; }
-#s3 .shift { transform: translateX(0); transition: transform 800ms var(--ease); }
+#s3 .shift { transform: translateX(0); transition: transform 900ms cubic-bezier(.65, 0, .35, 1); }
 #s3[data-step="b"] .shift { transform: translateX(-344px); }
 #s3 .big { left: 804px; font-family: Aeonik, Pretendard, sans-serif; font-size: 68px; letter-spacing: -2.04px; white-space: nowrap; }
 #s3 .note { left: 804px; font-size: 22px; letter-spacing: -.66px; color: #8a8a8a; white-space: nowrap; }
-#s3 .quote { left: 848px; top: 456px; width: 1072px; height: 624px; background: #e3ecf2; transform: translateX(1072px); transition: transform 800ms var(--ease); }
+#s3 .quote { left: 848px; top: 456px; width: 1072px; height: 624px; background: #e3ecf2; transform: translateX(1072px); transition: transform 900ms cubic-bezier(.65, 0, .35, 1); }
 #s3[data-step="b"] .quote { transform: translateX(0); }
 #s3 .hl { left: 30px; top: 102px; height: 86px; width: 0; background: #f6fee6; }
-#s3[data-step="b"] .hl { width: 891px; transition: width 700ms cubic-bezier(.65, 0, .35, 1) 900ms; } /* 연노랑: 가장 나중에 문장 뒤로 왼→오 */
+#s3[data-step="b"] .hl { width: 891px; transition: width 700ms cubic-bezier(.65, 0, .35, 1) 2250ms; } /* 연노랑: 가장 나중에 문장 뒤로 왼→오 */
 #s3 .qt { left: 28px; top: 20px; width: 1000px; font-weight: 300; font-size: 68px; letter-spacing: -2.04px; color: #2c5495; white-space: pre; line-height: normal; }
+#s3 .ql { display: block; }
+/* 문장: 패널이 들어온 뒤 줄마다 흐릿한 경계로 왼쪽부터 샤라락 써짐 → 그다음 연노랑 하이라이트 */
+#stage.ready #s3[data-step="b"] .ql { animation: swipe 650ms cubic-bezier(.33, 1, .68, 1) both; animation-delay: var(--d);
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 60%); mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  -webkit-mask-size: 250% 100%; mask-size: 250% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+#stage.ready #s3[data-step="b"] .sr { animation: fadeOnly 500ms ease 2100ms both; }
 #s3 .src { right: 44px; top: 488px; text-align: right; font-size: 24px; line-height: 1.4; letter-spacing: -.72px; color: #2c5495; white-space: nowrap; }
 
 
@@ -255,12 +261,12 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #stage.ready #gs[data-step="g1"] .col { animation: drop 700ms var(--ease) both; animation-delay: calc(var(--d) + 700ms); }
 @keyframes drop { from { height: 0; } }
 #stage.ready #gs[data-step="g1"] .ltime { animation: fadeOnly 300ms ease 2000ms both; }
-#stage.ready #gs[data-step="g1"] .ly { animation: fadeOnly 300ms ease 2200ms both; }
-#stage.ready #gs[data-step="g1"] .ay { animation: drawY 800ms linear 2300ms both; }
+#stage.ready #gs[data-step="g1"] .ly { animation: fadeOnly 300ms ease 2700ms both; } /* X(시간의 흐름) 끝나고 0.5초 쉼 */
+#stage.ready #gs[data-step="g1"] .ay { animation: drawY 800ms linear 2800ms both; }
 @keyframes drawY { from { height: 0; } }
-#stage.ready #gs[data-step="g1"] .row { animation: spread 700ms var(--ease) both; animation-delay: calc(var(--d) + 700ms); }
+#stage.ready #gs[data-step="g1"] .row { animation: spread 700ms var(--ease) both; animation-delay: calc(var(--d) + 1200ms); }
 @keyframes spread { from { width: 0; } }
-#stage.ready #gs[data-step="g1"] .ldepth { animation: fadeOnly 300ms ease 3100ms both; }
+#stage.ready #gs[data-step="g1"] .ldepth { animation: fadeOnly 300ms ease 3600ms both; }
 
 /* g2: 완성된 그리드가 맥락에 따라 천천히 줄었다 늘었다 (쫀득한 ease-in-out) 하다가 2번 그리드로 */
 #stage.ready #gs[data-step="g2"] .row { animation: var(--k) 4200ms linear 200ms both; }
@@ -457,10 +463,8 @@ html, body { height: 100%; background: #000; overflow: hidden; }
     <!-- 4장: 오른쪽에서 밀고 들어오는 인용문 -->
     <div class="abs quote">
       <i class="abs hl"></i>
-      <p class="abs qt">“AI 도구는 주로 
- 개별적으로 변화시킬 수 있는 행동 변화에서
- 영향을 미치는 것으로 나타났다.”</p>
-      <p class="abs src">Microsoft Research<br>&lt;생성형 AI를 활용한 업무 패턴의 변화&gt; (2025)</p>
+      <p class="abs qt"><span class="ql" style="--d:850ms">“AI 도구는 주로 </span><span class="ql" style="--d:1250ms"> 개별적으로 변화시킬 수 있는 행동 변화에서</span><span class="ql" style="--d:1700ms"> 영향을 미치는 것으로 나타났다.”</span></p>
+      <p class="abs src sr">Microsoft Research<br>&lt;생성형 AI를 활용한 업무 패턴의 변화&gt; (2025)</p>
     </div>
   </section>
 
