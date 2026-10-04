@@ -151,19 +151,27 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #stage.ready #tm[data-step="tB"] .phoneSet.dev { animation: phoneUp 800ms var(--ease) 120ms both; }
 @keyframes phoneUp { from { opacity: 0; translate: 0 80px; } }
 #tm .scr { left: 755px; top: 295px; width: 410px; height: 625px; border-radius: 7px; overflow: hidden; }
-#tm .lockL { position: absolute; inset: 0; transition: opacity 300ms ease-out; }
+#tm .lockL { position: absolute; inset: 0; transition: opacity 320ms ease-out 140ms; } /* 누른 뒤 살짝 머뭇거렸다가 */
 #tm .sheet { position: absolute; left: 0; top: 66px; width: 410px; height: 559px; border-radius: 8px 8px 0 0; overflow: hidden;
-  transform: translateY(559px); transition: transform 450ms cubic-bezier(.3, 0, .2, 1); }
+  transform: translateY(559px); transition: transform 480ms cubic-bezier(.3, 0, .2, 1) 260ms; }
 #tm:is([data-step="tC"], [data-step="tD"]) .lockL { opacity: 0; pointer-events: none; }
 #tm:is([data-step="tC"], [data-step="tD"]) .sheet { transform: none; } /* 잠금 해제 → 녹음 시트가 아래에서 올라옴 */
+#tm .cam { position: absolute; left: 204.5px; top: 19px; transition: left 480ms cubic-bezier(.3, 0, .2, 1) 260ms, top 480ms cubic-bezier(.3, 0, .2, 1) 260ms; }
+#tm .cam > * { position: absolute; transform: translate(-50%, -50%); transition: transform 480ms cubic-bezier(.3, 0, .2, 1) 260ms, opacity 300ms ease 300ms; }
+#tm .camL { left: 0; top: 0; width: 21px; height: 21px; }
+#tm .camR { left: 0; top: 0; width: 16px; height: 16px; border-radius: 50%; background: #161616; opacity: 0; transform: translate(-50%, -50%) scale(1.22); }
+#tm:is([data-step="tC"], [data-step="tD"]) .cam { left: 204.75px; top: 25px; }
+#tm:is([data-step="tC"], [data-step="tD"]) .camL { opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+#tm:is([data-step="tC"], [data-step="tD"]) .camR { opacity: 1; transform: translate(-50%, -50%); }
 #tm .mainG, #tm .flowL { position: absolute; inset: 0; transition: transform 1250ms cubic-bezier(.3, 0, .2, 1); }
 #tm .flowL { transform: translateX(-425px); }
 #tm[data-step="tD"] .mainG { transform: translateX(422px); }   /* 메인은 오른쪽으로 빠지고 */
 #tm[data-step="tD"] .flowL { transform: none; }                /* 플로우가 왼쪽에서 들어옴 */
 #tm .follow { transition: opacity 1250ms cubic-bezier(.3, 0, .2, 1); }
 #tm[data-step="tD"] .follow { opacity: 0; }
-#tm .tmr { position: absolute; font-weight: 700; line-height: 1.35; white-space: nowrap; overflow: hidden; }
-#tm .tmr i { display: inline-block; font-style: normal; }
+#tm .tmr { position: absolute; font-weight: 700; line-height: 1.35; white-space: nowrap; overflow: hidden; font-variant-numeric: tabular-nums; } /* 숫자가 바뀌어도 폭이 그대로 */
+#tm .tmr i { display: inline-block; font-style: normal; text-align: center; }
+#tm .tmr i.d { width: .62em; }
 #tm .tmr i.roll { animation: roll 320ms cubic-bezier(.3, 0, .2, 1); }
 @keyframes roll { from { transform: translateY(60%); opacity: 0; } }
 #tm .wave { position: absolute; left: 3px; top: 292px; }
@@ -694,7 +702,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
           <img src="assets/tm/sheet.png" style="left:0;top:0;width:410px;height:559px" alt="">
           <div class="mainG">
             <img src="assets/tm/main.png" style="left:115px;top:117px;width:180px;height:100px" alt="">
-            <svg class="wave" width="404" height="38" viewBox="0 0 404 38" style="overflow:visible"><circle cx="1" cy="19" r="1" fill="#748E99" opacity="0.3"/><circle cx="7" cy="19" r="1" fill="#748E99" opacity="0.3"/><circle cx="13" cy="19" r="1" fill="#748E99" opacity="0.3"/><circle cx="19" cy="19" r="1" fill="#748E99" opacity="0.5"/><circle cx="25" cy="19" r="1" fill="#748E99" opacity="0.5"/><circle cx="31" cy="19" r="1" fill="#748E99" opacity="0.5"/><circle cx="37" cy="19" r="1" fill="#748E99" opacity="0.5"/><circle cx="43" cy="19" r="1" fill="#748E99" opacity="0.5"/><circle cx="49" cy="19" r="1" fill="#748E99" opacity="0.5"/><circle cx="55" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="61" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="67" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="73" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="79" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="85" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="91" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="97" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="103" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="109" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="115" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="121" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="127" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="133" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="139" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="145" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="151" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="157" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="163" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="169" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="175" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="181" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="187" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="193" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="199" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="205" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="211" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="217" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="223" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="229" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="235" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="241" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="247" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="313" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="319" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="325" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="331" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="337" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="343" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="349" cy="19" r="1" fill="#748E99" opacity="1"/><circle cx="355" cy="19" r="1" fill="#748E99" opacity="0.6"/><circle cx="361" cy="19" r="1" fill="#748E99" opacity="0.6"/><circle cx="367" cy="19" r="1" fill="#748E99" opacity="0.6"/><circle cx="373" cy="19" r="1" fill="#748E99" opacity="0.6"/><circle cx="379" cy="19" r="1" fill="#748E99" opacity="0.6"/><circle cx="385" cy="19" r="1" fill="#748E99" opacity="0.6"/><circle cx="391" cy="19" r="1" fill="#748E99" opacity="0.3"/><circle cx="397" cy="19" r="1" fill="#748E99" opacity="0.3"/><circle cx="403" cy="19" r="1" fill="#748E99" opacity="0.3"/><rect class="wbar" x="252" y="6.0" width="2" height="26" rx="1" fill="#748E99" data-h="26" style="transition:all 140ms linear"/><rect class="wbar" x="258" y="0.0" width="2" height="38" rx="1" fill="#748E99" data-h="38" style="transition:all 140ms linear"/><rect class="wbar" x="264" y="11.0" width="2" height="16" rx="1" fill="#748E99" data-h="16" style="transition:all 140ms linear"/><rect class="wbar" x="270" y="13.0" width="2" height="12" rx="1" fill="#748E99" data-h="12" style="transition:all 140ms linear"/><rect class="wbar" x="276" y="14.0" width="2" height="10" rx="1" fill="#748E99" data-h="10" style="transition:all 140ms linear"/><rect class="wbar" x="282" y="15.0" width="2" height="8" rx="1" fill="#748E99" data-h="8" style="transition:all 140ms linear"/><rect class="wbar" x="288" y="15.0" width="2" height="8" rx="1" fill="#748E99" data-h="8" style="transition:all 140ms linear"/><rect class="wbar" x="294" y="15.0" width="2" height="8" rx="1" fill="#748E99" data-h="8" style="transition:all 140ms linear"/><rect class="wbar" x="300" y="16.0" width="2" height="6" rx="1" fill="#748E99" data-h="6" style="transition:all 140ms linear"/><rect class="wbar" x="306" y="17.0" width="2" height="4" rx="1" fill="#748E99" data-h="4" style="transition:all 140ms linear"/></svg>
+            <svg class="wave" width="404" height="38" viewBox="0 0 404 38" style="overflow:visible"><g class="wpast"></g><circle cx="315" cy="19" r="1" fill="#748E99"/><circle cx="321" cy="19" r="1" fill="#748E99"/><circle cx="327" cy="19" r="1" fill="#748E99"/><circle cx="333" cy="19" r="1" fill="#748E99"/><circle cx="339" cy="19" r="1" fill="#748E99"/><circle cx="345" cy="19" r="1" fill="#748E99"/><circle cx="351" cy="19" r="1" fill="#748E99"/><circle cx="357" cy="19" r="1" fill="#748E99"/><circle cx="363" cy="19" r="1" fill="#748E99"/><circle cx="369" cy="19" r="1" fill="#748E99"/><circle cx="375" cy="19" r="1" fill="#748E99"/><circle cx="381" cy="19" r="1" fill="#748E99"/><circle cx="387" cy="19" r="1" fill="#748E99"/><circle cx="393" cy="19" r="1" fill="#748E99"/><circle cx="399" cy="19" r="1" fill="#748E99"/></svg>
             <i class="wfade" style="left:0;background:linear-gradient(90deg,#e4eaf2,rgba(228,234,242,0))"></i>
             <i class="wfade" style="right:0;background:linear-gradient(270deg,#e4eaf2,rgba(228,234,242,0))"></i>
           </div>
@@ -712,6 +720,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
             <div class="tdots"><i></i><i style="animation-delay:.16s"></i><i style="animation-delay:.32s"></i></div>
           </div>
         </div>
+        <div class="cam"><img class="camL" src="assets/tm/cam_lock.png" alt=""><i class="camR"></i></div>
       </div>
     </div>
   </section>
@@ -791,9 +800,19 @@ const grid = document.getElementById('gs'), sc = document.getElementById('sc'), 
 let cutTimer, gridTimer;
 // Topic Map 휴대폰: 녹음 시간은 자릿수별로 굴러가며 흐르고(프로토타입 RollNum), 파형 막대는 출렁임(프로토타입 Wave)
 let phoneTimers = [];
+// 파형: x = 1, 7, … 309 (재생 위치). 피그마 첫 모습 = 왼쪽은 조용한 점, 오른쪽 끝 10칸이 막 녹음된 소리
+const WAVE0 = [...Array(42).fill(2), 26, 38, 16, 12, 10, 8, 8, 8, 6, 4];
+let wave = WAVE0.slice(), talk = 0;
+function nextLevel() { // 말하는 구간과 쉬는 구간이 번갈아 나오는 소리 크기
+  if (--talk < -6 || (talk < 0 && Math.random() < .12)) talk = 8 + Math.floor(Math.random() * 14);
+  return talk > 0 ? Math.max(4, Math.min(38, 6 + Math.random() * 30 * Math.sin(Math.PI * talk / 22 + .3))) : 2;
+}
+function drawWave(g) {
+  g.innerHTML = wave.map((h, i) => `<rect x="${1 + i * 6 - 1}" y="${19 - h / 2}" width="2" height="${h}" rx="1" fill="#748E99"/>`).join('');
+}
 function rollTo(el, text) {
   const old = [...el.querySelectorAll('i')].map(i => i.textContent);
-  el.innerHTML = [...text].map((c, k) => `<i${old.length && old[k] !== c ? ' class="roll"' : ''}>${c}</i>`).join('');
+  el.innerHTML = [...text].map((c, k) => `<i class="${c === ':' ? '' : 'd'}${old.length && old[k] !== c ? ' roll' : ''}">${c}</i>`).join('');
 }
 function phone(step) {
   phoneTimers.forEach(clearInterval); phoneTimers = [];
@@ -802,14 +821,17 @@ function phone(step) {
     phoneTimers.push(setInterval(() => rollTo(el, fmt(start + Math.floor((performance.now() - t0) / 1000))), 200)); };
   const fmt = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
   rollTo(lockT, '28:01'); rollTo(recT, '28:04');
+  wave = WAVE0.slice(); talk = 0; drawWave(document.querySelector('#tm .wpast'));
   if (step === 'tB') clock(lockT, 28 * 60 + 1);
   if (step === 'tC' || step === 'tD') {
     clock(recT, 28 * 60 + 4);
-    const bars = [...document.querySelectorAll('#tm .wbar')];
-    phoneTimers.push(setInterval(() => bars.forEach((b, i) => {
-      const h = Math.max(2, Math.min(38, +b.dataset.h * (0.35 + Math.random() * (i < 3 ? 0.9 : 1.3))));
-      b.setAttribute('height', h); b.setAttribute('y', 19 - h / 2);
-    }), 140));
+    // 실제 녹음 바처럼: 새 소리 막대가 재생 위치(오른쪽)에서 생기고 시간이 흐르며 왼쪽으로 밀려남
+    const g = document.querySelector('#tm .wpast');
+    phoneTimers.push(setInterval(() => {
+      wave.shift(); wave.push(nextLevel());
+      drawWave(g); g.style.transition = 'none'; g.style.transform = 'translateX(6px)';
+      g.getBoundingClientRect(); g.style.transition = 'transform 140ms linear'; g.style.transform = 'none';
+    }, 140));
   }
 }
 function show(n) { chartSlide.classList.toggle('on', n < 2); s3.classList.toggle('on', n === 2 || n === 3); grid.classList.toggle('on', n >= 4 && n <= 6); sc.classList.toggle('on', n >= 7 && n <= 9); map.classList.toggle('on', n >= 10 && n <= 14); tm.classList.toggle('on', n >= 15); chartSlide.classList.remove('stretch'); }
