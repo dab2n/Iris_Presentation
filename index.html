@@ -166,6 +166,118 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 @keyframes scrollList { 0%, 74.24% { translate: 0 0; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 90.91%, 100% { translate: 0 -152.5px; } }
 #stage.ready #map[data-step="flow"] .thumb { animation: thumb 6600ms linear both; }
 @keyframes thumb { 0%, 74.24% { top: 0; width: 4px; height: 27px; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 90.91%, 100% { top: 153px; width: 5px; height: 28px; } }
+
+/* ── 4~7: 그리드 시스템 (g1 축 그리기 → g2 유동 그리드 → g3 미리보기 카드 → g4 실제 UI) ── */
+#gs { background: #f4f8fb; }
+#gs img { position: absolute; display: block; max-width: none; }
+#gb { left: 448px; top: 280px; width: 1049.63px; height: 672.86px; border-radius: 30.24px; overflow: hidden; background: #e9ecf0; transition: left 900ms var(--ease); }
+#gb::after { content: ""; position: absolute; inset: 0; border: 1.512px solid #f0f0f0; border-radius: inherit; pointer-events: none; z-index: 5; }
+#gs:not([data-step="g1"]) #gb { left: 435px; }
+#gb .row, #gb .col { position: absolute; background: rgba(255, 148, 148, .2); transition: opacity 400ms ease; }
+#gb .row { left: 0; width: 1050px; height: 138px; }
+#gb .col { top: 0; width: 236px; height: 672px; }
+#gs .r1 { top: 40px; } #gs .r2 { top: 190px; } #gs .r3 { top: 340px; } #gs .r4 { top: 490px; }
+#gs[data-step="g2"] .r1 { top: 40px; height: 60px; } #gs[data-step="g2"] .r2 { top: 113px; height: 151px; }
+#gs[data-step="g2"] .r3 { top: 282px; height: 130px; } #gs[data-step="g2"] .r4 { top: 430px; height: 130px; }
+#gs[data-step="g3"] :is(.row, .col), #gs[data-step="g4"] :is(.row, .col) { opacity: 0; }
+#gb .pv { position: absolute; border-radius: 18.1px; background: rgba(100, 113, 133, .2); opacity: 0; }
+#gs[data-step="g3"] .pv { opacity: 1; }
+#gb .fin, #gs .lens { opacity: 0; }
+#gs[data-step="g4"] :is(.fin, .lens) { opacity: 1; }
+.axis { overflow: hidden; }
+.axis i { position: absolute; background: #fc1414; }
+.axis svg { position: absolute; }
+#gs .ax { left: 475px; top: 253.37px; width: 1024.8px; height: 13.26px; }
+#gs .ax i { left: 0; right: 7px; top: 5.73px; height: 1.8px; }
+#gs .ax svg { right: 0; top: 0; }
+#gs .ay { left: 421.37px; top: 320px; width: 13.26px; height: 633.8px; }
+#gs .ay i { top: 0; bottom: 7px; left: 5.73px; width: 1.8px; }
+#gs .ay svg { bottom: 0; left: 0; transform: rotate(90deg); transform-origin: 6.63px 6.63px; translate: 0 -0.63px; }
+#gs .axes { transition: opacity 300ms ease; }
+#gs:not([data-step="g1"]) .axes { opacity: 0; }
+
+/* g1 등장: X 화살표가 그려지며 지나가는 칸마다 세로 칸이 위에서 아래로 → 이어서 Y 와 가로 줄 */
+#stage.ready #gs[data-step="g1"] .lx { animation: fadeOnly 300ms ease both; }
+#stage.ready #gs[data-step="g1"] .ax { animation: drawX 1100ms linear 200ms both; }
+@keyframes drawX { from { width: 0; } }
+#stage.ready #gs[data-step="g1"] .col { animation: drop 700ms var(--ease) both; animation-delay: var(--d); }
+@keyframes drop { from { height: 0; } }
+#stage.ready #gs[data-step="g1"] .ltime { animation: fadeOnly 300ms ease 1300ms both; }
+#stage.ready #gs[data-step="g1"] .ly { animation: fadeOnly 300ms ease 1500ms both; }
+#stage.ready #gs[data-step="g1"] .ay { animation: drawY 800ms linear 1600ms both; }
+@keyframes drawY { from { height: 0; } }
+#stage.ready #gs[data-step="g1"] .row { animation: spread 700ms var(--ease) both; animation-delay: var(--d); }
+@keyframes spread { from { width: 0; } }
+#stage.ready #gs[data-step="g1"] .ldepth { animation: fadeOnly 300ms ease 2400ms both; }
+@keyframes fadeOnly { from { opacity: 0; } }
+
+/* g2: 완성된 그리드가 맥락에 따라 줄었다 늘었다 하다가 2번 그리드로 자리 잡음 */
+#stage.ready #gs[data-step="g2"] .row { animation: var(--k) 2600ms linear 200ms both; }
+#stage.ready #gs[data-step="g2"] .col { animation: var(--k) 2000ms linear 200ms both; }
+@keyframes row1 {
+  0% { top: 40px; height: 138px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  25% { top: 40px; height: 90px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  50% { top: 40px; height: 170px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  75% { top: 40px; height: 50px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  100% { top: 40px; height: 60px; }
+}
+@keyframes row2 {
+  0% { top: 190px; height: 138px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  25% { top: 142px; height: 190px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  50% { top: 222px; height: 80px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  75% { top: 102px; height: 160px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  100% { top: 113px; height: 151px; }
+}
+@keyframes row3 {
+  0% { top: 340px; height: 138px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  25% { top: 344px; height: 100px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  50% { top: 314px; height: 180px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  75% { top: 274px; height: 120px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  100% { top: 282px; height: 130px; }
+}
+@keyframes row4 {
+  0% { top: 490px; height: 138px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  25% { top: 456px; height: 160px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  50% { top: 506px; height: 95px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  75% { top: 406px; height: 150px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  100% { top: 430px; height: 130px; }
+}
+@keyframes col1 {
+  0.0% { left: 27px; width: 236px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  33.33% { left: 27px; width: 200px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  66.67% { left: 27px; width: 270px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  100.0% { left: 27px; width: 236px; }
+}
+@keyframes col2 {
+  0.0% { left: 277px; width: 236px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  33.33% { left: 241px; width: 272px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  66.67% { left: 311px; width: 210px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  100.0% { left: 277px; width: 236px; }
+}
+@keyframes col3 {
+  0.0% { left: 527px; width: 236px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  33.33% { left: 527px; width: 250px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  66.67% { left: 535px; width: 236px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  100.0% { left: 527px; width: 236px; }
+}
+@keyframes col4 {
+  0.0% { left: 777px; width: 236px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  33.33% { left: 791px; width: 222px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  66.67% { left: 785px; width: 228px; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  100.0% { left: 777px; width: 236px; }
+}
+
+/* g3: 미리보기 카드가 왼쪽 위부터 오른쪽 아래로 하나씩 */
+#stage.ready #gs[data-step="g3"] .pv { animation: pop 450ms var(--ease) both; animation-delay: var(--d); }
+@keyframes pop { from { opacity: 0; scale: .9; } }
+/* g4: 보드에 실제 무늬가 깔리고, 미리보기 자리에 실제 카드 UI 가 차례로 입혀짐 */
+#stage.ready #gs[data-step="g4"] .pv { animation: hand 500ms ease both; animation-delay: var(--e); } /* 실제 카드가 입혀지는 동안 미리보기는 사라짐 */
+@keyframes hand { from { opacity: 1; } }
+#stage.ready #gs[data-step="g4"] .finBoard { animation: fadeOnly 500ms ease both; }
+#stage.ready #gs[data-step="g4"] .fin:not(.finBoard) { animation: dress 500ms var(--ease) both; animation-delay: var(--d); }
+@keyframes dress { from { opacity: 0; scale: .97; } }
+#stage.ready #gs[data-step="g4"] .lens { animation: fadeOnly 600ms ease 1500ms both; }
+#gs.snap, #gs.snap * { transition: none !important; animation: none !important; }
 </style>
 </head>
 <body>
@@ -208,7 +320,45 @@ html, body { height: 100%; background: #000; overflow: hidden; }
     <p class="abs note rise" style="top:950px;--r:120ms">5가지 척도 중 - ‘좋아짐, 매우 좋아짐’ 을 선택한 사람의 비<br>율</p>
   </section>
 
-  <!-- 4~6 관계 맵 -->
+  <!-- 4~7 그리드 시스템 -->
+  <section class="slide" id="gs" data-step="g1">
+    <img src="assets/grid/head.png" style="left:0;top:0;width:1920px;height:200px" alt="">
+    <div class="abs" id="gb">
+      <div class="row r1" style="--d:1600ms;--k:row1"></div>
+      <div class="row r2" style="--d:1789ms;--k:row2"></div>
+      <div class="row r3" style="--d:1979ms;--k:row3"></div>
+      <div class="row r4" style="--d:2168ms;--k:row4"></div>
+      <div class="col" style="left:27px;--d:200ms;--k:col1"></div>
+      <div class="col" style="left:277px;--d:468ms;--k:col2"></div>
+      <div class="col" style="left:527px;--d:737ms;--k:col3"></div>
+      <div class="col" style="left:777px;--d:1005ms;--k:col4"></div>
+      <!-- 실제 보드 무늬는 미리보기 카드 아래에 깔림 -->
+      <img class="fin finBoard" src="assets/grid/board.png" style="left:0;top:0;width:1050px;height:673px" alt="">
+      <div class="pv" style="left:27px;top:40px;width:236px;height:60px;background:rgba(74,87,108,.4);--d:250ms;--e:400ms"></div>
+      <div class="pv" style="left:27px;top:113px;width:236px;height:151px;--d:390ms;--e:560ms"></div>
+      <div class="pv" style="left:277px;top:113px;width:236px;height:151px;--d:530ms;--e:720ms"></div>
+      <div class="pv" style="left:277px;top:282px;width:236px;height:130px;--d:670ms;--e:880ms"></div>
+      <div class="pv" style="left:277px;top:430px;width:236px;height:130px;--d:810ms;--e:1040ms"></div>
+      <div class="pv" style="left:777px;top:430px;width:236px;height:130px;background:rgba(83,122,185,.2);--d:950ms;--e:1200ms"></div>
+      <img class="fin" src="assets/grid/issue.png" style="left:19px;top:32px;width:252px;height:76px;--d:400ms" alt="">
+      <img class="fin" src="assets/grid/c1.png" style="left:19px;top:105px;width:252px;height:168px;--d:560ms" alt="">
+      <img class="fin" src="assets/grid/c2.png" style="left:269px;top:105px;width:252px;height:170px;--d:720ms" alt="">
+      <img class="fin" src="assets/grid/c3.png" style="left:269px;top:272px;width:252px;height:150px;--d:880ms" alt="">
+      <img class="fin" src="assets/grid/c4.png" style="left:269px;top:420px;width:245px;height:148px;--d:1040ms" alt="">
+      <img class="fin" src="assets/grid/concl.png" style="left:770px;top:433px;width:251px;height:118px;--d:1200ms" alt="">
+    </div>
+    <img class="lens" src="assets/grid/lens.png" style="left:340px;top:190px;width:220px;height:210px" alt="">
+    <div class="axes">
+      <img class="lx" src="assets/grid/lx.png" style="left:470px;top:200px;width:30px;height:50px" alt="">
+      <img class="ltime" src="assets/grid/ltime.png" style="left:1508px;top:242px;width:102px;height:34px" alt="">
+      <img class="ly" src="assets/grid/ly.png" style="left:384px;top:305px;width:30px;height:50px" alt="">
+      <img class="ldepth" src="assets/grid/ldepth.png" style="left:318px;top:925px;width:86px;height:37px" alt="">
+      <div class="abs axis ax"><i></i><svg width="8" height="13.26" viewBox="1017 0 8 13.2551"><path d="M1024.54 7.26396C1024.89 6.91249 1024.89 6.34264 1024.54 5.99117L1018.81 0.263604C1018.46 -0.0878682 1017.89 -0.0878682 1017.54 0.263604C1017.18 0.615076 1017.18 1.18492 1017.54 1.5364L1022.63 6.62756L1017.54 11.7187C1017.18 12.0702 1017.18 12.6401 1017.54 12.9915C1017.89 13.343 1018.46 13.343 1018.81 12.9915Z" fill="#FC1414"/></svg></div>
+      <div class="abs axis ay"><i></i><svg width="8" height="13.26" viewBox="1017 0 8 13.2551"><path d="M1024.54 7.26396C1024.89 6.91249 1024.89 6.34264 1024.54 5.99117L1018.81 0.263604C1018.46 -0.0878682 1017.89 -0.0878682 1017.54 0.263604C1017.18 0.615076 1017.18 1.18492 1017.54 1.5364L1022.63 6.62756L1017.54 11.7187C1017.18 12.0702 1017.18 12.6401 1017.54 12.9915C1017.89 13.343 1018.46 13.343 1018.81 12.9915Z" fill="#FC1414"/></svg></div>
+    </div>
+  </section>
+
+  <!-- 8~10 관계 맵 -->
   <section class="slide" id="map" data-step="intro">
     <div id="dev">
       <img src="assets/map/base.png" style="left:0;top:0;width:1920px;height:1080px" alt="">
@@ -296,12 +446,18 @@ function setChart(state) {
 }
 
 // 장 구성: 0·1 은 같은 차트 화면의 두 상태, 2 는 별도 화면
-const N = 6; // 0·1 차트, 2 인사이트, 3 관계맵 소개, 4 관계맵, 5 관계맵 흐름(카드 선택)
+const N = 10; // 0·1 차트, 2 인사이트, 3~6 그리드 시스템, 7 관계맵 소개, 8 관계맵, 9 관계맵 흐름(카드 선택)
 let cur = Math.min(Math.max(+location.hash.slice(1) - 1 || 0, 0), N - 1);
 const chartSlide = document.getElementById('chartSlide'), s3 = document.getElementById('s3'), map = document.getElementById('map');
-const MAP_STEP = { 3: 'intro', 4: 'full', 5: 'flow' };
+const MAP_STEP = { 7: 'intro', 8: 'full', 9: 'flow' }, GRID_STEP = { 3: 'g1', 4: 'g2', 5: 'g3', 6: 'g4' };
+const grid = document.getElementById('gs');
 let cutTimer;
-function show(n) { chartSlide.classList.toggle('on', n < 2); s3.classList.toggle('on', n === 2); map.classList.toggle('on', n >= 3); chartSlide.classList.remove('stretch'); }
+function show(n) { chartSlide.classList.toggle('on', n < 2); s3.classList.toggle('on', n === 2); grid.classList.toggle('on', n >= 3 && n <= 6); map.classList.toggle('on', n >= 7); chartSlide.classList.remove('stretch'); }
+function setStep(el, step, snap) {
+  el.classList.toggle('snap', snap);
+  el.dataset.step = step;
+  el.offsetWidth; requestAnimationFrame(() => el.classList.remove('snap'));
+}
 function go(i, animate = true) {
   const prev = cur;
   cur = Math.min(Math.max(i, 0), N - 1);
@@ -310,11 +466,8 @@ function go(i, animate = true) {
     chartSlide.classList.add('stretch');            // 그래프가 위로 늘어난 뒤
     cutTimer = setTimeout(() => show(2), 200);      // 트랜지션 없이 3 으로 컷
   } else show(cur);
-  if (cur >= 3) {
-    map.classList.toggle('snap', !animate || cur < prev || prev < 3); // 뒤로 가거나 처음 들어올 땐 바로 그 상태로
-    map.dataset.step = MAP_STEP[cur];
-    map.offsetWidth; requestAnimationFrame(() => map.classList.remove('snap'));
-  }
+  if (GRID_STEP[cur]) setStep(grid, GRID_STEP[cur], !animate || cur < prev);
+  if (MAP_STEP[cur]) setStep(map, MAP_STEP[cur], !animate || cur < prev || prev < 7); // 뒤로 가거나 처음 들어올 땐 바로 그 상태로
   if (cur < 2) setChart(cur);
   history.replaceState(null, '', '#' + (cur + 1));
 }
