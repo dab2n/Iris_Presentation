@@ -99,6 +99,66 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #s3 .blk { left: 0; width: 440px; }
 #s3 .big { left: 460px; font-family: Aeonik, Pretendard, sans-serif; font-size: 68px; letter-spacing: -2.04px; white-space: nowrap; }
 #s3 .note { left: 460px; width: 507px; font-family: "SF Pro Display", "Apple SD Gothic Neo", Pretendard, sans-serif; font-weight: 400; font-size: 22px; line-height: 1.4; color: #8a8a8a; }
+
+/* ── 4~6: 관계 맵 (피그마에서 내보낸 레이어 이미지를 겹쳐 움직임) ── */
+#map { background: #f4f8fb; }
+#map img { position: absolute; display: block; max-width: none; }
+/* 소개 제목(피그마 4장 위쪽 210px) — 다음 장으로 갈 때 위로 살짝 빠지며 사라짐 */
+#map .intro { left: 0; top: 0; width: 1920px; height: 210px; z-index: 2; transition: opacity 400ms ease, translate 500ms var(--ease); }
+#map:not([data-step="intro"]) .intro { opacity: 0; translate: 0 -24px; pointer-events: none; }
+/* 4→5: 첫 장의 작은 기기 화면이 제자리로 커지며 자리 잡음 */
+#dev { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; transition: transform 900ms var(--ease); }
+#map[data-step="intro"] #dev { transform: translate(71.333px, 110.889px) scale(.925926); }
+#map.snap, #map.snap * { transition: none !important; animation: none !important; }
+#left { left: 368px; top: 292px; width: 416px; height: 668px; overflow: hidden; }
+#win { left: 23.5px; top: 54px; width: 393px; height: 619px; overflow: hidden; background: #fff; }
+#win .thumb { left: 383.5px; top: 0; width: 4px; height: 27px; border-radius: 2px; background: #b5b9c0; }
+#left .shade { left: -1px; top: 587px; width: 418px; height: 82px; background: #fff; box-shadow: 0 -23.325px 41.985px #fff; }
+#board { left: 803px; top: 416px; width: 810px; height: 520px; border-radius: 23.33px; overflow: hidden; }
+#board .glow { left: 19.63px; top: 369.64px; width: 770.757px; height: 284.368px; }
+#map .guideSet { opacity: 0; }
+#cur { left: 1327px; top: 804.5px; width: 35.4577px; height: 36.1523px; }
+#cur img { left: 0; top: 0; width: 100%; height: 100%; transform: rotate(-36.34deg); }
+#map .cardOn, #map .listB, #map .stripB { opacity: 0; }
+
+/* 5→6 끝 상태 (애니메이션 없이 바로 열었을 때도 이 모습) */
+#map[data-step="flow"] #cur { translate: -122.12px -131.74px; }
+#map[data-step="flow"] .cardOn, #map[data-step="flow"] .listB, #map[data-step="flow"] .stripB { opacity: 1; }
+#map[data-step="flow"] .listLong { translate: 0 -152.5px; }
+#map[data-step="flow"] .thumb { top: 153px; width: 5px; height: 28px; }
+
+/* 5→6 흐름 (3.8초): 하단 안내 일렁이며 등장 → 커서가 카드로 → 클릭 → 원문이 스르륵 내려가 해당 발언을 찾음 */
+#stage.ready #map[data-step="flow"] .guideSet { animation: guide 3800ms linear both; }
+#stage.ready #map[data-step="flow"] .pillSet { animation-delay: 150ms; }
+@keyframes guide {
+  0% { opacity: 0; translate: 0 36px; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
+  18.4% { opacity: 1; translate: 0 0; }
+  55.3% { opacity: 1; animation-timing-function: ease; }
+  68.4%, 100% { opacity: 0; }
+}
+#board .glow { animation: sway 3.4s ease-in-out infinite alternate; transform-origin: 50% 50%; }
+@keyframes sway { /* 일렁임: 좌우로 흘러가며 위아래로 숨 쉬듯 */
+  0% { transform: translateX(-18px) scale(1.05, .9); }
+  50% { transform: translateX(6px) scale(.97, 1.08); }
+  100% { transform: translateX(18px) scale(1.02, .94); }
+}
+#stage.ready #map[data-step="flow"] #cur { animation: cursor 3800ms linear both; }
+@keyframes cursor {
+  0%, 23.68% { translate: 0 0; scale: 1; animation-timing-function: cubic-bezier(.65, 0, .35, 1); }
+  47.37%, 52.63% { translate: -119.73px -136.37px; scale: 1; animation-timing-function: ease-out; }
+  55.79% { translate: -120.9px -134px; scale: .86; animation-timing-function: ease-out; }
+  58.95%, 100% { translate: -122.12px -131.74px; scale: 1; }
+}
+#stage.ready #map[data-step="flow"] .cardOn { animation: fadeIn 3800ms linear both; --a: 53.9%; --b: 59.2%; }
+#stage.ready #map[data-step="flow"] .stripB { animation: stripIn 3800ms linear both; }
+#stage.ready #map[data-step="flow"] .listB { animation: hiIn 3800ms linear both; }
+@keyframes fadeIn { 0%, 53.9% { opacity: 0; animation-timing-function: ease; } 59.2%, 100% { opacity: 1; } }
+@keyframes stripIn { 0%, 57.9% { opacity: 0; animation-timing-function: ease; } 65.8%, 100% { opacity: 1; } }
+@keyframes hiIn { 0%, 86.8% { opacity: 0; animation-timing-function: ease; } 97.4%, 100% { opacity: 1; } }
+#stage.ready #map[data-step="flow"] .listLong { animation: scrollList 3800ms linear both; }
+@keyframes scrollList { 0%, 57.9% { translate: 0 0; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 86.8%, 100% { translate: 0 -152.5px; } }
+#stage.ready #map[data-step="flow"] .thumb { animation: thumb 3800ms linear both; }
+@keyframes thumb { 0%, 57.9% { top: 0; width: 4px; height: 27px; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 86.8%, 100% { top: 153px; width: 5px; height: 28px; } }
 </style>
 </head>
 <body>
@@ -139,6 +199,31 @@ html, body { height: 100%; background: #000; overflow: hidden; }
     <p class="abs note rise" style="top:574px;--r:200ms">5가지 척도 중 - ‘좋아짐, 매우 좋아짐’ 을 선택한 사람의 비<br>율</p>
     <p class="abs big rise" style="top:852px;--r:80ms">43.3%</p>
     <p class="abs note rise" style="top:950px;--r:120ms">5가지 척도 중 - ‘좋아짐, 매우 좋아짐’ 을 선택한 사람의 비<br>율</p>
+  </section>
+
+  <!-- 4~6 관계 맵 -->
+  <section class="slide" id="map" data-step="intro">
+    <div id="dev">
+      <img src="assets/map/base.png" style="left:0;top:0;width:1920px;height:1080px" alt="">
+      <div class="abs" id="left">
+        <div class="abs" id="win">
+          <img class="listLong" src="assets/map/listLong.png" style="left:0;top:0;width:384px" alt="">
+          <img class="listB" src="assets/map/listB.png" style="left:0;top:0;width:384px" alt="">
+          <div class="abs thumb"></div>
+        </div>
+        <div class="abs shade"></div>
+        <img src="assets/map/stripA_body.png" style="left:0;top:586px;width:416.5px" alt="">
+        <img class="stripB" src="assets/map/stripB_body.png" style="left:.5px;top:585.5px;width:416.5px" alt="">
+      </div>
+      <div class="abs guideSet" id="board"><img class="glow" src="assets/map/glow.svg" alt=""></div>
+      <img class="cardOn" src="assets/map/L_card.svg" style="left:1036.77px;top:628.31px;width:191px;height:110px" alt="">
+      <div class="abs guideSet pillSet" style="left:0;top:0">
+        <img src="assets/map/L_pill.svg" style="left:1134.896px;top:815.117px;width:148px;height:85px" alt="">
+        <img src="assets/map/L_guide.svg" style="left:1082.675px;top:884.676px;width:250px;height:28px" alt="">
+      </div>
+      <div class="abs" id="cur"><img src="assets/map/cursor.svg" alt=""></div>
+    </div>
+    <img class="intro" src="assets/map/intro.png" alt="">
   </section>
 </div>
 
@@ -204,24 +289,31 @@ function setChart(state) {
 }
 
 // 장 구성: 0·1 은 같은 차트 화면의 두 상태, 2 는 별도 화면
-const N = 3;
+const N = 6; // 0·1 차트, 2 인사이트, 3 관계맵 소개, 4 관계맵, 5 관계맵 흐름(카드 선택)
 let cur = Math.min(Math.max(+location.hash.slice(1) - 1 || 0, 0), N - 1);
-const chartSlide = document.getElementById('chartSlide'), s3 = document.getElementById('s3');
+const chartSlide = document.getElementById('chartSlide'), s3 = document.getElementById('s3'), map = document.getElementById('map');
+const MAP_STEP = { 3: 'intro', 4: 'full', 5: 'flow' };
 let cutTimer;
-function show(three) { chartSlide.classList.toggle('on', !three); s3.classList.toggle('on', three); chartSlide.classList.remove('stretch'); }
+function show(n) { chartSlide.classList.toggle('on', n < 2); s3.classList.toggle('on', n === 2); map.classList.toggle('on', n >= 3); chartSlide.classList.remove('stretch'); }
 function go(i, animate = true) {
   const prev = cur;
   cur = Math.min(Math.max(i, 0), N - 1);
   clearTimeout(cutTimer);
   if (cur === 2 && prev === 1 && animate) {
     chartSlide.classList.add('stretch');            // 그래프가 위로 늘어난 뒤
-    cutTimer = setTimeout(() => show(true), 200);   // 트랜지션 없이 3 으로 컷
-  } else show(cur === 2);
+    cutTimer = setTimeout(() => show(2), 200);      // 트랜지션 없이 3 으로 컷
+  } else show(cur);
+  if (cur >= 3) {
+    map.classList.toggle('snap', !animate || cur < prev || prev < 3); // 뒤로 가거나 처음 들어올 땐 바로 그 상태로
+    map.dataset.step = MAP_STEP[cur];
+    map.offsetWidth; requestAnimationFrame(() => map.classList.remove('snap'));
+  }
   if (cur < 2) setChart(cur);
   history.replaceState(null, '', '#' + (cur + 1));
 }
 go(cur, false);
 
+addEventListener('click', () => { go(cur + 1); stage.classList.add('ready'); });
 addEventListener('keydown', e => {
   if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) go(cur + 1);
   else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) go(cur - 1);
