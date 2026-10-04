@@ -93,7 +93,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 .pct { position: absolute; font-family: Aeonik, HND, Pretendard, sans-serif; font-size: 28.607px; letter-spacing: -.5721px; white-space: nowrap; }
 .pct.p0 { color: #498cc3; transition: opacity 200ms ease; }
 .pct.p1 { color: #98c5e4; opacity: 0; transition: opacity 120ms ease; }
-[data-state="1"] .pct.p0 { opacity: 0; }
+[data-state="1"] .pct.p0 { opacity: 0; transition-delay: var(--d, 0ms); } /* 1장 숫자는 높낮이가 바뀔 때 함께 사라짐 */
 /* ③ 파랑이 옅어지는 동시에 숫자가 왼쪽 칸부터 나타남 */
 [data-state="1"] .pct.p1 { opacity: 1; transition: opacity 400ms ease var(--pd, 0ms); }
 
@@ -632,8 +632,8 @@ const COLS = [ // [변화없음 높이, 부정 높이, 퍼센트, x, y] — 1장
   { label: ['아이디어 발상', '아이디어 교류'], g: ['125.62%', '120.61%'], s: [[52.706, 13.176, '66.7%', 19.765, 12], [90, 22, '50.0%', 19.765, 83]] },
   { label: ['문제 해결', '공동 문제 해결'],   g: ['119.82%', '117.41%'], s: [[44.471, 31.294, '70%', 19.765, 12], [111, 13, '56.6%', 19.765, 69]] },
 ];
-// ① 질문·항목 글자(0ms) → ② 높낮이 왼쪽부터(350ms~, 70ms 간격) → ③ 파랑 옅어짐 + 숫자 왼쪽부터(1050ms~, 120ms 간격)
-const TEXT_LEAD = 350, STAGGER = 70, FADE = 1050, PSTEP = 120;
+// ① 질문·항목 글자(0ms) → ② 높낮이 왼쪽부터(850ms~, 70ms 간격) → ③ 파랑 옅어짐 + 숫자 왼쪽부터(1550ms~, 120ms 간격)
+const TEXT_LEAD = 850, STAGGER = 70, FADE = 1550, PSTEP = 120; // 질문이 바뀐 걸 읽을 틈(0.85초)을 두고 그래프 시작
 
 // 두 글자열에서 앞뒤 공통 부분은 고정, 가운데 바뀐 부분만 .swap 으로 감싼다
 const chars = t => [...t].map((c, i) => `<span class="ch" style="--i:${i}">${c}</span>`).join('');
