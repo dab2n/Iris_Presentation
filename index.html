@@ -8,6 +8,7 @@
 <style>
 /* 피그마 폰트는 맥에 설치된 로컬 폰트를 그대로 쓴다 (웹폰트 대체 시 줄바꿈 어긋남) */
 @font-face { font-family: KR; font-weight: 300; src: local("SFProKR-Light"), local("SFProKRDisplay-Light"); }
+@font-face { font-family: KR; font-weight: 400; src: local("SFProKR-Regular"), local("SFProKRDisplay-Regular"); }
 @font-face { font-family: KR; font-weight: 500; src: local("SFProKR-Medium"), local("SFProKRDisplay-Medium"); }
 @font-face { font-family: KR; font-weight: 600; src: local("SFProKR-Semibold"), local("SFProKRDisplay-Semibold"); }
 @font-face { font-family: KR; font-weight: 700; src: local("SFProKR-Bold"), local("SFProKRDisplay-Bold"); }
@@ -156,13 +157,12 @@ html, body { height: 100%; background: #000; overflow: hidden; }
   transform: translateY(559px); transition: transform 480ms cubic-bezier(.3, 0, .2, 1) 260ms; }
 #tm:is([data-step="tC"], [data-step="tD"]) .lockL { opacity: 0; pointer-events: none; }
 #tm:is([data-step="tC"], [data-step="tD"]) .sheet { transform: none; } /* 잠금 해제 → 녹음 시트가 아래에서 올라옴 */
-#tm .cam { position: absolute; left: 204.5px; top: 19px; transition: left 480ms cubic-bezier(.3, 0, .2, 1) 260ms, top 480ms cubic-bezier(.3, 0, .2, 1) 260ms; }
-#tm .cam > * { position: absolute; transform: translate(-50%, -50%); transition: transform 480ms cubic-bezier(.3, 0, .2, 1) 260ms, opacity 300ms ease 300ms; }
-#tm .camL { left: 0; top: 0; width: 21px; height: 21px; }
-#tm .camR { left: 0; top: 0; width: 16px; height: 16px; border-radius: 50%; background: #161616; opacity: 0; transform: translate(-50%, -50%) scale(1.22); }
-#tm:is([data-step="tC"], [data-step="tD"]) .cam { left: 204.75px; top: 25px; }
-#tm:is([data-step="tC"], [data-step="tD"]) .camL { opacity: 0; transform: translate(-50%, -50%) scale(.82); }
-#tm:is([data-step="tC"], [data-step="tD"]) .camR { opacity: 1; transform: translate(-50%, -50%); }
+#tm .cam { position: absolute; left: 196.75px; top: 17px; width: 16px; height: 16px; border-radius: 50%; background: #161616; } /* 같은 기기라 카메라는 그대로 */
+#flowL .r12 { position: absolute; font-weight: 400; font-size: 12px; line-height: 1.35; color: #838383; white-space: nowrap; }
+#flowL .m16 { position: absolute; font-weight: 500; font-size: 16px; line-height: 1.35; color: #000; white-space: nowrap; }
+#flowL .typing { animation: typing 1.2s ease-in-out infinite; }
+#flowL .av { position: absolute; width: 20px; height: 20px; }
+#flowL .av img { position: absolute; display: block; }
 #tm .mainG, #tm .flowL { position: absolute; inset: 0; transition: transform 1250ms cubic-bezier(.3, 0, .2, 1); }
 #tm .flowL { transform: translateX(-425px); }
 #tm[data-step="tD"] .mainG { transform: translateX(422px); }   /* 메인은 오른쪽으로 빠지고 */
@@ -706,7 +706,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
             <i class="wfade" style="left:0;background:linear-gradient(90deg,#e4eaf2,rgba(228,234,242,0))"></i>
             <i class="wfade" style="right:0;background:linear-gradient(270deg,#e4eaf2,rgba(228,234,242,0))"></i>
           </div>
-          <div class="flowL"><img src="assets/tm/flow.png" style="left:80px;top:114px;width:250px;height:240px" alt=""></div>
+          <div class="flowL" id="flowL"></div>
           <img class="follow" src="assets/tm/follow.png" style="left:16px;top:460px;width:90px;height:32px" alt="">
           <p class="tmr" id="recT" style="right:20px;top:457px;font-size:28px;letter-spacing:-.56px;color:#141a1a">28:04</p>
         </div>
@@ -720,7 +720,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
             <div class="tdots"><i></i><i style="animation-delay:.16s"></i><i style="animation-delay:.32s"></i></div>
           </div>
         </div>
-        <div class="cam"><img class="camL" src="assets/tm/cam_lock.png" alt=""><i class="camR"></i></div>
+        <i class="cam"></i>
       </div>
     </div>
   </section>
@@ -799,6 +799,103 @@ const G3_TO_G4 = 2700; // 미리보기 카드가 다 놓이고 그리드가 사�
 const grid = document.getElementById('gs'), sc = document.getElementById('sc'), tm = document.getElementById('tm');
 let cutTimer, gridTimer;
 // Topic Map 휴대폰: 녹음 시간은 자릿수별로 굴러가며 흐르고(프로토타입 RollNum), 파형 막대는 출렁임(프로토타입 Wave)
+
+// ── 플로우 (IRIS 모바일 프로토타입 Rec.jsx 의 Flow 를 옮김, 시트 좌표는 프로토타입 + 25px) ──
+const FX = 25, FE = 'cubic-bezier(.3,0,.2,1)', PA = 'assets/tm/p/';
+const U1 = { x: 69, y: 220, w: 219, h: 114, img: 'radial-gradient(47.04px 27.5px at 111px 112px, #C5D1E8 3.37%, #DFE5F5 23.79%, #F5F8FF 100%)' };
+const U2 = { x: 71, y: 309, w: 219, h: 175, img: 'radial-gradient(93.53px 66px at 114px 180.5px, #C5D1E8 3.37%, #DFE5F5 23.79%, #F5F8FF 100%)' };
+const slice = (u, x, y) => `background-color:#F5F8FF;background-image:${u.img};background-size:${u.w}px ${u.h}px;background-position:${u.x - x}px ${u.y - y}px;background-repeat:no-repeat;`;
+const SHADOW = '0 2px 10px rgba(40,39,51,.2), inset 0 0 0 .75px rgba(255,255,255,.4)';
+const neckPath = (w, h, cx) => `path('M0 0 C${cx * .5} 0 ${cx} ${h * .18} ${cx} ${h * .43} C${cx} ${h * .73} ${cx * .6} ${h} 0 ${h} H${w} C${w - cx * .6} ${h} ${w - cx} ${h * .73} ${w - cx} ${h * .43} C${w - cx} ${h * .18} ${w - cx * .5} 0 ${w} 0 Z')`;
+const PILL = { left: 148, top: 300, width: 62, height: 34, radius: 17 }, CARD = { left: 71, top: 309, width: 219, height: 71, radius: 20 };
+const CHIP1 = { left: 139, top: 389, width: 83, height: 44, radius: 16 }, CHIP2 = { left: 122, top: 440, width: 117, height: 44, radius: 16 };
+const dropOf = (c, w = 44) => ({ left: c.left + c.width / 2 - w / 2, top: c.top, width: w, height: c.height, radius: c.height / 2 });
+const pxs = o => ({ left: o.left + FX + 'px', top: o.top + 'px', width: o.width + 'px', height: o.height + 'px', borderRadius: o.radius + 'px' });
+const boxCss = o => `position:absolute;left:${o.left + FX}px;top:${o.top}px;width:${o.width}px;height:${o.height}px;border-radius:${o.radius}px;box-shadow:${SHADOW};overflow:hidden;`;
+const av = (src, inset, flip) => `<div class="av" style="${flip ? 'transform:scaleX(-1);' : ''}"><img src="${PA + src}" style="inset:${inset};width:calc(100% - 2 * ${inset});height:calc(100% - 2 * ${inset})" alt=""></div>`;
+const dotsHtml = (id, at = [[23, 16.18], [30.77, 16.18], [38.55, 11]]) => `<div data-k="${id}" style="position:absolute;inset:0">${at.map(([l, t], i) => `<img class="typing" src="${PA}629a8.svg" style="position:absolute;left:${l}px;top:${t}px;width:3.455px;height:3.455px;animation-delay:${i * .18}s" alt="">`).join('')}</div>`;
+const CENTER = [[16, 20.3], [23.77, 20.3], [31.55, 15.1]];
+const neck = (k, u, x, y, w, h, cx, hide) => `<div data-k="${k}" style="position:absolute;left:${x + FX}px;top:${y}px;width:${w}px;height:${h}px;clip-path:${neckPath(w, h, cx)};transform-origin:top;${slice(u, x, y)}${hide ? 'transform:scaleY(0);' : ''}"></div>`;
+const T = ms => `transition:all ${ms}ms ${FE};`;
+function buildFlow() {
+  document.getElementById('flowL').innerHTML = `
+    <div data-g="line" style="position:absolute;left:${178.75 + FX}px;width:2.5px;background:linear-gradient(rgba(228,234,242,0) 0%, #C5D1E8 20.6%, #C5D1E8 81%, rgba(228,234,242,0) 98%);${T(900)}"></div>
+    <div data-g="all" style="position:absolute;left:${69 + FX}px;width:222px;display:flex;flex-direction:column;align-items:center;${T(700)}">
+      <div style="background:#f5f6fd;opacity:.6;padding:12px 30px 12px 20px;border-radius:20px;display:flex;flex-direction:column;gap:4px;line-height:1.35">
+        <p style="font-weight:400;font-size:12px;color:#838383">전체</p><p style="font-weight:500;font-size:16px;color:#000;white-space:nowrap">아이스 브레이킹</p>
+      </div>
+    </div>
+    <div data-g="ux" style="position:absolute;overflow:hidden;border-radius:20px;background:#eef1f9;${T(700)}">
+      <div data-g="uxbg" style="position:absolute;inset:0;${slice(U1, 69, 220)}${T(700)}"></div>
+      <div style="position:absolute;left:20px;top:12px;display:flex;gap:4px;align-items:center">
+        <div style="position:relative;width:20px;height:20px">
+          <div data-g="uxav1" style="position:absolute;inset:0;${T(700)}">${av('d8da5.png', '-2%')}</div>
+          <div data-g="uxav2" style="position:absolute;inset:0;opacity:0;${T(700)}">${av('54d88.png', '-2%')}</div>
+        </div>
+        <p style="font-weight:400;font-size:12px;line-height:1.35;color:#838383">UX</p>
+      </div>
+      <p data-g="uxt" class="m16" style="left:20px;top:36px;${T(700)}">인터뷰 이후 인사이트 공유</p>
+    </div>
+    ${neck('neck1', U1, 172.35, 291, 12.31, 9, 4.46)}
+    <div data-k="card" style="${boxCss(PILL)}${slice(U2, CARD.left, CARD.top)}transform-origin:50% 0%">
+      <div data-k="glow" style="position:absolute;inset:0;${slice(U1, PILL.left, PILL.top)}"></div>
+      ${dotsHtml('dots1')}
+      <p data-k="cardTag" class="r12" style="left:20px;top:12px;opacity:0">토론중</p>
+      <p data-k="cardTitle" class="m16" style="left:20px;top:36px;opacity:0">제품 메인 가치 논의</p>
+    </div>
+    ${neck('neck2', U2, 174.35, 380, 12.31, 9, 4.46, 1)}
+    <div data-k="chip1" style="${boxCss(dropOf(CHIP1))}${slice(U2, CHIP1.left, CHIP1.top)}opacity:0;transform-origin:50% 0%">
+      ${dotsHtml('dots2', CENTER)}
+      <p data-k="chip1Txt" class="r12" style="left:18px;top:14px;opacity:0">성능</p>
+      <div data-k="chip1Av" style="position:absolute;left:45px;top:12px;width:20px;height:20px;opacity:0">${av('b9ac1.png', '-2%')}</div>
+    </div>
+    ${neck('neck3', U2, 175.35, 433, 10.29, 7, 3.47, 1)}
+    <div data-k="chip2" style="${boxCss(dropOf(CHIP2))}${slice(U2, CHIP2.left, CHIP2.top)}opacity:0;transform-origin:50% 0%">
+      ${dotsHtml('dots3', CENTER)}
+      <p data-k="chip2Txt" class="r12" style="left:24px;top:14px;opacity:0">스토리</p>
+      <div data-k="chip2Av" style="position:absolute;left:61px;top:12px;width:32px;height:20px;opacity:0;display:flex;transform:scaleX(-1)">
+        <div style="position:relative;width:20px;height:20px;margin-right:-8px">${av('eae00.svg', '-2%')}</div>
+        <div style="position:relative;width:20px;height:20px">${av('314a3.png', '-12%')}</div>
+      </div>
+    </div>`;
+}
+let flowAnims = [], flowTimer;
+function setGen(on) { // 진행중 UX 카드 → 지나간 카드로, 전체·연결선 자리 이동
+  const g = k => document.querySelector(`#flowL [data-g="${k}"]`);
+  Object.assign(g('line').style, { top: (on ? 187 : 192) + 'px', height: (on ? 118 : 28) + 'px' });
+  g('all').style.top = (on ? 121 : 126) + 'px';
+  Object.assign(g('ux').style, { left: (on ? 80 : 69) + FX + 'px', top: (on ? 215 : 220) + 'px', width: (on ? 200 : 219) + 'px', height: (on ? 70 : 71) + 'px',
+    boxShadow: on ? '0 0 0 rgba(40,39,51,0), inset 0 0 0 0 rgba(255,255,255,0)' : SHADOW });
+  g('uxbg').style.opacity = on ? 0 : 1; g('uxav1').style.opacity = on ? 0 : 1; g('uxav2').style.opacity = on ? .6 : 0; g('uxt').style.color = on ? '#5b5e61' : '#000';
+}
+function flow(play, instant) {
+  flowAnims.forEach(a => a.cancel()); flowAnims = []; clearTimeout(flowTimer);
+  const el = document.getElementById('flowL'); el.querySelectorAll('[data-g]').forEach(e => e.style.transition = 'none'); setGen(false);
+  el.offsetWidth; el.querySelectorAll('[data-g]').forEach(e => e.style.transition = '');
+  if (!play) return;
+  const $ = k => el.querySelector(`[data-k="${k}"]`);
+  const run = (k, frames, delay, duration, easing = FE) => flowAnims.push($(k).animate(frames, instant ? { duration: 0, fill: 'both' } : { delay, duration, easing, fill: 'both' }));
+  const neckOut = (k, at) => run(k, [{ transform: 'scaleY(0)' }, { transform: 'scaleY(1.45)', offset: .5 }, { transform: 'scaleY(.85)', offset: .78 }, { transform: 'scaleY(1)' }], at, 520);
+  const born = (k, at) => run(k, [{ opacity: .2, transform: 'translateY(-17px) scale(.34, 1.75)' }, { opacity: 1, transform: 'translateY(-6px) scale(.62, 1.32)', offset: .28 },
+    { opacity: 1, transform: 'translateY(3px) scale(1.1, .82)', offset: .55 }, { transform: 'translateY(-1px) scale(.96, 1.07)', offset: .78 }, { opacity: 1, transform: 'none' }], at, 620);
+  const open = (k, from, to, at) => run(k, [{ ...pxs(from), transform: 'scaleY(1)' }, { ...pxs({ ...to, width: to.width * 1.03 }), transform: 'scaleY(.95)', offset: .72 }, { ...pxs(to), transform: 'none' }], at, 660);
+  const fade = (k, at, d, [a, b]) => run(k, [{ opacity: a }, { opacity: b }], at, d);
+  const SLIDE = [{ opacity: 0, transform: 'translateX(-14px)', clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, transform: 'none', clipPath: 'inset(0 0 0 0)' }];
+  // 플로우 진입: UX 카드에서 물방울이 떨어지고 입력중(점 셋)
+  neckOut('neck1', 150); born('card', 380); fade('dots1', 820, 260, [0, 1]);
+  if (instant) return;
+  // 3.2초 뒤 새 안건으로 굳어짐 → 하위 칩 둘
+  flowTimer = setTimeout(() => {
+    setGen(true);
+    fade('dots1', 0, 180, [1, 0]); fade('neck1', 0, 250, [1, 0]); fade('glow', 120, 460, [1, 0]);
+    open('card', PILL, CARD, 180); run('cardTag', SLIDE, 790, 430); run('cardTitle', SLIDE, 880, 460);
+    neckOut('neck2', 1150); born('chip1', 1350); fade('dots2', 1750, 240, [0, 1]); fade('dots2', 2330, 180, [1, 0]);
+    open('chip1', dropOf(CHIP1), CHIP1, 2350); run('chip1Txt', SLIDE, 2780, 400); run('chip1Av', SLIDE, 2860, 400);
+    neckOut('neck3', 3050); born('chip2', 3250); fade('dots3', 3650, 240, [0, 1]); fade('dots3', 4230, 180, [1, 0]);
+    open('chip2', dropOf(CHIP2), CHIP2, 4250); run('chip2Txt', SLIDE, 4680, 400); run('chip2Av', SLIDE, 4760, 400);
+  }, 3200 + 1250); // 플로우가 다 들어온 뒤부터 3.2초
+}
+
 let phoneTimers = [];
 // 파형: x = 1, 7, … 309 (재생 위치). 피그마 첫 모습 = 왼쪽은 조용한 점, 오른쪽 끝 10칸이 막 녹음된 소리
 const WAVE0 = [...Array(42).fill(2), 26, 38, 16, 12, 10, 8, 8, 8, 6, 4];
@@ -886,6 +983,7 @@ function go(i, animate = true) {
   }
   if (TM_STEP[cur]) setStep(tm, TM_STEP[cur], !animate);
   phone(TM_STEP[cur]);
+  flow(TM_STEP[cur] === 'tD', !animate);
   if (SC_STEP[cur]) setStep(sc, SC_STEP[cur], !animate || (prev === 8 && cur === 9) || (prev === 9 && cur === 8));
   map.classList.toggle('enter', prev === 9 && cur === 10); // 시나리오 → 관계 맵 첫 장
   map.classList.toggle('zin', prev === 10 && cur === 11);   // 안건 1 로 줌인
@@ -896,6 +994,7 @@ function go(i, animate = true) {
   if (cur === 2 || cur === 3) s3.dataset.step = cur === 3 ? 'b' : 'a'; // 3→4: 오른쪽에서 인용문이 밀고 들어옴
   history.replaceState(null, '', '#' + (cur + 1));
 }
+buildFlow();
 go(cur, false);
 
 addEventListener('click', () => { go(cur + 1); stage.classList.add('ready'); });
