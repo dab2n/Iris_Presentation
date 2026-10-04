@@ -170,10 +170,11 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 /* ── 4~7: 그리드 시스템 (g1 대지 → 축 그리기 → g2 유동 그리드 → g3 미리보기 카드 → g4 실제 UI + 연결선) ── */
 #gs { background: #f4f8fb; }
 #gs img { position: absolute; display: block; max-width: none; }
-#gb { left: 448px; top: 280px; width: 1049.63px; height: 672.86px; border-radius: 30.24px; overflow: hidden; background: #e9ecf0; transition: left 900ms var(--ease); }
+#gb { left: 448px; top: 280px; width: 1049.63px; height: 672.86px; border-radius: 30.24px; overflow: hidden; background: #fff; transition: left 900ms var(--ease), background-color 900ms ease; }
+#gs:is([data-step="g3"], [data-step="g4"], [data-step="g5"]) #gb { background: #e9ecf0; } /* 미리보기부터 회색 대지 */
 #gb::after { content: ""; position: absolute; inset: 0; border: 1.512px solid #f0f0f0; border-radius: inherit; pointer-events: none; z-index: 5; }
 #gs:not([data-step="g1"]) #gb { left: 435px; }
-#gb .row, #gb .col { position: absolute; background: rgba(255, 148, 148, .2); }
+#gb .row, #gb .col { position: absolute; background: rgba(255, 148, 148, .16); }
 #gb .row { left: 0; width: 1050px; height: 138px; }
 #gb .col { top: 0; width: 236px; height: 672px; }
 #gs .r1 { top: 40px; } #gs .r2 { top: 190px; } #gs .r3 { top: 340px; } #gs .r4 { top: 490px; }
@@ -189,7 +190,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #gb .pv .sk { position: absolute; border-radius: 4px; }
 #gs .lens { left: 374px; top: 209px; width: 138px; height: 138px; border-radius: 50%; background: rgba(255, 255, 255, .2); box-shadow: 4px 14px 30px rgba(49, 56, 70, .25); }
 .axis { overflow: hidden; }
-.axis i { position: absolute; background: #fc1414; }
+.axis i { position: absolute; background: #bfc4c8; }
 .axis svg { position: absolute; }
 #gs .ax { left: 475px; top: 253.37px; width: 1024.8px; height: 13.26px; }
 #gs .ax i { left: 0; right: 7px; top: 5.73px; height: 1.8px; }
@@ -417,8 +418,8 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <img class="ltime" src="assets/grid/ltime.png" style="left:1508px;top:242px;width:102px;height:34px" alt="">
       <img class="ly" src="assets/grid/ly.png" style="left:384px;top:305px;width:30px;height:50px" alt="">
       <img class="ldepth" src="assets/grid/ldepth.png" style="left:318px;top:925px;width:86px;height:37px" alt="">
-      <div class="abs axis ax"><i></i><svg width="8" height="13.26" viewBox="1017 0 8 13.2551"><path d="M1024.54 7.26396C1024.89 6.91249 1024.89 6.34264 1024.54 5.99117L1018.81 0.263604C1018.46 -0.0878682 1017.89 -0.0878682 1017.54 0.263604C1017.18 0.615076 1017.18 1.18492 1017.54 1.5364L1022.63 6.62756L1017.54 11.7187C1017.18 12.0702 1017.18 12.6401 1017.54 12.9915C1017.89 13.343 1018.46 13.343 1018.81 12.9915Z" fill="#FC1414"/></svg></div>
-      <div class="abs axis ay"><i></i><svg width="8" height="13.26" viewBox="1017 0 8 13.2551"><path d="M1024.54 7.26396C1024.89 6.91249 1024.89 6.34264 1024.54 5.99117L1018.81 0.263604C1018.46 -0.0878682 1017.89 -0.0878682 1017.54 0.263604C1017.18 0.615076 1017.18 1.18492 1017.54 1.5364L1022.63 6.62756L1017.54 11.7187C1017.18 12.0702 1017.18 12.6401 1017.54 12.9915C1017.89 13.343 1018.46 13.343 1018.81 12.9915Z" fill="#FC1414"/></svg></div>
+      <div class="abs axis ax"><i></i><svg width="8" height="13.26" viewBox="1017 0 8 13.2551"><path d="M1024.54 7.26396C1024.89 6.91249 1024.89 6.34264 1024.54 5.99117L1018.81 0.263604C1018.46 -0.0878682 1017.89 -0.0878682 1017.54 0.263604C1017.18 0.615076 1017.18 1.18492 1017.54 1.5364L1022.63 6.62756L1017.54 11.7187C1017.18 12.0702 1017.18 12.6401 1017.54 12.9915C1017.89 13.343 1018.46 13.343 1018.81 12.9915Z" fill="#BFC4C8"/></svg></div>
+      <div class="abs axis ay"><i></i><svg width="8" height="13.26" viewBox="1017 0 8 13.2551"><path d="M1024.54 7.26396C1024.89 6.91249 1024.89 6.34264 1024.54 5.99117L1018.81 0.263604C1018.46 -0.0878682 1017.89 -0.0878682 1017.54 0.263604C1017.18 0.615076 1017.18 1.18492 1017.54 1.5364L1022.63 6.62756L1017.54 11.7187C1017.18 12.0702 1017.18 12.6401 1017.54 12.9915C1017.89 13.343 1018.46 13.343 1018.81 12.9915Z" fill="#BFC4C8"/></svg></div>
     </div>
   </section>
 
