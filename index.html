@@ -230,7 +230,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 
 /* g2: 완성된 그리드가 맥락에 따라 천천히 줄었다 늘었다 (쫀득한 ease-in-out) 하다가 2번 그리드로 */
 #stage.ready #gs[data-step="g2"] .row { animation: var(--k) 4200ms linear 200ms both; }
-#stage.ready #gs[data-step="g2"] .col { animation: var(--k) 3600ms linear 200ms both; }
+#stage.ready #gs[data-step="g2"] .col { animation: var(--k) 4200ms linear 200ms both; } /* 가로·세로가 같은 박자로 바뀜 */
 @keyframes row1 {
   0% { top: 40px; height: 138px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
   25% { top: 40px; height: 90px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
@@ -260,28 +260,32 @@ html, body { height: 100%; background: #000; overflow: hidden; }
   100% { top: 430px; height: 130px; }
 }
 @keyframes col1 {
-  0.0% { left: 27px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  33.33% { left: 27px; width: 200px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  66.67% { left: 27px; width: 270px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  100.0% { left: 27px; width: 236px; }
+  0% { left: 27px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { left: 27px; width: 200px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { left: 27px; width: 270px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { left: 27px; width: 250px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { left: 27px; width: 236px; }
 }
 @keyframes col2 {
-  0.0% { left: 277px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  33.33% { left: 241px; width: 272px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  66.67% { left: 311px; width: 210px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  100.0% { left: 277px; width: 236px; }
+  0% { left: 277px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { left: 241px; width: 272px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { left: 311px; width: 210px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { left: 291px; width: 226px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { left: 277px; width: 236px; }
 }
 @keyframes col3 {
-  0.0% { left: 527px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  33.33% { left: 527px; width: 250px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  66.67% { left: 535px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  100.0% { left: 527px; width: 236px; }
+  0% { left: 527px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { left: 527px; width: 250px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { left: 535px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { left: 531px; width: 244px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { left: 527px; width: 236px; }
 }
 @keyframes col4 {
-  0.0% { left: 777px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  33.33% { left: 791px; width: 222px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  66.67% { left: 785px; width: 228px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
-  100.0% { left: 777px; width: 236px; }
+  0% { left: 777px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { left: 791px; width: 222px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { left: 785px; width: 228px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { left: 789px; width: 224px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { left: 777px; width: 236px; }
 }
 
 /* g3: 2번 그리드가 남아 있는 채로 미리보기 카드가 왼쪽 위부터 → 그 뒤 그리드가 천천히 사라짐 */
