@@ -136,12 +136,19 @@ html, body { height: 100%; background: #000; overflow: hidden; }
   53.03%, 100% { transform: none; }
 }
 #stage.ready #map[data-step="flow"] .guideSet { animation: guide 6600ms linear both; }
-#stage.ready #map[data-step="flow"] .pillSet { animation-delay: 150ms; }
-@keyframes guide {
-  0%, 10.61% { opacity: 0; translate: 0 36px; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
-  22.73% { opacity: 1; translate: 0 0; }
+#stage.ready #map[data-step="flow"] .pillSet { animation-name: guideText; } /* 빛이 다 올라온 뒤 글자 */
+@keyframes guide { /* 빛: 아래에서 위로 올라옴 */
+  0%, 10.61% { opacity: 0; translate: 0 140px; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
+  24.24% { opacity: 1; translate: 0 0; }
   72.73% { opacity: 1; animation-timing-function: ease; }
   80.30%, 100% { opacity: 0; }
+}
+@keyframes guideText { /* 버튼·안내 문구: 빛 뒤에 제자리에서 나타남 */
+  0%, 21.21% { opacity: 0; translate: 0 10px; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
+  29.55% { opacity: 1; translate: 0 0; }
+  72.73% { opacity: 1; animation-timing-function: ease; }
+  80.30%, 100% { opacity: 0; }
+}
 }
 #board .glow { animation: sway 3.4s ease-in-out infinite alternate; transform-origin: 50% 50%; }
 @keyframes sway { /* 일렁임: 좌우로 흘러가며 위아래로 숨 쉬듯 */
@@ -283,10 +290,15 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 /* g4: 보드 무늬 → 카드 UI 가 차례로 입혀지고, 카드와 카드 사이 연결선이 흐름을 따라 그려짐 → 마지막 선은 아래로 길게 */
 #stage.ready #gs[data-step="g4"] .finBoard { animation: fadeOnly 500ms ease both; }
 #stage.ready #gs[data-step="g4"] .card { animation: dress 400ms var(--ease) both; animation-delay: var(--d); }
-#stage.ready #gs[data-step="g4"] .card .av { animation: pop 300ms var(--ease) both; animation-delay: calc(var(--d) + 120ms); }
-/* 글줄: 왼쪽부터 써 내려가듯 한 줄씩 드러남 */
-#stage.ready #gs[data-step="g4"] .card .tl { animation: type var(--t) linear both; animation-delay: var(--d); }
-@keyframes type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+#gb .card .ui { position: absolute; inset: 0; }
+/* 카드 안 UI: 부드러운 가장자리로 왼쪽에서 오른쪽으로 슥 스와이프되며 나타남 */
+#stage.ready #gs[data-step="g4"] .card .ui { animation: swipe 650ms cubic-bezier(.33, 1, .68, 1) both; animation-delay: calc(var(--d) + 150ms);
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 60%); mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  -webkit-mask-size: 250% 100%; mask-size: 250% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+@keyframes swipe {
+  from { -webkit-mask-position: 100% 0; mask-position: 100% 0; translate: -10px 0; }
+  to { -webkit-mask-position: 0 0; mask-position: 0 0; translate: 0 0; }
+}
 @keyframes dress { from { opacity: 0; scale: .97; } }
 #stage.ready #gs[data-step="g4"] .pv { animation: hand 500ms ease both; animation-delay: var(--e); }
 @keyframes hand { from { opacity: 1; } to { opacity: 0; } }
@@ -372,44 +384,56 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <img class="ln v" src="assets/grid/L5.png" style="left:903px;top:551px;width:12px;height:122px;--d:2100ms;--t:700ms" alt="">
       <div class="card" style="left:25px;top:38px;width:240px;height:64px;--d:250ms">
         <img class="shell" src="assets/grid/issue_shell.png" style="left:0;top:0;width:240px;height:64px" alt="">
-        <img class="tl" src="assets/grid/issue_t0.png" style="left:12.0px;top:11.5px;width:50.5px;height:16.0px;--d:370ms;--t:140ms" alt="">
-        <img class="tl" src="assets/grid/issue_t1.png" style="left:12.5px;top:30.5px;width:189.0px;height:18.5px;--d:540ms;--t:270ms" alt="">
+        <div class="ui">
+          <img class="tl" src="assets/grid/issue_t0.png" style="left:12.0px;top:11.5px;width:50.5px;height:16.0px" alt="">
+          <img class="tl" src="assets/grid/issue_t1.png" style="left:12.5px;top:30.5px;width:189.0px;height:18.5px" alt="">
+        </div>
       </div>
       <div class="card" style="left:25px;top:111px;width:238.4px;height:155px;--d:550ms">
         <img class="shell" src="assets/grid/c1_shell.png" style="left:0;top:0;width:238.4px;height:155px" alt="">
-        <img class="av" src="assets/grid/c1_av.png" style="left:18.0px;top:18.5px;width:28.5px;height:28.0px" alt="">
-        <img class="tl" src="assets/grid/c1_t0.png" style="left:18.0px;top:52.0px;width:176.0px;height:18.0px;--d:770ms;--t:251ms" alt="">
-        <img class="tl" src="assets/grid/c1_t1.png" style="left:18.0px;top:73.0px;width:90.5px;height:18.5px;--d:1051ms;--t:140ms" alt="">
-        <img class="tl" src="assets/grid/c1_t2.png" style="left:18.5px;top:99.5px;width:195.5px;height:16.0px;--d:1221ms;--t:279ms" alt="">
-        <img class="tl" src="assets/grid/c1_t3.png" style="left:18.5px;top:117.5px;width:67.0px;height:16.0px;--d:1530ms;--t:140ms" alt="">
+        <div class="ui">
+          <img class="av" src="assets/grid/c1_av.png" style="left:18.0px;top:18.5px;width:28.5px;height:28.0px" alt="">
+          <img class="tl" src="assets/grid/c1_t0.png" style="left:18.0px;top:52.0px;width:176.0px;height:18.0px" alt="">
+          <img class="tl" src="assets/grid/c1_t1.png" style="left:18.0px;top:73.0px;width:90.5px;height:18.5px" alt="">
+          <img class="tl" src="assets/grid/c1_t2.png" style="left:18.5px;top:99.5px;width:195.5px;height:16.0px" alt="">
+          <img class="tl" src="assets/grid/c1_t3.png" style="left:18.5px;top:117.5px;width:67.0px;height:16.0px" alt="">
+        </div>
       </div>
       <div class="card" style="left:277px;top:111px;width:238.4px;height:154.6px;--d:850ms">
         <img class="shell" src="assets/grid/c2_shell.png" style="left:0;top:0;width:238.4px;height:154.6px" alt="">
-        <img class="av" src="assets/grid/c2_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
-        <img class="tl" src="assets/grid/c2_t0.png" style="left:18.5px;top:51.5px;width:185.5px;height:18.5px;--d:1070ms;--t:265ms" alt="">
-        <img class="tl" src="assets/grid/c2_t1.png" style="left:18.5px;top:73.0px;width:87.5px;height:18.5px;--d:1365ms;--t:140ms" alt="">
-        <img class="tl" src="assets/grid/c2_t2.png" style="left:18.5px;top:99.0px;width:183.5px;height:16.0px;--d:1535ms;--t:262ms" alt="">
-        <img class="tl" src="assets/grid/c2_t3.png" style="left:18.5px;top:117.0px;width:142.5px;height:16.5px;--d:1827ms;--t:204ms" alt="">
+        <div class="ui">
+          <img class="av" src="assets/grid/c2_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
+          <img class="tl" src="assets/grid/c2_t0.png" style="left:18.5px;top:51.5px;width:185.5px;height:18.5px" alt="">
+          <img class="tl" src="assets/grid/c2_t1.png" style="left:18.5px;top:73.0px;width:87.5px;height:18.5px" alt="">
+          <img class="tl" src="assets/grid/c2_t2.png" style="left:18.5px;top:99.0px;width:183.5px;height:16.0px" alt="">
+          <img class="tl" src="assets/grid/c2_t3.png" style="left:18.5px;top:117.0px;width:142.5px;height:16.5px" alt="">
+        </div>
       </div>
       <div class="card" style="left:277px;top:280px;width:238.4px;height:133.6px;--d:1150ms">
         <img class="shell" src="assets/grid/c3_shell.png" style="left:0;top:0;width:238.4px;height:133.6px" alt="">
-        <img class="av" src="assets/grid/c3_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
-        <img class="tl" src="assets/grid/c3_t0.png" style="left:19.0px;top:51.5px;width:196.5px;height:19.0px;--d:1370ms;--t:281ms" alt="">
-        <img class="tl" src="assets/grid/c3_t1.png" style="left:18.5px;top:78.0px;width:195.0px;height:16.0px;--d:1681ms;--t:279ms" alt="">
-        <img class="tl" src="assets/grid/c3_t2.png" style="left:18.5px;top:96.0px;width:172.0px;height:16.0px;--d:1990ms;--t:246ms" alt="">
+        <div class="ui">
+          <img class="av" src="assets/grid/c3_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
+          <img class="tl" src="assets/grid/c3_t0.png" style="left:19.0px;top:51.5px;width:196.5px;height:19.0px" alt="">
+          <img class="tl" src="assets/grid/c3_t1.png" style="left:18.5px;top:78.0px;width:195.0px;height:16.0px" alt="">
+          <img class="tl" src="assets/grid/c3_t2.png" style="left:18.5px;top:96.0px;width:172.0px;height:16.0px" alt="">
+        </div>
       </div>
       <div class="card" style="left:277px;top:428px;width:238.4px;height:133.6px;--d:1450ms">
         <img class="shell" src="assets/grid/c4_shell.png" style="left:0;top:0;width:238.4px;height:133.6px" alt="">
-        <img class="av" src="assets/grid/c4_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
-        <img class="tl" src="assets/grid/c4_t0.png" style="left:18.0px;top:51.5px;width:89.5px;height:19.0px;--d:1670ms;--t:140ms" alt="">
-        <img class="tl" src="assets/grid/c4_t1.png" style="left:18.5px;top:78.0px;width:200.0px;height:16.0px;--d:1840ms;--t:286ms" alt="">
-        <img class="tl" src="assets/grid/c4_t2.png" style="left:18.5px;top:96.0px;width:157.5px;height:16.5px;--d:2156ms;--t:225ms" alt="">
+        <div class="ui">
+          <img class="av" src="assets/grid/c4_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
+          <img class="tl" src="assets/grid/c4_t0.png" style="left:18.0px;top:51.5px;width:89.5px;height:19.0px" alt="">
+          <img class="tl" src="assets/grid/c4_t1.png" style="left:18.5px;top:78.0px;width:200.0px;height:16.0px" alt="">
+          <img class="tl" src="assets/grid/c4_t2.png" style="left:18.5px;top:96.0px;width:157.5px;height:16.5px" alt="">
+        </div>
       </div>
       <div class="card" style="left:776px;top:439px;width:238.4px;height:112.5px;--d:1800ms">
         <img class="shell" src="assets/grid/concl_shell.png" style="left:0;top:0;width:238.4px;height:112.5px" alt="">
-        <img class="tl" src="assets/grid/concl_t0.png" style="left:18.0px;top:24.0px;width:31.0px;height:16.0px;--d:1920ms;--t:140ms" alt="">
-        <img class="tl" src="assets/grid/concl_t1.png" style="left:18.5px;top:51.5px;width:193.0px;height:18.5px;--d:2090ms;--t:276ms" alt="">
-        <img class="tl" src="assets/grid/concl_t2.png" style="left:18.5px;top:73.0px;width:101.5px;height:18.5px;--d:2396ms;--t:145ms" alt="">
+        <div class="ui">
+          <img class="tl" src="assets/grid/concl_t0.png" style="left:18.0px;top:24.0px;width:31.0px;height:16.0px" alt="">
+          <img class="tl" src="assets/grid/concl_t1.png" style="left:18.5px;top:51.5px;width:193.0px;height:18.5px" alt="">
+          <img class="tl" src="assets/grid/concl_t2.png" style="left:18.5px;top:73.0px;width:101.5px;height:18.5px" alt="">
+        </div>
       </div>
     </div>
     <div class="abs lens"></div>
