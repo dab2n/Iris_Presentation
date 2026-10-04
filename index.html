@@ -317,6 +317,39 @@ html, body { height: 100%; background: #000; overflow: hidden; }
   100% { opacity: 0; translate: 1042px 675px; }
 }
 #gs.snap, #gs.snap * { transition: none !important; animation: none !important; }
+
+/* ── 관계 맵 개요(안건 카드) → 안건 1 로 줌인하면 그 안의 세부 노드 카드가 주르륵 ── */
+#map .listS { opacity: 0; transition: opacity 500ms ease 150ms; }
+#map:is([data-step="ov"], [data-step="intro"]) .listS { opacity: 1; }
+#map .ovTitle { left: 0; top: 0; width: 1920px; height: 210px; z-index: 2; transition: opacity 400ms ease, translate 500ms var(--ease); }
+#map:not([data-step="ov"]) .ovTitle { opacity: 0; translate: 0 -24px; }
+#map[data-step="ov"] #dev { transform: translate(71.333px, 110.889px) scale(.925926); }
+#zb { left: 803px; top: 416px; width: 810px; height: 520px; border-radius: 23.33px; overflow: hidden; opacity: 0; }
+#map[data-step="ov"] #zb { opacity: 1; }
+#zb img { position: absolute; }
+#zb .ovw { position: absolute; left: 0; top: 0; width: 810px; height: 520px; transform-origin: 0 0; }
+#map[data-step="ov"] #cur { opacity: 0; }
+#cur { transition: opacity 400ms ease; }
+/* 줌인 (개요 → 소개) */
+#stage.ready #map.zin[data-step="intro"] #zb { animation: zbHold 2300ms linear both; }
+@keyframes zbHold { 0%, 99% { opacity: 1; } 100% { opacity: 0; } }
+#stage.ready #map.zin[data-step="intro"] .ovw { animation: zoomCard 1200ms cubic-bezier(.7, 0, .3, 1) both; }
+@keyframes zoomCard {
+  0% { transform: none; opacity: 1; }
+  62% { opacity: 1; }
+  100% { transform: translate(-144.6px, -608.0px) scale(3.347); opacity: 0; }
+}
+#stage.ready #map.zin[data-step="intro"] .z49 { animation: fadeOut 300ms ease 500ms both; }
+#stage.ready #map.zin[data-step="intro"] .z100 { animation: fadeOnly 300ms ease 700ms both; }
+@keyframes fadeOut { to { opacity: 0; } }
+#stage.ready #map.zin[data-step="intro"] .nd { animation: nodeIn 380ms cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(1150ms + var(--i) * 90ms); }
+@keyframes nodeIn { from { opacity: 0; translate: 0 10px; scale: .96; } }
+#stage.ready #map.zin[data-step="intro"] #cur { transition-delay: 1900ms; }
+/* 줌아웃 (소개 → 개요): 세부 노드가 거둬지고 다시 흰 안건 카드로 */
+#stage.ready #map.zout[data-step="ov"] .nd { animation: fadeOut 220ms ease both; animation-delay: calc((5 - var(--i)) * 40ms); }
+#stage.ready #map.zout[data-step="ov"] .ovw { animation: zoomCard 1100ms cubic-bezier(.7, 0, .3, 1) 250ms reverse both; }
+#stage.ready #map.zout[data-step="ov"] .z100 { animation: fadeOut 300ms ease 500ms both; }
+#stage.ready #map.zout[data-step="ov"] .z49 { animation: fadeOnly 300ms ease 700ms both; }
 </style>
 </head>
 <body>
@@ -454,6 +487,22 @@ html, body { height: 100%; background: #000; overflow: hidden; }
   <section class="slide" id="map" data-step="intro">
     <div id="dev">
       <img src="assets/map/base.png" style="left:0;top:0;width:1920px;height:1080px" alt="">
+      <!-- 개요 보드(안건 카드) ↔ 세부 노드 보드 -->
+      <div class="abs" id="zb">
+        <img src="assets/map/det_board.png" style="left:0;top:0;width:810px;height:520px" alt="">
+        <img class="nd" src="assets/map/n0.png" style="left:19px;top:19px;width:192px;height:56px;--i:0" alt="">
+        <img class="nd" src="assets/map/n1.png" style="left:19px;top:83px;width:191px;height:126px;--i:1" alt="">
+        <img class="nd" src="assets/map/n2.png" style="left:233px;top:83px;width:191px;height:126px;--i:2" alt="">
+        <img class="nd" src="assets/map/n3.png" style="left:233px;top:211px;width:191px;height:110px;--i:3" alt="">
+        <img class="nd" src="assets/map/n4.png" style="left:233px;top:328px;width:191px;height:110px;--i:4" alt="">
+        <img class="nd" src="assets/map/n5.png" style="left:599px;top:390px;width:191px;height:93px;--i:5" alt="">
+        <img class="z100" src="assets/map/zoom100.png" style="left:695px;top:19px;width:97px;height:42px" alt="">
+        <div class="ovw">
+          <img src="assets/map/ov_board.png" style="left:0;top:0;width:810px;height:520px" alt="">
+          <img src="assets/map/ov_card1.svg" style="left:41.09px;top:165.78px;width:246.3px;height:189.07px" alt="">
+        </div>
+        <img class="z49" src="assets/map/ov_zoom49.png" style="left:701.78px;top:21.17px;width:87.7px;height:37.91px" alt="">
+      </div>
       <div class="abs" id="left">
         <div class="abs" id="win">
           <!-- 원문 → 건너뛰는 발언들 → 원문(도착) 을 이어 붙인 긴 띠. 빠르게 넘어가는 동안만 세로 잔상 -->
@@ -462,6 +511,8 @@ html, body { height: 100%; background: #000; overflow: hidden; }
             <img class="listBlur" src="assets/map/listStripBlur.png" style="left:0;top:0;width:384px;height:2692px" alt="">
             <img class="listB" src="assets/map/listHi.png" style="left:0;top:1984px;width:384px;height:708px" alt="">
           </div>
+          <!-- 작은 화면(개요·소개) 버전은 줄바꿈이 달라서 따로: 커질 때 원래 크기 버전으로 바뀜 -->
+          <img class="listS" src="assets/map/listS.png" style="left:0;top:0;width:384px;height:760px" alt="">
           <div class="abs thumb"></div>
         </div>
         <div class="abs shade"></div>
@@ -477,6 +528,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <div class="abs" id="cur"><img src="assets/map/cursor.svg" alt=""></div>
     </div>
     <img class="intro" src="assets/map/intro.png" alt="">
+    <img class="ovTitle" src="assets/map/ov_title.png" alt="">
   </section>
 </div>
 
@@ -542,12 +594,12 @@ function setChart(state) {
 }
 
 // 장 구성: 0·1 은 같은 차트 화면의 두 상태, 2 는 별도 화면
-const N = 11; // 0·1 차트, 2 인사이트, 3~7 그리드 시스템(7 = 원 이동), 8 관계맵 소개, 9 관계맵, 10 관계맵 흐름(카드 선택)
+const N = 12; // 0·1 차트, 2 인사이트, 3~7 그리드 시스템(7 = 원 이동), 8 관계맵 개요(안건), 9 관계맵 소개, 10 관계맵, 11 관계맵 흐름(카드 선택)
 // 새로고침하면 맨 첫 장, 주소의 #번호로 열면 그 장
 const reloaded = performance.getEntriesByType('navigation')[0]?.type === 'reload';
 let cur = reloaded ? 0 : Math.min(Math.max(+location.hash.slice(1) - 1 || 0, 0), N - 1);
 const chartSlide = document.getElementById('chartSlide'), s3 = document.getElementById('s3'), map = document.getElementById('map');
-const MAP_STEP = { 8: 'intro', 9: 'full', 10: 'flow' }, GRID_STEP = { 3: 'g1', 4: 'g2', 5: 'g3', 6: 'g4', 7: 'g5' };
+const MAP_STEP = { 8: 'ov', 9: 'intro', 10: 'full', 11: 'flow' }, GRID_STEP = { 3: 'g1', 4: 'g2', 5: 'g3', 6: 'g4', 7: 'g5' };
 const grid = document.getElementById('gs');
 let cutTimer;
 function show(n) { chartSlide.classList.toggle('on', n < 2); s3.classList.toggle('on', n === 2); grid.classList.toggle('on', n >= 3 && n <= 7); map.classList.toggle('on', n >= 8); chartSlide.classList.remove('stretch'); }
@@ -566,7 +618,9 @@ function go(i, animate = true) {
     cutTimer = setTimeout(() => show(2), 200);      // 트랜지션 없이 3 으로 컷
   } else show(cur);
   if (GRID_STEP[cur]) setStep(grid, GRID_STEP[cur], !animate);
-  if (MAP_STEP[cur]) setStep(map, MAP_STEP[cur], !animate || prev < 8); // 소개 장으로 처음 들어올 땐 바로 그 상태로
+  map.classList.toggle('zin', prev === 8 && cur === 9);   // 안건 1 로 줌인
+  map.classList.toggle('zout', prev === 9 && cur === 8);  // 다시 안건 카드로 줌아웃
+  if (MAP_STEP[cur]) setStep(map, MAP_STEP[cur], !animate || prev < 8); // 관계 맵으로 처음 들어올 땐 바로 그 상태로
   if (cur < 2) setChart(cur);
   history.replaceState(null, '', '#' + (cur + 1));
 }
