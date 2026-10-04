@@ -348,7 +348,11 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 @keyframes pctUp { from { --pct: 49; } to { --pct: 100; } }
 #stage.ready #map.zout[data-step="ov"] .zpct { animation: pctUp 1100ms cubic-bezier(.7, 0, .3, 1) 250ms reverse both; }
 @keyframes fadeOut { to { opacity: 0; } }
-#stage.ready #map.zin[data-step="intro"] .nd { animation: nodeIn 380ms cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(1150ms + var(--i) * 90ms); }
+#stage.ready #map.zin[data-step="intro"] .nd { animation: nodeIn 380ms cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(1150ms + var(--i) * 120ms); }
+/* 노드 사이 연결선·화살표: 앞 노드가 나온 뒤 다음 노드 쪽으로 그려짐 */
+#stage.ready #map.zin[data-step="intro"] .dl.v { animation: drawDown var(--t) ease-in-out both; animation-delay: var(--d); }
+#stage.ready #map.zin[data-step="intro"] .dl.h { animation: drawRight var(--t) ease-in-out both; animation-delay: var(--d); }
+#stage.ready #map.zout[data-step="ov"] .dl { animation: fadeOut 200ms ease both; }
 @keyframes nodeIn { from { opacity: 0; translate: 0 10px; scale: .96; } }
 #stage.ready #map.zin[data-step="intro"] #cur { transition-delay: 1900ms; }
 /* 줌아웃 (소개 → 개요): 세부 노드가 거둬지고 다시 흰 안건 카드로 */
@@ -501,6 +505,11 @@ html, body { height: 100%; background: #000; overflow: hidden; }
         <img class="nd" src="assets/map/n3.png" style="left:233px;top:211px;width:191px;height:110px;--i:3" alt="">
         <img class="nd" src="assets/map/n4.png" style="left:233px;top:328px;width:191px;height:110px;--i:4" alt="">
         <img class="nd" src="assets/map/n5.png" style="left:599px;top:390px;width:191px;height:93px;--i:5" alt="">
+        <img class="dl v" src="assets/map/det_la.png" style="left:111px;top:70px;width:8px;height:18px;--d:1210ms;--t:150ms" alt="">
+        <img class="dl h" src="assets/map/det_lb.png" style="left:205px;top:139px;width:33px;height:12px;--d:1330ms;--t:150ms" alt="">
+        <img class="dl v" src="assets/map/det_lc1.png" style="left:325px;top:204px;width:8px;height:12px;--d:1450ms;--t:110ms" alt="">
+        <img class="dl v" src="assets/map/det_lc2.png" style="left:325px;top:316px;width:8px;height:17px;--d:1570ms;--t:110ms" alt="">
+        <img class="dl h" src="assets/map/det_ld.png" style="left:419px;top:358px;width:283px;height:38px;--d:1690ms;--t:280ms" alt="">
         <img class="z100" src="assets/map/zoompill100.png" style="left:695px;top:19px;width:97px;height:42px" alt="">
         <div class="ovw">
           <img src="assets/map/ov_board.png" style="left:0;top:0;width:810px;height:520px" alt="">
