@@ -422,6 +422,24 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 /* ── 관계 맵 개요(안건 카드) → 안건 1 로 줌인하면 그 안의 세부 노드 카드가 주르륵 ── */
 #map .listS { opacity: 0; transition: opacity 500ms ease 150ms; }
 #map:is([data-step="ov"], [data-step="intro"]) .listS { opacity: 1; }
+#map .decor { position: absolute; left: 0; top: 0; mix-blend-mode: multiply; opacity: 0; transition: opacity 300ms ease; pointer-events: none; }
+#map:is([data-step="ov"], [data-step="intro"]) .decor { opacity: 1; }
+#map .sumP, #cur0 { opacity: 0; z-index: 5; }
+#cur0 { left: 913.3px; top: 326px; width: 35.4577px; height: 36.1523px; }
+#cur0 img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform: rotate(-36.34deg); }
+/* 요약 탭 → 커서가 '플로우 맵' 탭으로 와서 딸깍 → 요약이 걷히고 안건 카드 스켈레톤이 디자인으로 */
+#stage.ready #map.enter[data-step="ov"] .decor { animation: fadeOnly 400ms ease 700ms both; }
+#stage.ready #map.enter[data-step="ov"] .sumP { animation: sumOff 220ms ease 1650ms both; }
+@keyframes sumOff { from { opacity: 1; } to { opacity: 0; } }
+#stage.ready #map.enter[data-step="ov"] #cur0 { animation: cur0 2300ms linear both; }
+@keyframes cur0 {
+  0% { opacity: 0; translate: 270px 380px; animation-timing-function: ease; }
+  30.4% { opacity: 1; translate: 270px 380px; animation-timing-function: cubic-bezier(.65, 0, .35, 1); }
+  65.2% { opacity: 1; translate: 0 0; scale: 1; animation-timing-function: ease-out; }
+  69.6% { translate: .6px 1px; scale: .93; animation-timing-function: ease-out; }
+  73.9%, 82.6% { opacity: 1; translate: 0 0; scale: 1; animation-timing-function: ease; }
+  95.7%, 100% { opacity: 0; translate: 0 0; scale: 1; }
+}
 #map .ovTitle { left: 0; top: 0; width: 1920px; height: 210px; z-index: 2; transition: opacity 400ms ease, translate 500ms var(--ease); }
 #map:not([data-step="ov"], [data-step="intro"]) .ovTitle { opacity: 0; translate: 0 -24px; } /* 개요·소개는 같은 타이틀 */
 #map[data-step="ov"] #dev { transform: translate(71.333px, 110.889px) scale(.925926); }
@@ -654,9 +672,9 @@ html, body { height: 100%; background: #000; overflow: hidden; }
         <div class="ovw">
           <img src="assets/map/ov_board.png" style="left:0;top:0;width:810px;height:520px" alt="">
           <img src="assets/map/ov_card1.svg" style="left:41.09px;top:165.78px;width:246.3px;height:189.07px" alt="">
-          <div class="skel" style="left:43.22px;top:167.05px;width:242.0px;height:184.7px;--d:900ms"><i style="left:21.6px;top:25.4px;width:28.1px;height:8.6px;border-radius:4px"></i><i style="left:189.1px;top:21.6px;width:31.3px;height:18.4px;border-radius:9px"></i><i style="left:21.6px;top:46.5px;width:162.1px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:68.1px;width:121.0px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:107.0px;width:198.8px;height:8.6px;border-radius:4px"></i><i style="left:21.6px;top:122.1px;width:151.3px;height:8.6px;border-radius:4px"></i><i style="left:177.2px;top:151.3px;width:43.2px;height:8.6px;border-radius:4px"></i></div>
-          <div class="skel" style="left:315.48px;top:167.05px;width:242.0px;height:184.7px;--d:1060ms"><i style="left:21.6px;top:25.4px;width:28.1px;height:8.6px;border-radius:4px"></i><i style="left:189.1px;top:21.6px;width:31.3px;height:18.4px;border-radius:9px"></i><i style="left:21.6px;top:46.5px;width:162.1px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:68.1px;width:121.0px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:107.0px;width:198.8px;height:8.6px;border-radius:4px"></i><i style="left:21.6px;top:122.1px;width:151.3px;height:8.6px;border-radius:4px"></i><i style="left:177.2px;top:151.3px;width:43.2px;height:8.6px;border-radius:4px"></i></div>
-          <div class="skel" style="left:587.74px;top:167.05px;width:242.0px;height:184.7px;--d:1220ms"><i style="left:21.6px;top:25.4px;width:28.1px;height:8.6px;border-radius:4px"></i><i style="left:189.1px;top:21.6px;width:31.3px;height:18.4px;border-radius:9px"></i><i style="left:21.6px;top:46.5px;width:162.1px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:68.1px;width:121.0px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:107.0px;width:198.8px;height:8.6px;border-radius:4px"></i><i style="left:21.6px;top:122.1px;width:151.3px;height:8.6px;border-radius:4px"></i><i style="left:177.2px;top:151.3px;width:43.2px;height:8.6px;border-radius:4px"></i></div>
+          <div class="skel" style="left:43.22px;top:167.05px;width:242.0px;height:184.7px;--d:1950ms"><i style="left:21.6px;top:25.4px;width:28.1px;height:8.6px;border-radius:4px"></i><i style="left:189.1px;top:21.6px;width:31.3px;height:18.4px;border-radius:9px"></i><i style="left:21.6px;top:46.5px;width:162.1px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:68.1px;width:121.0px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:107.0px;width:198.8px;height:8.6px;border-radius:4px"></i><i style="left:21.6px;top:122.1px;width:151.3px;height:8.6px;border-radius:4px"></i><i style="left:177.2px;top:151.3px;width:43.2px;height:8.6px;border-radius:4px"></i></div>
+          <div class="skel" style="left:315.48px;top:167.05px;width:242.0px;height:184.7px;--d:2110ms"><i style="left:21.6px;top:25.4px;width:28.1px;height:8.6px;border-radius:4px"></i><i style="left:189.1px;top:21.6px;width:31.3px;height:18.4px;border-radius:9px"></i><i style="left:21.6px;top:46.5px;width:162.1px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:68.1px;width:121.0px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:107.0px;width:198.8px;height:8.6px;border-radius:4px"></i><i style="left:21.6px;top:122.1px;width:151.3px;height:8.6px;border-radius:4px"></i><i style="left:177.2px;top:151.3px;width:43.2px;height:8.6px;border-radius:4px"></i></div>
+          <div class="skel" style="left:587.74px;top:167.05px;width:242.0px;height:184.7px;--d:2270ms"><i style="left:21.6px;top:25.4px;width:28.1px;height:8.6px;border-radius:4px"></i><i style="left:189.1px;top:21.6px;width:31.3px;height:18.4px;border-radius:9px"></i><i style="left:21.6px;top:46.5px;width:162.1px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:68.1px;width:121.0px;height:15.1px;border-radius:4px"></i><i style="left:21.6px;top:107.0px;width:198.8px;height:8.6px;border-radius:4px"></i><i style="left:21.6px;top:122.1px;width:151.3px;height:8.6px;border-radius:4px"></i><i style="left:177.2px;top:151.3px;width:43.2px;height:8.6px;border-radius:4px"></i></div>
         </div>
         <img class="z49" src="assets/map/ov_zoompill.png" style="left:701.78px;top:21.17px;width:87.7px;height:37.91px" alt="">
         <span class="zpct"></span>
@@ -685,8 +703,16 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <img class="cardOn" src="assets/map/L_card.svg" style="left:1036.77px;top:628.31px;width:191px;height:110px" alt="">
       <img class="guideSet gPill" src="assets/map/L_pill.svg" style="left:1134.896px;top:815.117px;width:148px;height:85px" alt="">
       <img class="guideSet gText" src="assets/map/L_guide.svg" style="left:1082.675px;top:884.676px;width:250px;height:28px" alt="">
+      <!-- 시나리오에서 들어올 때: 요약 탭 화면 → 커서가 '플로우 맵' 탭을 눌러 이동 -->
+      <img class="sumP" src="assets/map/sum_panel.png" style="position:absolute;left:784.7px;top:292.5px;width:847px;height:667.3px" alt="">
+      <div class="abs" id="cur0"><img src="assets/map/cursor.svg" alt=""></div>
       <div class="abs" id="cur"><img src="assets/map/cursor.svg" alt=""></div>
     </div>
+    <!-- 바탕 장식(피그마 Union): 기기 뒤 계단 모양 면 — 기기 자리는 비우고 곱하기로 깔아 그림자와 자연스럽게 섞임 -->
+    <svg class="decor" width="1920" height="1080" viewBox="0 0 1920 1080">
+      <defs><mask id="devHole"><rect width="1920" height="1080" fill="#fff"/><rect x="331.1" y="215.1" width="1257.8" height="791.8" rx="28.5" fill="#000"/></mask></defs>
+      <path d="M1920.42 178H1735V407H1528.42V620H1446V1137H-80V620H-123.584V378H227V165H481.416V-64H1920.42V178Z" fill="rgb(243.5,245.7,246.9)" mask="url(#devHole)"/>
+    </svg>
     <img class="ovTitle" src="assets/map/ov_title.png" alt="">
   </section>
   <!-- 마지막: 시나리오 3 → Topic Map -->
