@@ -602,7 +602,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
   <!-- 슬라이드 1·2 -->
   <!-- 아직 애니메이션을 넣지 않은 장(피그마 그대로) — 장 번호는 STATIC 표 -->
   <section class="slide" id="st">
-    <img data-k="s01" src="assets/st/s01.webp" alt="">
+    <img data-k="s01b" src="assets/st/s01b.webp" alt="">
     <img data-k="s02" src="assets/st/s02.webp" alt="">
     <img data-k="s03" src="assets/st/s03.webp" alt="">
     <img data-k="s08" src="assets/st/s08.webp" alt="">
@@ -1051,7 +1051,7 @@ function stFx(n) {
   setTimeout(() => { if (cur !== n) return; imgs.forEach(im => im.classList.toggle('on', im.dataset.k === key)); st.querySelectorAll('.fx').forEach(e => e.remove()); }, end + 50);
 }
 const PP_STEP = { 7: 'p0', 8: 'p1', 9: 'p2', 10: 'p3' }, LG_STEP = { 12: 'l1', 13: 'l2' };
-const STATIC = { 0: 's01', 1: 's02', 2: 's03', 11: 's12', 14: 's15', 15: 's16', 35: 's35', 36: 's36b', 37: 's37a', 38: 's37' }; // 37·38 E.O.D: 글자 먼저 → 클릭하면 Iris 로고
+const STATIC = { 0: 's01b', 1: 's02', 2: 's03', 11: 's12', 14: 's15', 15: 's16', 35: 's35', 36: 's36b', 37: 's37a', 38: 's37' }; // 37·38 E.O.D: 글자 먼저 → 클릭하면 Iris 로고
 // 새로고침하면 맨 첫 장, 주소의 #번호로 열면 그 장
 const reloaded = performance.getEntriesByType('navigation')[0]?.type === 'reload';
 let cur = reloaded ? 0 : Math.min(Math.max(+location.hash.slice(1) - 1 || 0, 0), N - 1);
