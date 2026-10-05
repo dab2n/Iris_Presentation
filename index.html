@@ -132,7 +132,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #sc img { position: absolute; display: block; }
 #sc .sct { left: 500px; top: 360px; width: 920px; height: 360px; transition: opacity 400ms ease; }
 #sc:not([data-step="sA"]) .sct { opacity: 0; }
-#sc .card { top: 235px; width: 533px; height: 618px; opacity: 0; }
+#sc .card { top: 235px; height: 618px; opacity: 0; }
 #sc:not([data-step="sA"]) .card { opacity: 1; }
 #stage.ready #sc[data-step="sB"] .card:not(.dim) { animation: cardSlide 700ms var(--ease) both; animation-delay: var(--d); }
 @keyframes cardSlide { from { opacity: 0; translate: 0 60px; } }
@@ -143,30 +143,43 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 /* ── 마지막: 시나리오 3 → Topic Map (모바일 프로토타입 IRIS 의 녹음 화면 동작을 옮김) ── */
 #bz { background: #f4f8fb; }
 #bz img, #bz svg { position: absolute; display: block; max-width: none; }
-/* 버뮤다 존: 1 → 2 휴대폰들이 왼쪽으로 쓱 → 대각선 점선이 우하단→좌상단 → 삼각형 채움 + 카드 회색 + 안내 문구 */
-#bz .ph { position: absolute; top: 315px; width: 844px; height: 641px; transition: transform 950ms cubic-bezier(.65, 0, .35, 1), opacity 600ms ease; }
+/* 버뮤다 존: 진입 = 두 화면이 차례로 올라오고 시계·입력중 점이 움직임
+   1 → 2 = 화면이 가운데로(왼쪽 화면은 왼쪽으로 빠짐) → 대각선 점선이 그어짐 → 카드 회색 + 삼각형 좌상단→우하단 채움, 점선은 계속 흐름 → 알림이 위에서 내려옴 */
+#bz .ph { position: absolute; top: 315px; width: 844px; height: 641px; transition: transform 950ms cubic-bezier(.65, 0, .35, 1), opacity 500ms ease 350ms; }
 #bz .phL { left: 101px; } #bz .phR { left: 975px; }
+#stage.ready #bz.enter[data-step="b1"] .ph { animation: phoneUp 800ms var(--ease) both; animation-delay: var(--d); }
+#stage.ready #bz.enter[data-step="b1"] .head { animation: fadeOnly 500ms ease both; }
+#bz .pill { left: 52px; top: 18.5px; }
+#bz .btm { top: 559px; font-size: 28px; letter-spacing: -.56px; color: #141a1a; text-align: center; }
+#bz .dot { position: absolute; width: 4.32px; height: 4.32px; border-radius: 50%; background: #c0ceed; animation: typing 1.2s ease-in-out infinite; }
 #bz .shd { position: absolute; inset: 0; border-radius: 13px; box-shadow: 25.92px 25px 57.2px 1px rgba(0, 0, 0, .25); opacity: 0; transition: opacity 700ms ease 300ms; }
-#bz .dia, #bz .tri { clip-path: inset(100% 0 0 100%); }
-#bz .dia { transition: clip-path 750ms cubic-bezier(.65, 0, .35, 1) 1050ms; }
-#bz .tri { opacity: 0; transition: clip-path 800ms cubic-bezier(.65, 0, .35, 1) 1850ms, opacity 500ms ease 1850ms; }
-#bz .cg { opacity: 0; transition: opacity 500ms ease 1850ms; }
-#bz .bub { position: absolute; left: 1049px; top: 285px; width: 715px; height: 132px; box-sizing: border-box; padding: 19.5px 20px 20.5px; border-radius: 24px; background: #fff;
-  box-shadow: 25.92px 25px 57.2px 1px rgba(0, 0, 0, .25); font-weight: 600; font-size: 32px; line-height: 1.45; color: #2d2d2d; white-space: nowrap;
-  opacity: 0; transform: translateY(60px); transition: transform 700ms cubic-bezier(.3, 0, .2, 1) 1850ms, opacity 450ms ease 1850ms; }
-#bz[data-step="b2"] .ph { transform: translate(-700px, -18px); }
-#bz[data-step="b2"] .phL { opacity: 0; }
-#bz[data-step="b2"] :is(.shd, .tri, .cg, .bub) { opacity: 1; }
+#bz .dia { clip-path: inset(100% 0 0 100%); transition: clip-path 750ms cubic-bezier(.65, 0, .35, 1) 1000ms; }
+#bz .dia path { animation: march 700ms linear infinite; }
+@keyframes march { to { stroke-dashoffset: -5.4; } }
+#bz .tri { opacity: 0; clip-path: inset(0 100% 100% 0); transition: clip-path 900ms cubic-bezier(.65, 0, .35, 1) 1750ms, opacity 400ms ease 1750ms; }
+#bz .cg { opacity: 0; transition: opacity 500ms ease 1750ms; }
+#bz .bzl { position: absolute; left: 471px; top: 327px; margin: 0; font-weight: 600; font-size: 16px; line-height: 1.45; color: #859dba; white-space: nowrap; opacity: 0; transition: opacity 500ms ease 2250ms; }
+#bz .noti { left: 28px; top: 51px; width: 374px; height: 140px; border-radius: 24px; box-shadow: 0 8px 25.4px rgba(0, 0, 0, .2); opacity: 0; transform: translateY(-36px);
+  transition: transform 650ms cubic-bezier(.3, 0, .2, 1) 2850ms, opacity 400ms ease 2850ms; }
+#bz[data-step="b2"] .phR { transform: translate(-437px, -18px); }
+#bz[data-step="b2"] .phL { transform: translate(-1100px, -18px); opacity: 0; }
+#bz[data-step="b2"] :is(.shd, .tri, .cg, .bzl, .noti) { opacity: 1; }
 #bz[data-step="b2"] :is(.dia, .tri) { clip-path: inset(0 0 0 0); }
-#bz[data-step="b2"] .bub { transform: none; }
+#bz[data-step="b2"] .noti { transform: none; }
 #bz.snap, #bz.snap * { transition: none !important; }
 #tm { background: #f4f8fb; }
+/* 상태바 녹음 표시(Live activity): 아래 녹음 시간과 같은 시계로 굴러감 */
+.pill { position: absolute; left: 44px; top: 14.5px; margin: 0; display: flex; align-items: center; gap: 4px; padding: 3px 8px 3px 4px; border-radius: 10px; background: #eb3c3f; }
+:is(#tm, #bz) .pill img { position: static; width: 12px; height: 12px; }
+:is(#tm, #bz) .pill .tmr { position: static; font-weight: 600; font-size: 8.4px; line-height: 10.661px; letter-spacing: .0888px; color: #fff; }
+:is(#tm, #bz) .pill .tmr i.d { width: .58em; }
 #tm img { position: absolute; display: block; max-width: none; }
-#tm .acard { top: 235px; width: 533px; height: 618px; }
-#tm:not([data-step="tA"]) .acard { opacity: 0; }
-#stage.ready #tm[data-step="tA"] .acard { animation: cardSlide 700ms var(--ease) both; animation-delay: var(--d); }
+#tm .acard { top: 235px; height: 618px; }
+#tm .acard.dim { opacity: 0; } #tm[data-step="tA"] .acard.dim { opacity: 1; } /* 두 카드 → 시나리오 2 강조는 바로 전환 */
+#tm:not([data-step^="tA"]) .acard { opacity: 0; }
+#stage.ready #tm[data-step="tA0"] .acard:not(.dim) { animation: cardSlide 700ms var(--ease) both; animation-delay: var(--d); }
 #tm .phoneSet { opacity: 0; }
-#tm:not([data-step="tA"]) .phoneSet { opacity: 1; }
+#tm:not([data-step^="tA"]) .phoneSet { opacity: 1; }
 #stage.ready #tm[data-step="tB"] .phoneSet.head { animation: fadeOnly 500ms ease both; }
 #stage.ready #tm[data-step="tB"] .phoneSet.dev { animation: phoneUp 800ms var(--ease) 120ms both; }
 @keyframes phoneUp { from { opacity: 0; translate: 0 80px; } }
@@ -188,10 +201,10 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #tm[data-step="tD"] .flowL { transform: none; }                /* 플로우가 왼쪽에서 들어옴 */
 #tm .follow { transition: opacity 1250ms cubic-bezier(.3, 0, .2, 1); }
 #tm[data-step="tD"] .follow { opacity: 0; }
-#tm .tmr { position: absolute; font-weight: 700; line-height: 1.35; white-space: nowrap; overflow: hidden; font-variant-numeric: tabular-nums; } /* 숫자가 바뀌어도 폭이 그대로 */
-#tm .tmr i { display: inline-block; font-style: normal; text-align: center; }
-#tm .tmr i.d { width: .62em; }
-#tm .tmr i.roll { animation: roll 320ms cubic-bezier(.3, 0, .2, 1); }
+:is(#tm, #bz) .tmr { position: absolute; font-weight: 700; line-height: 1.35; white-space: nowrap; overflow: hidden; font-variant-numeric: tabular-nums; } /* 숫자가 바뀌어도 폭이 그대로 */
+.tmr i { display: inline-block; font-style: normal; text-align: center; }
+.tmr i.d { width: .62em; }
+.tmr i.roll { animation: roll 320ms cubic-bezier(.3, 0, .2, 1); }
 @keyframes roll { from { transform: translateY(60%); opacity: 0; } }
 #tm .wave { position: absolute; left: 3px; top: 292px; }
 #tm .wfade { position: absolute; top: 292px; width: 55px; height: 38px; }
@@ -673,11 +686,9 @@ html, body { height: 100%; background: #000; overflow: hidden; }
   <!-- 시나리오 (관계 맵 앞) -->
   <section class="slide" id="sc" data-step="sA">
     <img class="sct" src="assets/scn/title.png" alt="">
-    <img class="card" src="assets/scn/c1.webp" style="left:140px;--d:250ms" alt="">
-    <img class="card" src="assets/scn/c2.webp" style="left:694px;--d:380ms" alt="">
-    <img class="card" src="assets/scn/c3.webp" style="left:1248px;--d:510ms" alt="">
-    <img class="card dim" src="assets/scn/d2.webp" style="left:694px" alt="">
-    <img class="card dim" src="assets/scn/d3.webp" style="left:1248px" alt="">
+    <img class="card" src="assets/scn/k1.webp" style="left:140px;width:810px;--d:250ms" alt="">
+    <img class="card" src="assets/scn/k2.webp" style="left:970px;width:811px;--d:380ms" alt="">
+    <img class="card dim" src="assets/scn/k2d.webp" style="left:970px;width:811px" alt="">
   </section>
 
   <!-- 8~10 관계 맵 -->
@@ -747,9 +758,9 @@ html, body { height: 100%; background: #000; overflow: hidden; }
   </section>
   <!-- 마지막: 시나리오 3 → Topic Map -->
   <section class="slide" id="tm" data-step="tA">
-    <img class="acard" src="assets/tm/a1.webp" style="left:140px;--d:120ms" alt="">
-    <img class="acard" src="assets/tm/a2.webp" style="left:694px;--d:240ms" alt="">
-    <img class="acard" src="assets/tm/a3.webp" style="left:1248px;--d:360ms" alt="">
+    <img class="acard" src="assets/scn/k1.webp" style="left:140px;width:810px;--d:120ms" alt="">
+    <img class="acard" src="assets/scn/k2.webp" style="left:970px;width:811px;--d:240ms" alt="">
+    <img class="acard dim" src="assets/scn/k1d.webp" style="left:140px;width:810px" alt="">
     <img class="phoneSet head" src="assets/tm/head.png" style="left:0;top:0;width:1920px;height:230px" alt="">
     <div class="abs phoneSet dev" style="left:0;top:0;width:1920px;height:1080px">
       <img src="assets/tm/chrome.png" style="left:660px;top:250px;width:600px;height:760px" alt="">
@@ -776,6 +787,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
             <div class="tdots"><i></i><i style="animation-delay:.16s"></i><i style="animation-delay:.32s"></i></div>
           </div>
         </div>
+        <p class="pill"><img src="assets/tm/notes.svg" alt=""><span class="tmr" id="pillT">28:04</span></p>
         <i class="cam"></i>
       </div>
     </div>
@@ -783,9 +795,14 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 
   <!-- Topic Map 버뮤다 존 (피그마 295:26546) -->
   <section class="slide" id="bz" data-step="b1">
-    <img src="assets/bz/head.png" style="left:0;top:0;width:1920px;height:240px" alt="">
-    <div class="ph phL"><img src="assets/bz/phoneL.png" style="left:0;top:0;width:844px;height:641px" alt=""></div>
-    <div class="ph phR">
+    <img class="head" src="assets/bz/head.png" style="left:0;top:0;width:1920px;height:240px" alt="">
+    <div class="ph phL" style="--d:80ms">
+      <img src="assets/bz/phoneL.png" style="left:0;top:0;width:844px;height:641px" alt="">
+      <p class="pill"><img src="assets/tm/notes.svg" alt=""><span class="tmr" id="bzLp">32:01</span></p>
+      <p class="tmr btm" id="bzLt" style="left:736px;width:72px">32:01</p>
+      <i class="dot" style="left:598px;top:506.97px"></i><i class="dot" style="left:607.71px;top:506.97px;animation-delay:.18s"></i><i class="dot" style="left:617.43px;top:500.5px;animation-delay:.36s"></i>
+    </div>
+    <div class="ph phR" style="--d:260ms">
       <i class="shd"></i>
       <img src="assets/bz/phoneR.png" style="left:0;top:0;width:844px;height:641px" alt="">
       <svg class="tri" style="left:170.5px;top:242px" width="469" height="248" viewBox="0 0 469 248" fill="none">
@@ -809,8 +826,11 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <img class="cg" src="assets/bz/c1g.png" style="left:108px;top:186px;width:280px;height:104px" alt="">
       <img class="cg" src="assets/bz/c2g.png" style="left:498px;top:186px;width:280px;height:104px" alt="">
       <img class="cg" src="assets/bz/c3g.png" style="left:498px;top:457px;width:280px;height:105.5px" alt="">
+      <p class="bzl">버뮤다 발생</p>
+      <p class="pill"><img src="assets/tm/notes.svg" alt=""><span class="tmr" id="bzRp">56:08</span></p>
+      <p class="tmr btm" id="bzRt" style="left:733px;width:78px">56:08</p>
+      <img class="noti" src="assets/bz/noti.png" alt="">
     </div>
-    <p class="bub">토픽 맵에서 버뮤다 존이 감지됐어요.<br>같은 이야기가 멤돌고 있다면, 하나씩 해결해보면 어떨까요?</p>
   </section>
 </div>
 
@@ -877,12 +897,12 @@ function setChart(state) {
 }
 
 // 장 구성: 0·1 은 같은 차트 화면의 두 상태, 2 는 별도 화면
-const N = 21; // … 19·20 버뮤다 존(20 = 휴대폰 왼쪽으로 → 대각선 → 삼각형·카드 회색·안내 문구) | 15 시나리오 3, 16 잠금화면(Topic Map), 17 녹음 화면, 18 플로우 | 0·1 차트, 2 인사이트, 3 인사이트+인용문, 4~6 그리드 시스템(6 = 스켈레톤 → 그리드 사라짐 → 디자인 입힘까지 한 번에), 7~9 시나리오, 10 관계맵 개요(안건), 11 관계맵 소개(안건1 줌인), 12 관계맵, 13 '실시간 확인하기' 클로즈업(멈춤), 14 카드 선택 → 원문 재생
+const N = 22; // … 15·16 시나리오 2(두 카드 → 2 강조), 20·21 버뮤다 존 | 19·20 버뮤다 존(20 = 휴대폰 왼쪽으로 → 대각선 → 삼각형·카드 회색·안내 문구) | 15 시나리오 3, 16 잠금화면(Topic Map), 17 녹음 화면, 18 플로우 | 0·1 차트, 2 인사이트, 3 인사이트+인용문, 4~6 그리드 시스템(6 = 스켈레톤 → 그리드 사라짐 → 디자인 입힘까지 한 번에), 7~9 시나리오, 10 관계맵 개요(안건), 11 관계맵 소개(안건1 줌인), 12 관계맵, 13 '실시간 확인하기' 클로즈업(멈춤), 14 카드 선택 → 원문 재생
 // 새로고침하면 맨 첫 장, 주소의 #번호로 열면 그 장
 const reloaded = performance.getEntriesByType('navigation')[0]?.type === 'reload';
 let cur = reloaded ? 0 : Math.min(Math.max(+location.hash.slice(1) - 1 || 0, 0), N - 1);
 const chartSlide = document.getElementById('chartSlide'), s3 = document.getElementById('s3'), map = document.getElementById('map');
-const SC_STEP = { 7: 'sA', 8: 'sB', 9: 'sC' }, TM_STEP = { 15: 'tA', 16: 'tB', 17: 'tC', 18: 'tD' }, MAP_STEP = { 10: 'ov', 11: 'intro', 12: 'full', 13: 'flowA', 14: 'flowB' }, GRID_STEP = { 4: 'g1', 5: 'g2', 6: 'g3' };
+const SC_STEP = { 7: 'sA', 8: 'sB', 9: 'sC' }, TM_STEP = { 15: 'tA0', 16: 'tA', 17: 'tB', 18: 'tC', 19: 'tD' }, MAP_STEP = { 10: 'ov', 11: 'intro', 12: 'full', 13: 'flowA', 14: 'flowB' }, GRID_STEP = { 4: 'g1', 5: 'g2', 6: 'g3' };
 const G3_TO_G4 = 2700; // 미리보기 카드가 다 놓이고 그리드가 사라진 뒤 클릭 없이 바로 디자인 입히기
 const grid = document.getElementById('gs'), sc = document.getElementById('sc'), tm = document.getElementById('tm'), bz = document.getElementById('bz');
 let cutTimer, gridTimer;
@@ -985,6 +1005,19 @@ function flow(play, instant) {
 }
 
 let phoneTimers = [];
+const fmt = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+// 상단 녹음 표시와 하단 녹음 시간을 한 시계로: 1초마다 같이 넘어감
+function tick(els, start) {
+  const t0 = performance.now(); els.forEach(el => { el.innerHTML = ''; rollTo(el, fmt(start)); });
+  return setInterval(() => { const t = fmt(start + Math.floor((performance.now() - t0) / 1000)); els.forEach(el => rollTo(el, t)); }, 200);
+}
+let bzTimers = null; // 버뮤다 두 장 사이를 오가도 시간이 이어지게, 섹션에 들어올 때만 새로 시작
+function bzClock(on) {
+  if (on === !!bzTimers) return;
+  if (!on) { bzTimers.forEach(clearInterval); bzTimers = null; return; }
+  const $ = id => document.getElementById(id);
+  bzTimers = [tick([$('bzLp'), $('bzLt')], 32 * 60 + 1), tick([$('bzRp'), $('bzRt')], 56 * 60 + 8)];
+}
 // 파형: x = 1, 7, … 309 (재생 위치). 피그마 첫 모습 = 왼쪽은 조용한 점, 오른쪽 끝 10칸이 막 녹음된 소리
 const WAVE0 = [...Array(42).fill(2), 26, 38, 16, 12, 10, 8, 8, 8, 6, 4];
 let wave = WAVE0.slice(), talk = 0;
@@ -1002,14 +1035,13 @@ function rollTo(el, text) {
 function phone(step) {
   phoneTimers.forEach(clearInterval); phoneTimers = [];
   const lockT = document.getElementById('lockT'), recT = document.getElementById('recT');
-  const clock = (el, start) => { const t0 = performance.now(); el.innerHTML = ''; rollTo(el, fmt(start));
-    phoneTimers.push(setInterval(() => rollTo(el, fmt(start + Math.floor((performance.now() - t0) / 1000))), 200)); };
-  const fmt = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
-  rollTo(lockT, '28:01'); rollTo(recT, '28:04');
+  const pill = document.getElementById('pillT');
+  const clock = (els, start) => phoneTimers.push(tick(els, start));
+  rollTo(lockT, '28:01'); rollTo(recT, '28:04'); rollTo(pill, step === 'tB' ? '28:01' : '28:04');
   wave = WAVE0.slice(); talk = 0; drawWave(document.querySelector('#tm .wpast'));
-  if (step === 'tB') clock(lockT, 28 * 60 + 1);
+  if (step === 'tB') clock([lockT, pill], 28 * 60 + 1);
   if (step === 'tC' || step === 'tD') {
-    clock(recT, 28 * 60 + 4);
+    clock([recT, pill], 28 * 60 + 4);
     // 실제 녹음 바처럼: 새 소리 막대가 재생 위치(오른쪽)에서 생기고 시간이 흐르며 왼쪽으로 밀려남
     const g = document.querySelector('#tm .wpast');
     phoneTimers.push(setInterval(() => {
@@ -1019,7 +1051,7 @@ function phone(step) {
     }, 140));
   }
 }
-function show(n) { chartSlide.classList.toggle('on', n < 2); s3.classList.toggle('on', n === 2 || n === 3); grid.classList.toggle('on', n >= 4 && n <= 6); sc.classList.toggle('on', n >= 7 && n <= 9); map.classList.toggle('on', n >= 10 && n <= 14); tm.classList.toggle('on', n >= 15 && n <= 18); bz.classList.toggle('on', n >= 19); chartSlide.classList.remove('stretch'); }
+function show(n) { chartSlide.classList.toggle('on', n < 2); s3.classList.toggle('on', n === 2 || n === 3); grid.classList.toggle('on', n >= 4 && n <= 6); sc.classList.toggle('on', n >= 7 && n <= 9); map.classList.toggle('on', n >= 10 && n <= 14); tm.classList.toggle('on', n >= 15 && n <= 19); bz.classList.toggle('on', n >= 20); chartSlide.classList.remove('stretch'); }
 function setStep(el, step, snap) {
   el.classList.toggle('snap', snap);
   // 같은 상태로 다시 들어올 때만 비웠다 넣어 애니메이션을 처음부터 — 다른 상태로 갈 땐 비우면 전환이 0 에서 다시 시작해 깜빡임
@@ -1073,7 +1105,9 @@ function go(i, animate = true) {
   if (TM_STEP[cur]) setStep(tm, TM_STEP[cur], !animate);
   phone(TM_STEP[cur]);
   flow(TM_STEP[cur] === 'tD', !animate);
-  if (cur >= 19) setStep(bz, cur === 20 ? 'b2' : 'b1', !animate || cur === 19);
+  bz.classList.toggle('enter', prev === 19 && cur === 20); // 플로우 → 두 화면이 차례로 올라옴
+  if (cur >= 20) setStep(bz, cur === 21 ? 'b2' : 'b1', !animate || (prev === 21 && cur === 20));
+  bzClock(cur >= 20);
   if (SC_STEP[cur]) setStep(sc, SC_STEP[cur], !animate || (prev === 8 && cur === 9) || (prev === 9 && cur === 8));
   map.classList.toggle('enter', prev === 9 && cur === 10); // 시나리오 → 관계 맵 첫 장
   map.classList.toggle('zin', prev === 10 && cur === 11);   // 안건 1 로 줌인
