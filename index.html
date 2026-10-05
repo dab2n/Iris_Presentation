@@ -295,6 +295,17 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 @keyframes blurOn { 0%, 54.55% { opacity: 0; } 61.36%, 70.45% { opacity: 1; } 78.41%, 100% { opacity: 0; } }
 #stage.ready #map[data-step="flowB"] .thumb { animation: thumb 4400ms linear both; }
 @keyframes thumb { 0%, 53.41% { top: 0; width: 4px; height: 27px; animation-timing-function: cubic-bezier(.45, 0, .2, 1); } 82.95%, 100% { top: 153px; width: 5px; height: 28px; } }
+/* 뒤로 넘길 때도 같은 화면이라 끊기지 않게: 카메라는 거꾸로 움직이고, 사라질 것들은 서서히 */
+@keyframes outFrom1 { from { opacity: 1; } to { opacity: 0; } }
+#stage.ready #map.back[data-step="full"] #dev { animation: camOut 900ms cubic-bezier(.65, 0, .35, 1) both; }
+#stage.ready #map.back[data-step="full"] .guideSet { animation: outFrom1 350ms ease both; }
+#stage.ready #map.back[data-step="flowA"] :is(.stripB, .listB) { animation: outFrom1 350ms ease both; }
+#stage.ready #map.back[data-step="flowA"] .listMove { animation: listBack 900ms cubic-bezier(.65, 0, .35, 1) both; }
+@keyframes listBack { from { translate: 0 -2136.5px; } }
+#stage.ready #map.back[data-step="flowA"] .thumb { animation: thumbBack 900ms cubic-bezier(.65, 0, .35, 1) both; }
+@keyframes thumbBack { from { top: 153px; width: 5px; height: 28px; } }
+#stage.ready #map.back[data-step="flowA"] #cur { animation: curBack 900ms cubic-bezier(.65, 0, .35, 1) both; }
+@keyframes curBack { from { translate: -122.12px -131.74px; } }
 /* 실시간 하이라이트: 발언 카드 색(지금 말하는 사람) + 어절 네모(지금 말하는 어절) — JS 가 음성 진행에 맞춰 옮김 */
 .listB { mix-blend-mode: multiply; } /* 묶음째 곱하기 → 아래 원문 글자가 그대로 보임 */
 .listB .rowHi, .listB .wordHi { position: absolute; }
@@ -1011,7 +1022,8 @@ function phone(step) {
 function show(n) { chartSlide.classList.toggle('on', n < 2); s3.classList.toggle('on', n === 2 || n === 3); grid.classList.toggle('on', n >= 4 && n <= 6); sc.classList.toggle('on', n >= 7 && n <= 9); map.classList.toggle('on', n >= 10 && n <= 14); tm.classList.toggle('on', n >= 15 && n <= 18); bz.classList.toggle('on', n >= 19); chartSlide.classList.remove('stretch'); }
 function setStep(el, step, snap) {
   el.classList.toggle('snap', snap);
-  el.dataset.step = ''; el.offsetWidth; // 같은 장으로 돌아와도 애니메이션을 처음부터 다시
+  // 같은 상태로 다시 들어올 때만 비웠다 넣어 애니메이션을 처음부터 — 다른 상태로 갈 땐 비우면 전환이 0 에서 다시 시작해 깜빡임
+  if (el.dataset.step === step) { el.dataset.step = ''; el.offsetWidth; }
   el.dataset.step = step;
   el.offsetWidth; requestAnimationFrame(() => el.classList.remove('snap'));
 }
@@ -1066,6 +1078,7 @@ function go(i, animate = true) {
   map.classList.toggle('enter', prev === 9 && cur === 10); // 시나리오 → 관계 맵 첫 장
   map.classList.toggle('zin', prev === 10 && cur === 11);   // 안건 1 로 줌인
   map.classList.toggle('zout', prev === 11 && cur === 10);  // 다시 안건 카드로 줌아웃
+  map.classList.toggle('back', (prev === 13 && cur === 12) || (prev === 14 && cur === 13)); // 클로즈업·재생에서 뒤로
   play(MAP_STEP[cur] === 'flowB', animate ? 2350 : 0);
   if (MAP_STEP[cur]) setStep(map, MAP_STEP[cur], !animate || prev < 10); // 관계 맵으로 처음 들어올 땐 바로 그 상태로
   if (cur < 2) setChart(cur);
