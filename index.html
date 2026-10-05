@@ -64,11 +64,9 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 /* ── AI Logic Design ── */
 #lg { background: #f4f8fb; overflow: hidden; }
 #lg img { position: absolute; display: block; max-width: none; }
-#lg .r { transition: translate 1000ms cubic-bezier(.65, 0, .35, 1), opacity 700ms ease; }
-#lg :is(.algo, .anat) { translate: 0 640px; opacity: 0; }
-#lg[data-step="l2"] .jr { translate: 0 -640px; opacity: 0; }
-#lg[data-step="l2"] :is(.algo, .anat) { translate: 0 0; opacity: 1; }
-#lg[data-step="l2"] .anat { transition-delay: 90ms; }
+#lg .col { position: absolute; inset: 0; transition: translate 1500ms cubic-bezier(.65, 0, .35, 1); }
+#lg[data-step="l2"] .col { translate: 0 -1030px; } /* 표들이 한 열로 이어져 있어 위로 올라가는 동안 다음 표가 아래에서 함께 올라옴 */
+#lg .jr { -webkit-mask-image: linear-gradient(#000 92%, transparent); mask-image: linear-gradient(#000 92%, transparent); } /* 피그마에서도 화면 밖은 잘려 있어 끝을 흐리게 */
 #stage.ready #lg.enter[data-step="l1"] .left { animation: slideUp 700ms var(--ease) both; }
 #stage.ready #lg.enter[data-step="l1"] .jr { animation: slideUp 800ms var(--ease) 200ms both; }
 #lg.snap, #lg.snap * { transition: none !important; animation: none !important; }
@@ -219,10 +217,10 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #bz .bzl { position: absolute; left: 471px; top: 327px; margin: 0; font-weight: 600; font-size: 16px; line-height: 1.45; color: #859dba; white-space: nowrap; opacity: 0; transition: opacity 500ms ease 2250ms; }
 #bz .lens { left: 627px; top: 17.434px; width: 19.545px; height: 19.545px; } /* 같은 목업이라 렌즈도 같은 자리 */
 #bz .noti { left: 28px; top: 51px; width: 374px; height: 140px; border-radius: 24px; box-shadow: 0 8px 25.4px rgba(0, 0, 0, .2); opacity: 0; transform: translateY(-36px);
-  transition: transform 650ms cubic-bezier(.3, 0, .2, 1) 2000ms, opacity 400ms ease 2000ms; }
-#bz:is([data-step="b2"], [data-step="b3"]) :is(.tri, .cg, .noti) { opacity: 1; }
+  transition: transform 650ms cubic-bezier(.3, 0, .2, 1) 1000ms, opacity 400ms ease 1000ms; }
+#bz:is([data-step="b2"], [data-step="b3"]) :is(.tri, .cg) { opacity: 1; } #bz[data-step="b3"] .noti { opacity: 1; }
 #bz:is([data-step="b2"], [data-step="b3"]) :is(.dia, .tri) { clip-path: inset(0 0 0 0); }
-#bz:is([data-step="b2"], [data-step="b3"]) .noti { transform: none; }
+#bz[data-step="b3"] .noti { transform: none; } /* 줌인이 끝난 뒤 위에서 내려옴 */
 #bz.snap, #bz.snap * { transition: none !important; }
 #tm { background: #f4f8fb; }
 /* 상태바 녹음 표시(Live activity): 아래 녹음 시간과 같은 시계로 굴러감 */
@@ -657,9 +655,11 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 
   <!-- AI Logic Design (피그마 317:33341): 왼쪽은 고정, 오른쪽만 한 페이지를 스크롤하듯 위로 -->
   <section class="slide" id="lg" data-step="l1">
-    <img class="r jr" src="assets/lg/jr.webp" style="left:660px;top:72px;width:1180px;height:1008px" alt="">
-    <img class="r algo" src="assets/lg/algo.webp" style="left:660px;top:80px;width:1180px;height:453px" alt="">
-    <img class="r anat" src="assets/lg/anat.webp" style="left:660px;top:558px;width:1180px;height:522px" alt="">
+    <div class="col">
+      <img class="jr" src="assets/lg/jr.webp" style="left:660px;top:72px;width:1180px;height:1008px" alt="">
+      <img src="assets/lg/algo.webp" style="left:660px;top:1110px;width:1180px;height:453px" alt="">
+      <img src="assets/lg/anat.webp" style="left:660px;top:1588px;width:1180px;height:522px" alt="">
+    </div>
     <img class="fade" src="assets/lg/fade.png" style="left:56px;top:971px;width:1919px;height:109px" alt="">
     <img class="left" src="assets/lg/left.png" style="left:0;top:0;width:640px;height:1080px" alt="">
   </section>
