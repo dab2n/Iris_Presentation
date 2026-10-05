@@ -603,6 +603,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
     <img data-k="s16" src="assets/st/s16.webp" alt="">
     <img data-k="s35" src="assets/st/s35.webp" alt="">
     <img data-k="s36" src="assets/st/s36.webp" alt="">
+    <img data-k="s37a" src="assets/st/s37a.webp" alt="">
     <img data-k="s37" src="assets/st/s37.webp" alt="">
   </section>
 
@@ -995,13 +996,13 @@ function setChart(state) {
 }
 
 // 장 구성: 0·1 은 같은 차트 화면의 두 상태, 2 는 별도 화면
-const N = 37; // 피그마 '발표용' 섹션(229:15335) 순서 그대로. 애니메이션이 있는 장은 OLD 표로 예전 번호에 연결
+const N = 38; // 피그마 '발표용' 섹션(229:15335) 순서 그대로. 애니메이션이 있는 장은 OLD 표로 예전 번호에 연결
 // OLD[새 번호] = 예전 22장 덱 번호(-1 = 그림만 있는 장). 0·1 차트, 2·3 인사이트, 4~6 그리드, 7~9 시나리오 1, 10~14 Flow Map, 15~19 시나리오 2·Topic Map, 20·21 버뮤다
-const OLD = [-1, -1, -1, 0, 1, 2, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4, 5, 6, ...Array.from({ length: 15 }, (_, k) => 7 + k), -1, -1, -1];
+const OLD = [-1, -1, -1, 0, 1, 2, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4, 5, 6, ...Array.from({ length: 15 }, (_, k) => 7 + k), -1, -1, -1, -1];
 // 배경이 같은 장으로 넘어올 때: 바뀐 띠(위→아래)만 옛 내용을 덮고 새 내용이 아래에서 올라옴. base = 깔고 시작할 앞 장 그림(없으면 배경색)
-const ST_FX = {"13":{"base":"s13","bg":"#f4f8fb","b":[[600,66,1320,200],[116,244,671,620],[683,244,1237,620],[1249,244,1804,620],[116,628,671,1004],[683,628,1237,1004],[1249,628,1804,1004]]},"34":{"base":null,"bg":"#f4f8fb","b":[[0,0,1854,1080]]},"35":{"base":null,"bg":"#f4f8fb","b":[[905,75,1013,116],[148,174,1643,1015]]}};
-// 클릭 없이 다음 장으로 이어짐: g1 축·칸 → 유동 그리드, Flow Map 첫 장 → 안건 1 줌인, 시나리오 2 두 카드 → 오른쪽 강조
-const AUTO = { 16: 4300, 22: 3300, 27: 1800 };
+const ST_FX = {"13":{"base":"s13","bg":"#f4f8fb","b":[[600,66,1320,200],[116,244,671,620],[683,244,1237,620],[1249,244,1804,620],[116,628,671,1004],[683,628,1237,1004],[1249,628,1804,1004]]},"34":{"base":null,"bg":"#f4f8fb","b":[[0,0,1854,1080]]},"35":{"base":null,"bg":"#f4f8fb","b":[[905,75,1013,116],[148,174,1643,1015]]},"36":{"base":null,"bg":"#0b0d0d","b":[[75,462,232,532],[74,544,652,588],[74,588,420,630]]},"37":{"base":"s37a","bg":"#0b0d0d","b":[[1360,375,1855,705]],"soft":1}};
+// 클릭 없이 다음 장으로 이어짐: g1 축·칸 → 유동 그리드, 시나리오 2 두 카드 → 오른쪽 강조
+const AUTO = { 16: 4300, 27: 1800 }; // Flow Map 줌인은 클릭으로
 let autoTimer;
 function stFx(n) {
   st.querySelectorAll('.fx').forEach(e => e.remove());
@@ -1017,13 +1018,15 @@ function stFx(n) {
     im.style.clipPath = `inset(${y0}px ${1920 - x1}px ${1080 - y1}px ${x0}px)`;
     st.append(cv, im);
     if (f.base) cv.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: k * 90, fill: 'both' });
-    const a = im.animate([{ opacity: 0, translate: '0 36px' }, { opacity: 1, translate: '0 0' }], { duration: 650, delay: 120 + k * 110, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'both' });
-    end = Math.max(end, 120 + k * 110 + 650);
+    const dur = f.soft ? 1400 : 650; // soft: 제자리에서 천천히 떠오름(E.O.D 로고)
+    im.animate(f.soft ? [{ opacity: 0, scale: .985 }, { opacity: 1, scale: 1 }] : [{ opacity: 0, translate: '0 36px' }, { opacity: 1, translate: '0 0' }],
+      { duration: dur, delay: 120 + k * 110, easing: f.soft ? 'cubic-bezier(.33, 0, .2, 1)' : 'cubic-bezier(.22, 1, .36, 1)', fill: 'both' });
+    end = Math.max(end, 120 + k * 110 + dur);
   });
   setTimeout(() => { if (cur !== n) return; imgs.forEach(im => im.classList.toggle('on', im.dataset.k === key)); st.querySelectorAll('.fx').forEach(e => e.remove()); }, end + 50);
 }
 const PP_STEP = { 7: 'p0', 8: 'p1', 9: 'p2', 10: 'p3' };
-const STATIC = { 0: 's01', 1: 's02', 2: 's03', 11: 's12', 12: 's13', 13: 's14', 14: 's15', 15: 's16', 34: 's35', 35: 's36', 36: 's37' };
+const STATIC = { 0: 's01', 1: 's02', 2: 's03', 11: 's12', 12: 's13', 13: 's14', 14: 's15', 15: 's16', 34: 's35', 35: 's36', 36: 's37a', 37: 's37' }; // 37·38 E.O.D: 글자 먼저 → 클릭하면 Iris 로고
 // 새로고침하면 맨 첫 장, 주소의 #번호로 열면 그 장
 const reloaded = performance.getEntriesByType('navigation')[0]?.type === 'reload';
 let cur = reloaded ? 0 : Math.min(Math.max(+location.hash.slice(1) - 1 || 0, 0), N - 1);
