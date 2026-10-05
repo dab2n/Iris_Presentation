@@ -42,6 +42,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #stage.ready #s3.on .drop { animation: drop 700ms var(--ease) both; animation-delay: var(--r, 0ms); }
 @keyframes drop { from { opacity: 0; translate: 0 -30px; } }
 /* 패턴: 아래 줄부터 한 줄씩 다다닥 차오름 (줄 간격 17.82px, 16단계) */
+#s3 .crosses { clip-path: inset(186.74px 0 0 0); } #stage:not(.ready) #s3 .crosses { clip-path: none; } /* 애니메이션이 붙기 전 한 프레임에 보이던 깜빡임 방지 */
 #stage.ready #s3.on .crosses { animation: fillUp 480ms steps(12, jump-none) 420ms both; }
 @keyframes fillUp { from { clip-path: inset(186.74px 0 0 0); } to { clip-path: inset(0 0 0 0); } }
 
@@ -63,7 +64,15 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #st { background: #000; }
 #st img { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: none; }
 #st img.on { display: block; }
+#st .fx { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
 #chartSlide .note { left: 1612px; top: 488px; width: 187px; margin: 0; font-weight: 400; font-size: 24px; line-height: 1.4; letter-spacing: -.96px; color: #bebebe; text-align: right; white-space: nowrap; }
+#stage.ready #chartSlide.enter :is(.eyebrow, .title, .legend, .note) { animation: slideUp 700ms var(--ease) both; animation-delay: var(--sd, 0ms); }
+#stage.ready #chartSlide.enter .title { --sd: 80ms; } #stage.ready #chartSlide.enter :is(.legend, .note) { --sd: 260ms; }
+#stage.ready #chartSlide.enter .col .label { animation: slideUp 600ms var(--ease) both; animation-delay: calc(380ms + var(--ci) * 90ms); }
+#stage.ready #chartSlide.enter .col .bars { animation: barUp 800ms cubic-bezier(.65, 0, .35, 1) both; animation-delay: calc(520ms + var(--ci) * 110ms); }
+#stage.ready #chartSlide.enter .col .p0 { animation: fadeOnly 400ms ease both; animation-delay: calc(1150ms + var(--ci) * 110ms); }
+@keyframes barUp { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+@keyframes slideUp { from { opacity: 0; translate: 0 40px; } }
 #chartSlide .band { left: 0; top: 448px; width: 1920px; height: 632px; background: #f5f5f5; }
 #chartSlide .eyebrow { color: #848484; }
 #chartSlide .title { top: 167px; line-height: 1.4; }
@@ -154,6 +163,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #stage.ready #bz.enter[data-step="b1"] .ph { animation: phoneUp 800ms var(--ease) both; animation-delay: var(--d); }
 #stage.ready #bz.enter[data-step="b1"] .head { animation: fadeOnly 500ms ease both; }
 #bz .pill { left: 52px; top: 18.5px; }
+#tm #recT, #tm #lockT, #bz .btm { padding: 0 6px; margin: 0 -6px; } /* 숫자 글리프가 칸 밖으로 살짝 나와도 안 잘리게 */
 #bz .btm { top: 559px; font-size: 28px; letter-spacing: -.56px; color: #141a1a; text-align: center; }
 #bz .dot { position: absolute; width: 4.32px; height: 4.32px; border-radius: 50%; background: #c0ceed; animation: typing 1.2s ease-in-out infinite; }
 #bz .shd { position: absolute; inset: 0; border-radius: 13px; box-shadow: 25.92px 25px 57.2px 1px rgba(0, 0, 0, .25); opacity: 0; transition: opacity 700ms ease 300ms; }
@@ -440,9 +450,9 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 }
 
 /* g3: 2번 그리드가 남아 있는 채로 미리보기 카드가 왼쪽 위부터 → 그 뒤 그리드가 천천히 사라짐 */
-#stage.ready #gs[data-step="g3"] .pv { animation: pop 450ms var(--ease) both; animation-delay: var(--d); }
+#stage.ready #gs[data-step="g3"] .pv { animation: pop 400ms var(--ease) both; animation-delay: calc(var(--d) * .7); }
 @keyframes pop { from { opacity: 0; scale: .9; } }
-#stage.ready #gs[data-step="g3"] :is(.row, .col) { animation: gridOut 1400ms ease-in-out 1200ms both; }
+#stage.ready #gs[data-step="g3"] :is(.row, .col) { animation: gridOut 1000ms ease-in-out 800ms both; }
 @keyframes gridOut { from { opacity: 1; } to { opacity: 0; } }
 
 /* g4: 보드 무늬 → 카드 UI 가 차례로 입혀지고, 카드와 카드 사이 연결선이 흐름을 따라 그려짐 → 마지막 선은 아래로 길게 */
@@ -450,7 +460,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #stage.ready #gs[data-step="g4"] .card { animation: dress 400ms var(--ease) both; animation-delay: var(--d); }
 #gb .card .ui { position: absolute; inset: 0; }
 /* 카드 안 UI: 부드러운 가장자리로 왼쪽에서 오른쪽으로 슥 스와이프되며 나타남 */
-#stage.ready #gs[data-step="g4"] .card .ui { animation: swipe 650ms cubic-bezier(.33, 1, .68, 1) both; animation-delay: calc(var(--d) + 150ms);
+#stage.ready #gs[data-step="g4"] .card .ui { animation: swipe 650ms cubic-bezier(.33, 1, .68, 1) both; animation-delay: calc(var(--d) + 60ms);
   -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 60%); mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
   -webkit-mask-size: 250% 100%; mask-size: 250% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
 @keyframes swipe {
@@ -630,26 +640,26 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <div class="col" style="left:777px;--d:1005ms;--k:col4"></div>
       <!-- 실제 보드 무늬는 미리보기 카드 아래에 깔림 -->
       <img class="fin finBoard" src="assets/grid/board.png" style="left:0;top:0;width:1050px;height:673px" alt="">
-      <div class="pv" style="left:27px;top:40px;width:236px;height:60px;background:rgba(74,87,108,.4);--d:250ms;--e:250ms"><i class="sk" style="left:12.0px;top:14.0px;width:44.5px;height:7px;background:rgba(255,255,255,.4)"></i><i class="sk" style="left:12.5px;top:33.2px;width:183.0px;height:9px;background:rgba(255,255,255,.4)"></i></div>
-      <div class="pv" style="left:27px;top:113px;width:236px;height:151px;--d:390ms;--e:550ms"><i class="sk" style="left:18.0px;top:18.5px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.0px;top:54.5px;width:170.0px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.0px;top:75.8px;width:84.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.5px;top:102.0px;width:189.5px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.5px;top:120.0px;width:61.0px;height:7px;background:rgba(100,113,133,.2)"></i></div>
-      <div class="pv" style="left:277px;top:113px;width:236px;height:151px;--d:530ms;--e:850ms"><i class="sk" style="left:20.0px;top:18.0px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:54.2px;width:179.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:75.8px;width:81.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:101.5px;width:177.5px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:119.8px;width:136.5px;height:7px;background:rgba(100,113,133,.2)"></i></div>
-      <div class="pv" style="left:277px;top:282px;width:236px;height:130px;--d:670ms;--e:1150ms"><i class="sk" style="left:20.0px;top:18.0px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:21.0px;top:54.5px;width:190.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:80.5px;width:189.0px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:98.5px;width:166.0px;height:7px;background:rgba(100,113,133,.2)"></i></div>
-      <div class="pv" style="left:277px;top:430px;width:236px;height:130px;--d:810ms;--e:1450ms"><i class="sk" style="left:20.0px;top:18.0px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.0px;top:54.5px;width:83.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:80.5px;width:194.0px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:98.8px;width:151.5px;height:7px;background:rgba(100,113,133,.2)"></i></div>
-      <div class="pv" style="left:777px;top:430px;width:236px;height:130px;background:rgba(83,122,185,.2);--d:950ms;--e:1800ms"><i class="sk" style="left:19.0px;top:37.5px;width:25.0px;height:7px;background:rgba(83,122,185,.22)"></i><i class="sk" style="left:19.5px;top:65.2px;width:187.0px;height:9px;background:rgba(83,122,185,.22)"></i><i class="sk" style="left:19.5px;top:86.8px;width:95.5px;height:9px;background:rgba(83,122,185,.22)"></i></div>
-      <img class="ln v" src="assets/grid/L1.png" style="left:143px;top:100px;width:12px;height:13px;--d:500ms;--t:150ms" alt="">
-      <img class="ln h" src="assets/grid/L2.png" style="left:261px;top:181px;width:18px;height:14px;--d:800ms;--t:150ms" alt="">
-      <img class="ln v" src="assets/grid/L3a.png" style="left:390px;top:263px;width:12px;height:19px;--d:1100ms;--t:120ms" alt="">
-      <img class="ln v" src="assets/grid/L3b.png" style="left:390px;top:411px;width:12px;height:19px;--d:1400ms;--t:120ms" alt="">
-      <img class="ln h" src="assets/grid/L4.png" style="left:515px;top:488px;width:261px;height:12px;--d:1700ms;--t:220ms" alt="">
-      <img class="ln v" src="assets/grid/L5.png" style="left:903px;top:551px;width:12px;height:122px;--d:2100ms;--t:700ms" alt="">
-      <div class="card" style="left:25px;top:38px;width:240px;height:64px;--d:250ms">
+      <div class="pv" style="left:27px;top:40px;width:236px;height:60px;background:rgba(74,87,108,.4);--d:250ms;--e:129ms"><i class="sk" style="left:12.0px;top:14.0px;width:44.5px;height:7px;background:rgba(255,255,255,.4)"></i><i class="sk" style="left:12.5px;top:33.2px;width:183.0px;height:9px;background:rgba(255,255,255,.4)"></i></div>
+      <div class="pv" style="left:27px;top:113px;width:236px;height:151px;--d:390ms;--e:129ms"><i class="sk" style="left:18.0px;top:18.5px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.0px;top:54.5px;width:170.0px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.0px;top:75.8px;width:84.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.5px;top:102.0px;width:189.5px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.5px;top:120.0px;width:61.0px;height:7px;background:rgba(100,113,133,.2)"></i></div>
+      <div class="pv" style="left:277px;top:113px;width:236px;height:151px;--d:530ms;--e:209ms"><i class="sk" style="left:20.0px;top:18.0px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:54.2px;width:179.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:75.8px;width:81.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:101.5px;width:177.5px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:119.8px;width:136.5px;height:7px;background:rgba(100,113,133,.2)"></i></div>
+      <div class="pv" style="left:277px;top:282px;width:236px;height:130px;--d:670ms;--e:209ms"><i class="sk" style="left:20.0px;top:18.0px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:21.0px;top:54.5px;width:190.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:80.5px;width:189.0px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:98.5px;width:166.0px;height:7px;background:rgba(100,113,133,.2)"></i></div>
+      <div class="pv" style="left:277px;top:430px;width:236px;height:130px;--d:810ms;--e:209ms"><i class="sk" style="left:20.0px;top:18.0px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.0px;top:54.5px;width:83.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:80.5px;width:194.0px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:98.8px;width:151.5px;height:7px;background:rgba(100,113,133,.2)"></i></div>
+      <div class="pv" style="left:777px;top:430px;width:236px;height:130px;background:rgba(83,122,185,.2);--d:950ms;--e:369ms"><i class="sk" style="left:19.0px;top:37.5px;width:25.0px;height:7px;background:rgba(83,122,185,.22)"></i><i class="sk" style="left:19.5px;top:65.2px;width:187.0px;height:9px;background:rgba(83,122,185,.22)"></i><i class="sk" style="left:19.5px;top:86.8px;width:95.5px;height:9px;background:rgba(83,122,185,.22)"></i></div>
+      <img class="ln v" src="assets/grid/L1.png" style="left:143px;top:100px;width:12px;height:13px;--d:420ms;--t:150ms" alt="">
+      <img class="ln h" src="assets/grid/L2.png" style="left:261px;top:181px;width:18px;height:14px;--d:480ms;--t:150ms" alt="">
+      <img class="ln v" src="assets/grid/L3a.png" style="left:390px;top:263px;width:12px;height:19px;--d:540ms;--t:120ms" alt="">
+      <img class="ln v" src="assets/grid/L3b.png" style="left:390px;top:411px;width:12px;height:19px;--d:600ms;--t:120ms" alt="">
+      <img class="ln h" src="assets/grid/L4.png" style="left:515px;top:488px;width:261px;height:12px;--d:660ms;--t:220ms" alt="">
+      <img class="ln v" src="assets/grid/L5.png" style="left:903px;top:551px;width:12px;height:122px;--d:820ms;--t:600ms" alt="">
+      <div class="card" style="left:25px;top:38px;width:240px;height:64px;--d:128ms">
         <img class="shell" src="assets/grid/issue_shell.png" style="left:0;top:0;width:240px;height:64px" alt="">
         <div class="ui">
           <img class="tl" src="assets/grid/issue_t0.png" style="left:12.0px;top:11.5px;width:50.5px;height:16.0px" alt="">
           <img class="tl" src="assets/grid/issue_t1.png" style="left:12.5px;top:30.5px;width:189.0px;height:18.5px" alt="">
         </div>
       </div>
-      <div class="card" style="left:25px;top:111px;width:238.4px;height:155px;--d:550ms">
+      <div class="card" style="left:25px;top:111px;width:238.4px;height:155px;--d:128ms">
         <img class="shell" src="assets/grid/c1_shell.png" style="left:0;top:0;width:238.4px;height:155px" alt="">
         <div class="ui">
           <img class="av" src="assets/grid/c1_av.png" style="left:18.0px;top:18.5px;width:28.5px;height:28.0px" alt="">
@@ -659,7 +669,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
           <img class="tl" src="assets/grid/c1_t3.png" style="left:18.5px;top:117.5px;width:67.0px;height:16.0px" alt="">
         </div>
       </div>
-      <div class="card" style="left:277px;top:111px;width:238.4px;height:154.6px;--d:850ms">
+      <div class="card" style="left:277px;top:111px;width:238.4px;height:154.6px;--d:209ms">
         <img class="shell" src="assets/grid/c2_shell.png" style="left:0;top:0;width:238.4px;height:154.6px" alt="">
         <div class="ui">
           <img class="av" src="assets/grid/c2_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
@@ -669,7 +679,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
           <img class="tl" src="assets/grid/c2_t3.png" style="left:18.5px;top:117.0px;width:142.5px;height:16.5px" alt="">
         </div>
       </div>
-      <div class="card" style="left:277px;top:280px;width:238.4px;height:133.6px;--d:1150ms">
+      <div class="card" style="left:277px;top:280px;width:238.4px;height:133.6px;--d:209ms">
         <img class="shell" src="assets/grid/c3_shell.png" style="left:0;top:0;width:238.4px;height:133.6px" alt="">
         <div class="ui">
           <img class="av" src="assets/grid/c3_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
@@ -678,7 +688,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
           <img class="tl" src="assets/grid/c3_t2.png" style="left:18.5px;top:96.0px;width:172.0px;height:16.0px" alt="">
         </div>
       </div>
-      <div class="card" style="left:277px;top:428px;width:238.4px;height:133.6px;--d:1450ms">
+      <div class="card" style="left:277px;top:428px;width:238.4px;height:133.6px;--d:209ms">
         <img class="shell" src="assets/grid/c4_shell.png" style="left:0;top:0;width:238.4px;height:133.6px" alt="">
         <div class="ui">
           <img class="av" src="assets/grid/c4_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
@@ -687,7 +697,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
           <img class="tl" src="assets/grid/c4_t2.png" style="left:18.5px;top:96.0px;width:157.5px;height:16.5px" alt="">
         </div>
       </div>
-      <div class="card" style="left:776px;top:439px;width:238.4px;height:112.5px;--d:1800ms">
+      <div class="card" style="left:776px;top:439px;width:238.4px;height:112.5px;--d:368ms">
         <img class="shell" src="assets/grid/concl_shell.png" style="left:0;top:0;width:238.4px;height:112.5px" alt="">
         <div class="ui">
           <img class="tl" src="assets/grid/concl_t0.png" style="left:18.0px;top:24.0px;width:31.0px;height:16.0px" alt="">
@@ -823,7 +833,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
     <div class="ph phL" style="--d:80ms">
       <img src="assets/bz/phoneL.png" style="left:0;top:0;width:844px;height:641px" alt="">
       <p class="pill"><img src="assets/tm/notes.svg" alt=""><span class="tmr" id="bzLp">32:01</span></p>
-      <p class="tmr btm" id="bzLt" style="left:736px;width:72px">32:01</p>
+      <p class="tmr btm" id="bzLt" style="left:727px;width:90px">32:01</p>
       <i class="dot" style="left:598px;top:506.97px"></i><i class="dot" style="left:607.71px;top:506.97px;animation-delay:.18s"></i><i class="dot" style="left:617.43px;top:500.5px;animation-delay:.36s"></i>
     </div>
     <div class="ph phR" style="--d:260ms">
@@ -852,7 +862,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <img class="cg" src="assets/bz/c3g.png" style="left:498px;top:457px;width:280px;height:105.5px" alt="">
       <p class="bzl">버뮤다 발생</p>
       <p class="pill"><img src="assets/tm/notes.svg" alt=""><span class="tmr" id="bzRp">56:08</span></p>
-      <p class="tmr btm" id="bzRt" style="left:733px;width:78px">56:08</p>
+      <p class="tmr btm" id="bzRt" style="left:727px;width:90px">56:08</p>
       <img class="noti" src="assets/bz/noti.png" alt="">
     </div>
   </section>
@@ -882,7 +892,7 @@ function diffMarkup(a, b) {
 
 const chart = document.getElementById('chart');
 chart.innerHTML = COLS.map((c, i) => `
-  <div class="col" style="--d:${TEXT_LEAD + i * STAGGER}ms;--fd:${FADE}ms;--pd:${FADE + i * PSTEP}ms;--rx:${c.g[0]};--ry:${c.g[1]}">
+  <div class="col" style="--ci:${i};--d:${TEXT_LEAD + i * STAGGER}ms;--fd:${FADE}ms;--pd:${FADE + i * PSTEP}ms;--rx:${c.g[0]};--ry:${c.g[1]}">
     <div class="bars"><div class="seg p"></div><div class="seg n"></div><div class="seg m"></div></div>
     <p class="label">${diffMarkup(c.label[0], c.label[1])}</p>
     <p class="pct p0" style="left:${c.s[0][3]}px;top:${c.s[0][4]}px">${c.s[0][2]}</p>
@@ -924,13 +934,37 @@ function setChart(state) {
 const N = 37; // 피그마 '발표용' 섹션(229:15335) 순서 그대로. 애니메이션이 있는 장은 OLD 표로 예전 번호에 연결
 // OLD[새 번호] = 예전 22장 덱 번호(-1 = 그림만 있는 장). 0·1 차트, 2·3 인사이트, 4~6 그리드, 7~9 시나리오 1, 10~14 Flow Map, 15~19 시나리오 2·Topic Map, 20·21 버뮤다
 const OLD = [-1, -1, -1, 0, 1, 2, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4, 5, 6, ...Array.from({ length: 15 }, (_, k) => 7 + k), -1, -1, -1];
+// 배경이 같은 장으로 넘어올 때: 바뀐 띠(위→아래)만 옛 내용을 덮고 새 내용이 아래에서 올라옴. base = 깔고 시작할 앞 장 그림(없으면 배경색)
+const ST_FX = {"7":{"base":null,"bg":"#fcfcfc","b":[[888,78,1031,119],[341,156,1581,214],[217,228,1751,287],[151,298,1761,367]]},"8":{"base":"s08","bg":"#fcfcfc","b":[[340,156,991,214],[217,229,1165,287],[151,298,1165,368],[195,479,1388,546],[193,562,1814,963]]},"9":{"base":"s09","bg":"#fcfcfc","b":[[340,156,1582,214],[217,228,1751,287],[151,298,1761,368],[195,479,1388,546],[193,562,1814,963]]},"10":{"base":"s10","bg":"#fcfcfc","b":[[1520,156,1582,214],[1350,228,1751,285],[1340,298,1761,368]]},"13":{"base":"s13","bg":"#f4f8fb","b":[[600,66,1320,200],[116,244,671,620],[683,244,1237,620],[1249,244,1804,620],[116,628,671,1004],[683,628,1237,1004],[1249,628,1804,1004]]},"34":{"base":null,"bg":"#f4f8fb","b":[[0,0,1854,1080]]},"35":{"base":null,"bg":"#f4f8fb","b":[[905,75,1013,116],[148,174,1643,1015]]}};
+// 클릭 없이 다음 장으로 이어짐: g1 축·칸 → 유동 그리드, Flow Map 첫 장 → 안건 1 줌인, 시나리오 2 두 카드 → 오른쪽 강조
+const AUTO = { 16: 4300, 22: 3300, 27: 1800 };
+let autoTimer;
+function stFx(n) {
+  st.querySelectorAll('.fx').forEach(e => e.remove());
+  const f = ST_FX[n]; if (!f) return;
+  const key = STATIC[n], src = `assets/st/${key}.webp`, imgs = st.querySelectorAll('img[data-k]');
+  imgs.forEach(im => im.classList.toggle('on', im.dataset.k === f.base));
+  st.style.background = f.bg;
+  let end = 0;
+  f.b.forEach(([x0, y0, x1, y1], k) => {
+    const cv = document.createElement('div'); cv.className = 'fx';
+    cv.style.cssText = `left:${x0}px;top:${y0}px;width:${x1 - x0}px;height:${y1 - y0}px;background:${f.bg}`;
+    const im = document.createElement('img'); im.className = 'fx'; im.src = src;
+    im.style.clipPath = `inset(${y0}px ${1920 - x1}px ${1080 - y1}px ${x0}px)`;
+    st.append(cv, im);
+    if (f.base) cv.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: k * 90, fill: 'both' });
+    const a = im.animate([{ opacity: 0, translate: '0 36px' }, { opacity: 1, translate: '0 0' }], { duration: 650, delay: 120 + k * 110, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'both' });
+    end = Math.max(end, 120 + k * 110 + 650);
+  });
+  setTimeout(() => { if (cur !== n) return; imgs.forEach(im => im.classList.toggle('on', im.dataset.k === key)); st.querySelectorAll('.fx').forEach(e => e.remove()); }, end + 50);
+}
 const STATIC = { 0: 's01', 1: 's02', 2: 's03', 7: 's08', 8: 's09', 9: 's10', 10: 's08', 11: 's12', 12: 's13', 13: 's14', 14: 's15', 15: 's16', 34: 's35', 35: 's36', 36: 's37' };
 // 새로고침하면 맨 첫 장, 주소의 #번호로 열면 그 장
 const reloaded = performance.getEntriesByType('navigation')[0]?.type === 'reload';
 let cur = reloaded ? 0 : Math.min(Math.max(+location.hash.slice(1) - 1 || 0, 0), N - 1);
 const chartSlide = document.getElementById('chartSlide'), s3 = document.getElementById('s3'), map = document.getElementById('map');
 const SC_STEP = { 7: 'sA', 8: 'sB', 9: 'sC' }, TM_STEP = { 15: 'tA0', 16: 'tA', 17: 'tB', 18: 'tC', 19: 'tD' }, MAP_STEP = { 10: 'ov', 11: 'intro', 12: 'full', 13: 'flowA', 14: 'flowB' }, GRID_STEP = { 4: 'g1', 5: 'g2', 6: 'g3' };
-const G3_TO_G4 = 2700; // 미리보기 카드가 다 놓이고 그리드가 사라진 뒤 클릭 없이 바로 디자인 입히기
+const G3_TO_G4 = 1900; // 미리보기 카드가 다 놓이고 그리드가 사라진 뒤 클릭 없이 바로 디자인 입히기
 const st = document.getElementById('st'), grid = document.getElementById('gs'), sc = document.getElementById('sc'), tm = document.getElementById('tm'), bz = document.getElementById('bz');
 let cutTimer, gridTimer;
 // Topic Map 휴대폰: 녹음 시간은 자릿수별로 굴러가며 흐르고(프로토타입 RollNum), 파형 막대는 출렁임(프로토타입 Wave)
@@ -1084,7 +1118,7 @@ function show(n) { // n = 예전 번호(-1 = 그림 장)
 function setStep(el, step, snap) {
   el.classList.toggle('snap', snap);
   // 같은 상태로 다시 들어올 때만 비웠다 넣어 애니메이션을 처음부터 — 다른 상태로 갈 땐 비우면 전환이 0 에서 다시 시작해 깜빡임
-  if (el.dataset.step === step) { el.dataset.step = ''; el.offsetWidth; }
+  if (el.dataset.step === step) { el.classList.add('snap'); el.dataset.step = ''; el.offsetWidth; } // 비우는 순간 전환이 돌면 이전 장면이 비쳐 보임
   el.dataset.step = step;
   el.offsetWidth; requestAnimationFrame(() => el.classList.remove('snap'));
 }
@@ -1147,6 +1181,13 @@ function go(i, animate = true) {
   if (MAP_STEP[c]) setStep(map, MAP_STEP[c], !animate || p < 10); // 관계 맵으로 처음 들어올 땐 바로 그 상태로
   if (c >= 0 && c < 2) setChart(c);
   if (c === 2 || c === 3) s3.dataset.step = c === 3 ? 'b' : 'a'; // 3→4: 오른쪽에서 인용문이 밀고 들어옴
+  st.querySelectorAll('.fx').forEach(e => e.remove());
+  if (STATIC[cur]) st.style.background = ST_FX[cur]?.bg || '#000';
+  if (animate && prev === cur - 1 && ST_FX[cur]) stFx(cur);
+  chartSlide.classList.remove('enter');
+  if (animate && c === 0 && p === -1) { chartSlide.offsetWidth; chartSlide.classList.add('enter'); } // 리서치 첫 장: 앞 장에서 넘어올 때 슬라이드인
+  clearTimeout(autoTimer);
+  if (animate && prev === cur - 1 && AUTO[cur]) autoTimer = setTimeout(() => go(cur + 1), AUTO[cur]);
   history.replaceState(null, '', '#' + (cur + 1));
 }
 buildFlow();
