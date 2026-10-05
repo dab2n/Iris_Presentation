@@ -201,11 +201,12 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #bz .tri { opacity: 0; clip-path: inset(0 100% 100% 0); transition: clip-path 900ms cubic-bezier(.65, 0, .35, 1) 1750ms, opacity 400ms ease 1750ms; }
 #bz .cg { opacity: 0; transition: opacity 500ms ease 1750ms; }
 #bz .bzl { position: absolute; left: 471px; top: 327px; margin: 0; font-weight: 600; font-size: 16px; line-height: 1.45; color: #859dba; white-space: nowrap; opacity: 0; transition: opacity 500ms ease 2250ms; }
+#bz .lens { left: 627px; top: 17.434px; width: 19.545px; height: 19.545px; } /* 같은 목업이라 렌즈도 같은 자리 */
 #bz .noti { left: 28px; top: 51px; width: 374px; height: 140px; border-radius: 24px; box-shadow: 0 8px 25.4px rgba(0, 0, 0, .2); opacity: 0; transform: translateY(-36px);
   transition: transform 650ms cubic-bezier(.3, 0, .2, 1) 2850ms, opacity 400ms ease 2850ms; }
 #bz[data-step="b2"] .phR { transform: translate(-437px, -18px); }
 #bz[data-step="b2"] .phL { transform: translate(-1100px, -18px); opacity: 0; }
-#bz[data-step="b2"] :is(.shd, .tri, .cg, .bzl, .noti) { opacity: 1; }
+#bz[data-step="b2"] :is(.shd, .tri, .cg, .noti) { opacity: 1; }
 #bz[data-step="b2"] :is(.dia, .tri) { clip-path: inset(0 0 0 0); }
 #bz[data-step="b2"] .noti { transform: none; }
 #bz.snap, #bz.snap * { transition: none !important; }
@@ -893,6 +894,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
     <img class="head" src="assets/bz/head.png" style="left:0;top:0;width:1920px;height:240px" alt="">
     <div class="ph phL" style="--d:80ms">
       <img src="assets/bz/phoneL.png" style="left:0;top:0;width:844px;height:641px" alt="">
+      <img class="lens" src="assets/tm/lens.png" alt="">
       <p class="pill"><img src="assets/tm/notes.svg" alt=""><span class="tmr" id="bzLp">32:01</span></p>
       <p class="tmr btm" id="bzLt" style="left:727px;width:90px">32:01</p>
       <i class="dot" style="left:598px;top:506.97px"></i><i class="dot" style="left:607.71px;top:506.97px;animation-delay:.18s"></i><i class="dot" style="left:617.43px;top:500.5px;animation-delay:.36s"></i>
@@ -922,10 +924,10 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <img class="cg" src="assets/bz/c1g.png" style="left:108px;top:186px;width:280px;height:104px" alt="">
       <img class="cg" src="assets/bz/c2g.png" style="left:498px;top:186px;width:280px;height:104px" alt="">
       <img class="cg" src="assets/bz/c3g.png" style="left:498px;top:457px;width:280px;height:105.5px" alt="">
-      <p class="bzl">버뮤다 발생</p>
       <p class="pill"><img src="assets/tm/notes.svg" alt=""><span class="tmr" id="bzRp">56:08</span></p>
       <p class="tmr btm" id="bzRt" style="left:727px;width:90px">56:08</p>
       <img class="noti" src="assets/bz/noti.png" alt="">
+      <img class="lens" src="assets/tm/lens.png" alt="">
     </div>
   </section>
 </div>
