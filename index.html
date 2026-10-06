@@ -93,7 +93,8 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #pp { background: #fcfcfc; }
 #pp img { position: absolute; display: block; max-width: none; }
 #pp .cd { opacity: 0; }
-#pp :is(.c, .cd) { transition: opacity 500ms ease; }
+#pp[data-step="pe"] :is(.eb, .c) { opacity: 0; } /* 빈 대지 → 클릭하면 글 요소가 하나씩 올라옴 */
+#pp :is(.eb, .c, .cd) { transition: opacity 500ms ease; }
 #pp[data-step="p1"] .c3, #pp[data-step="p2"] :is(.c1, .c2), #pp[data-step="p3"] .c { opacity: 0; }
 #pp[data-step="p1"] .c3d, #pp[data-step="p2"] :is(.c1d, .c2d), #pp[data-step="p3"] .cd { opacity: 1; }
 #pp .g { position: absolute; inset: 0; opacity: 0; transition: opacity 250ms ease; }
@@ -714,7 +715,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 
   <section class="slide" id="vd">
     <p class="eb">[ AI Logic Prototype ]</p>
-    <p class="tt" style="--r:80ms">질문하면, 그래프를 따라<br>답을 찾아가는 로직</p>
+    <p class="tt" style="--r:80ms">맥락을 보존하는<br>온톨로지 시각화</p>
     <p class="bd" style="--r:140ms">회의 내용을 노드와 관계로 쌓은 맵에서<br>질문의 근거가 되는 발언을 따라가며<br>답과 출처를 함께 보여줍니다.</p>
     <video src="assets/vd/demo2.mp4" poster="assets/vd/poster2.jpg" muted playsinline loop preload="auto" disablepictureinpicture style="--r:180ms"></video>
   </section>
@@ -1091,13 +1092,13 @@ function setChart(state) {
 }
 
 // 장 구성: 0·1 은 같은 차트 화면의 두 상태, 2 는 별도 화면
-const N = 41; // 피그마 '발표용' 섹션(229:15335) 순서 그대로. 애니메이션이 있는 장은 OLD 표로 예전 번호에 연결
+const N = 42; // 피그마 '발표용' 섹션(229:15335) 순서 그대로. 애니메이션이 있는 장은 OLD 표로 예전 번호에 연결
 // OLD[새 번호] = 예전 22장 덱 번호(-1 = 그림만 있는 장). 0·1 차트, 2·3 인사이트, 4~6 그리드, 7~9 시나리오 1, 10~14 Flow Map, 15~19 시나리오 2·Topic Map, 20·21 버뮤다
-const OLD = [-1, -1, -1, 0, 1, 2, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12.5, 13, 14, ...Array.from({ length: 8 }, (_, k) => 15 + k), -1, -1, -1, -1]; // 12.5 = Flow Map 두 카드 화살표 확대
+const OLD = [-1, -1, -1, 0, 1, 2, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12.5, 13, 14, ...Array.from({ length: 8 }, (_, k) => 15 + k), -1, -1, -1, -1]; // 12.5 = Flow Map 두 카드 화살표 확대
 // 배경이 같은 장으로 넘어올 때: 바뀐 띠(위→아래)만 옛 내용을 덮고 새 내용이 아래에서 올라옴. base = 깔고 시작할 앞 장 그림(없으면 배경색)
-const ST_FX = {"38":{"base":null,"bg":"#f4f8fb","b":[[900,70,1020,120],[715,128,1205,190],[130,229,960,1010],[960,229,1790,1010]]},"39":{"base":null,"bg":"#0b0d0d","b":[[70,460,236,534],[68,540,590,589],[68,589,590,634]]},"40":{"base":"s37c","bg":"#0b0d0d","b":[[1360,375,1855,705]],"soft":1,"rise":1},"15":{"base":null,"bg":"#f4f8fb","b":[[600,66,1320,200],[116,244,671,620],[683,244,1237,620],[1249,244,1804,620],[116,628,671,1004],[683,628,1237,1004],[1249,628,1804,1004]]}};
+const ST_FX = {"39":{"base":null,"bg":"#f4f8fb","b":[[900,70,1020,120],[715,128,1205,190],[130,229,960,1010],[960,229,1790,1010]]},"40":{"base":null,"bg":"#0b0d0d","b":[[70,460,236,534],[68,540,590,589],[68,589,590,634]]},"41":{"base":"s37c","bg":"#0b0d0d","b":[[1360,375,1855,705]],"soft":1,"rise":1},"16":{"base":null,"bg":"#f4f8fb","b":[[600,66,1320,200],[116,244,671,620],[683,244,1237,620],[1249,244,1804,620],[116,628,671,1004],[683,628,1237,1004],[1249,628,1804,1004]]}};
 // 클릭 없이 다음 장으로 이어짐: g1 축·칸 → 유동 그리드, 시나리오 2 두 카드 → 오른쪽 강조
-const AUTO = { 29: 1800 }; // Flow Map 줌인·그리드 축 소개→유동 그리드는 클릭으로
+const AUTO = { 30: 1800 }; // Flow Map 줌인·그리드 축 소개→유동 그리드는 클릭으로
 let autoTimer;
 function stFx(n) {
   st.querySelectorAll('.fx').forEach(e => e.remove());
@@ -1122,15 +1123,15 @@ function stFx(n) {
   });
   setTimeout(() => { if (cur !== n) return; imgs.forEach(im => im.classList.toggle('on', im.dataset.k === key)); st.querySelectorAll('.fx').forEach(e => e.remove()); }, end + 50);
 }
-const PP_STEP = { 7: 'p0', 8: 'p1', 9: 'p2', 10: 'p3' }, LG_STEP = { 12: 'l1', 13: 'l2' };
-const STATIC = { 0: 's01b', 1: 's02', 2: 's03', 11: 's12', 15: 's14b', 16: 's15', 38: 's36b', 39: 's37c', 40: 's37d' }; // 38·39 E.O.D: 글자 먼저 → 클릭하면 Iris 로고
+const PP_STEP = { 7: 'pe', 8: 'p0', 9: 'p1', 10: 'p2', 11: 'p3' }, LG_STEP = { 13: 'l1', 14: 'l2' }; // pe = Pain Points 앞 빈 대지
+const STATIC = { 0: 's01b', 1: 's02', 2: 's03', 12: 's12', 16: 's14b', 17: 's15', 39: 's36b', 40: 's37c', 41: 's37d' }; // 40·41 E.O.D: 글자 먼저 → 클릭하면 Iris 로고
 // 새로고침하면 맨 첫 장, 주소의 #번호로 열면 그 장
 const reloaded = performance.getEntriesByType('navigation')[0]?.type === 'reload';
 let cur = reloaded ? 0 : Math.min(Math.max(+location.hash.slice(1) - 1 || 0, 0), N - 1);
 const chartSlide = document.getElementById('chartSlide'), s3 = document.getElementById('s3'), map = document.getElementById('map');
 const SC_STEP = { 7: 'sA', 8: 'sB', 9: 'sC' }, TM_STEP = { 15: 'tA0', 16: 'tA', 17: 'tB', 18: 'tC', 19: 'tD' }, MAP_STEP = { 10: 'ov', 11: 'intro', 12: 'full', 12.5: 'arrow', 13: 'flowA', 14: 'flowB' }, GRID_STEP = { 4: 'g1', 5: 'g2', 6: 'g3' };
 const G3_TO_G4 = 1900; // 미리보기 카드가 다 놓이고 그리드가 사라진 뒤 클릭 없이 바로 디자인 입히기
-const VD = 14, vd = document.getElementById('vd'), vdv = vd.querySelector('video'); // 15번: 시연 영상(구간별 배속·질문 입력 8배, 무음)
+const VD = 15, vd = document.getElementById('vd'), vdv = vd.querySelector('video'); // 15번: 시연 영상(구간별 배속·질문 입력 8배, 무음)
 fetch(vdv.src).then(r => r.blob()).then(b => { // 발표 중 네트워크를 기다리지 않게 처음 열 때 통째로 받아 둠
   const t = vdv.currentTime, on = !vdv.paused; vdv.src = URL.createObjectURL(b);
   if (on) { vdv.currentTime = t; vdv.play().catch(() => {}); }
@@ -1283,7 +1284,7 @@ function phone(step) {
   }
 }
 function show(n) { // n = 예전 번호(-1 = 그림 장)
-  st.classList.toggle('on', !!STATIC[cur]); pp.classList.toggle('on', !!PP_STEP[cur]); cn.classList.toggle('on', cur === 37); vd.classList.toggle('on', cur === VD); lg.classList.toggle('on', !!LG_STEP[cur]); st.querySelectorAll('img').forEach(im => im.classList.toggle('on', im.dataset.k === STATIC[cur]));
+  st.classList.toggle('on', !!STATIC[cur]); pp.classList.toggle('on', !!PP_STEP[cur]); cn.classList.toggle('on', cur === 38); vd.classList.toggle('on', cur === VD); lg.classList.toggle('on', !!LG_STEP[cur]); st.querySelectorAll('img').forEach(im => im.classList.toggle('on', im.dataset.k === STATIC[cur]));
   chartSlide.classList.toggle('on', n >= 0 && n < 2); s3.classList.toggle('on', n === 2 || n === 3); grid.classList.toggle('on', n >= 4 && n <= 6); sc.classList.toggle('on', n >= 7 && n <= 9); map.classList.toggle('on', n >= 10 && n <= 14); tm.classList.toggle('on', n >= 15 && n <= 19); bz.classList.toggle('on', n >= 20); chartSlide.classList.remove('stretch'); }
 function setStep(el, step, snap) {
   el.classList.toggle('snap', snap);
@@ -1353,15 +1354,15 @@ function go(i, animate = true) {
   if (MAP_STEP[c]) setStep(map, MAP_STEP[c], !animate || p < 10); // 관계 맵으로 처음 들어올 땐 바로 그 상태로
   if (c >= 0 && c < 2) setChart(c);
   if (c === 2 || c === 3) s3.dataset.step = c === 3 ? 'b' : 'a'; // 3→4: 오른쪽에서 인용문이 밀고 들어옴
-  cn.classList.remove('enter'); if (animate && cur === 37 && prev === 36) { cn.offsetWidth; cn.classList.add('enter'); } // 컨셉 이미지 목업이 아래에서
+  cn.classList.remove('enter'); if (animate && cur === 38 && prev === 37) { cn.offsetWidth; cn.classList.add('enter'); } // 컨셉 이미지 목업이 아래에서
   vd.classList.remove('enter'); if (animate && cur === VD && prev === VD - 1) { vd.offsetWidth; vd.classList.add('enter'); }
   if (cur === VD) { vdv.currentTime = 0; vdv.play().catch(() => {}); } else vdv.pause(); // 들어올 때마다 처음부터, 나가면 멈춤
   if (LG_STEP[cur]) {
-    lg.classList.remove('enter'); if (animate && cur === 12 && prev === 11) { lg.offsetWidth; lg.classList.add('enter'); }
+    lg.classList.remove('enter'); if (animate && cur === 13 && prev === 12) { lg.offsetWidth; lg.classList.add('enter'); }
     setStep(lg, LG_STEP[cur], !animate || prev !== cur - 1); // 1→2 만 스크롤, 뒤로·건너뛸 땐 바로
   }
   if (PP_STEP[cur]) {
-    pp.classList.remove('enter'); if (animate && cur === 7 && prev === 6) { pp.offsetWidth; pp.classList.add('enter'); }
+    pp.classList.remove('enter'); if (animate && cur === 8 && prev === 7) { pp.offsetWidth; pp.classList.add('enter'); }
     setStep(pp, PP_STEP[cur], !animate);
   }
   st.querySelectorAll('.fx').forEach(e => e.remove());
