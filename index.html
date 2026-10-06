@@ -1129,6 +1129,10 @@ const chartSlide = document.getElementById('chartSlide'), s3 = document.getEleme
 const SC_STEP = { 7: 'sA', 8: 'sB', 9: 'sC' }, TM_STEP = { 15: 'tA0', 16: 'tA', 17: 'tB', 18: 'tC', 19: 'tD' }, MAP_STEP = { 10: 'ov', 11: 'intro', 12: 'full', 12.5: 'arrow', 13: 'flowA', 14: 'flowB' }, GRID_STEP = { 4: 'g1', 5: 'g2', 6: 'g3' };
 const G3_TO_G4 = 1900; // 미리보기 카드가 다 놓이고 그리드가 사라진 뒤 클릭 없이 바로 디자인 입히기
 const VD = 14, vd = document.getElementById('vd'), vdv = vd.querySelector('video'); // 15번: 시연 영상(2배속, 무음)
+fetch(vdv.src).then(r => r.blob()).then(b => { // 발표 중 네트워크를 기다리지 않게 처음 열 때 통째로 받아 둠
+  const t = vdv.currentTime, on = !vdv.paused; vdv.src = URL.createObjectURL(b);
+  if (on) { vdv.currentTime = t; vdv.play().catch(() => {}); }
+}).catch(() => {});
 const cn = document.getElementById('cn'), lg = document.getElementById('lg'), pp = document.getElementById('pp'), st = document.getElementById('st'), grid = document.getElementById('gs'), sc = document.getElementById('sc'), tm = document.getElementById('tm'), bz = document.getElementById('bz');
 let cutTimer, gridTimer;
 // Topic Map 휴대폰: 녹음 시간은 자릿수별로 굴러가며 흐르고(프로토타입 RollNum), 파형 막대는 출렁임(프로토타입 Wave)
