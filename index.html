@@ -338,7 +338,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 
 /* 11 (flowB): 원래 크기로 줌아웃 → 커서가 카드로 → 꾹 눌렀다 튕기듯 떼기 → 원문이 건너뛰며 스크롤 → 해당 발언 하이라이트, 재생 계속 */
 #map[data-step="flowB"] .guideSet { opacity: 0; }
-#map[data-step="flowB"] #cur { translate: -122.12px -131.74px; }
+#map[data-step="flowB"] #cur { translate: -122.12px -259.74px; }
 #map[data-step="flowB"] .listB, #map[data-step="flowB"] .stripB { opacity: 1; }
 #map[data-step="flowB"] .listMove { translate: 0 -2136.5px; }
 #map[data-step="flowB"] .thumb { top: 153px; width: 5px; height: 28px; }
@@ -357,11 +357,11 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #stage.ready #map[data-step="flowB"] #cur { animation: cursor 4400ms linear both; }
 @keyframes cursor {
   0%, 22.73% { translate: 0 0; scale: 1; animation-timing-function: cubic-bezier(.65, 0, .35, 1); }
-  43.18%, 47.73% { translate: -119.73px -136.37px; scale: 1; animation-timing-function: cubic-bezier(.5, 0, 1, 1); }
-  50.00% { translate: -120.3px -132.6px; scale: .92; animation-timing-function: cubic-bezier(.2, 0, .3, 1); }
-  53.18% { translate: -122.12px -134.5px; scale: 1.02; animation-timing-function: ease-in-out; }
-  55.91% { translate: -122.12px -131.2px; scale: .995; animation-timing-function: ease-in-out; }
-  58.18%, 100% { translate: -122.12px -131.74px; scale: 1; }
+  43.18%, 47.73% { translate: -119.73px -264.37px; scale: 1; animation-timing-function: cubic-bezier(.5, 0, 1, 1); }
+  50.00% { translate: -120.3px -260.6px; scale: .92; animation-timing-function: cubic-bezier(.2, 0, .3, 1); }
+  53.18% { translate: -122.12px -262.5px; scale: 1.02; animation-timing-function: ease-in-out; }
+  55.91% { translate: -122.12px -259.2px; scale: .995; animation-timing-function: ease-in-out; }
+  58.18%, 100% { translate: -122.12px -259.74px; scale: 1; }
 }
 #stage.ready #map[data-step="flowB"] .cardOn { animation: cardIn 4400ms linear both; }
 @keyframes cardIn { /* 누르는 순간 눌린 모습 → 떼면 원래 카드로 */ 0%, 47.73% { opacity: 0; animation-timing-function: ease-out; } 49.77%, 52.27% { opacity: 1; animation-timing-function: ease; } 59.55%, 100% { opacity: 0; } }
@@ -386,7 +386,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #stage.ready #map.back[data-step="flowA"] .thumb { animation: thumbBack 900ms cubic-bezier(.65, 0, .35, 1) both; }
 @keyframes thumbBack { from { top: 153px; width: 5px; height: 28px; } }
 #stage.ready #map.back[data-step="flowA"] #cur { animation: curBack 900ms cubic-bezier(.65, 0, .35, 1) both; }
-@keyframes curBack { from { translate: -122.12px -131.74px; } }
+@keyframes curBack { from { translate: -122.12px -259.74px; } }
 /* 실시간 하이라이트: 발언 카드 색(지금 말하는 사람) + 어절 네모(지금 말하는 어절) — JS 가 음성 진행에 맞춰 옮김 */
 .listB { mix-blend-mode: multiply; } /* 묶음째 곱하기 → 아래 원문 글자가 그대로 보임 */
 .listB .rowHi, .listB .wordHi { position: absolute; }
@@ -901,7 +901,6 @@ html, body { height: 100%; background: #000; overflow: hidden; }
         </div>
       </div>
       <div class="abs" id="board"><div class="guideSet glowRise"><img class="glow" src="assets/map/glow.svg" alt=""></div></div>
-      <img class="cardOn" src="assets/map/L_card.svg" style="left:1036.77px;top:628.31px;width:191px;height:110px" alt="">
       <img class="guideSet gPill" src="assets/map/L_pill.svg" style="left:1134.896px;top:815.117px;width:148px;height:85px" alt="">
       <img class="guideSet gText" src="assets/map/L_guide.svg" style="left:1082.675px;top:884.676px;width:250px;height:28px" alt="">
       <!-- 시나리오에서 들어올 때: 요약 탭 화면 → 커서가 '플로우 맵' 탭을 눌러 이동 -->
@@ -912,6 +911,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
         <path class="h" d="M1024.4 560.75H1014" stroke="#c0ceed" stroke-width="1.5"/><path class="h" d="M1024.4 560.75H1034" stroke="#c0ceed" stroke-width="1.5"/>
         <path class="hd l" d="M1009 560.75L1014.4 557.75V563.75Z" fill="#c0ceed"/><path class="hd r" d="M1038.75 560.75L1033.35 557.75V563.75Z" fill="#c0ceed"/>
       </svg>
+      <img class="cardOn" src="assets/map/L_card_up.svg" style="left:1036.77px;top:500.31px;width:191px;height:126px" alt="">
       <div class="abs" id="cur0"><img src="assets/map/cursor.svg" alt=""></div>
       <div class="abs" id="cur"><img src="assets/map/cursor.svg" alt=""></div>
     </div>
