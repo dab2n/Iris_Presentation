@@ -538,17 +538,27 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #map:is([data-step="ov"], [data-step="intro"]) :is(.hb, .arwp, .arw) { visibility: hidden; } /* 개요·줌인 단계의 보드는 다른 그림이라 숨김 */
 #map .arw .h { stroke-dasharray: 10.5; stroke-dashoffset: 0; }
 #map[data-step="arrow"] #dev { transform: translate(-2113.5px, -1144.5px) scale(3); }
-#stage.ready #map[data-step="arrow"] .arw .h { animation: arwDraw 650ms cubic-bezier(.65, 0, .35, 1) 950ms both; }
-#stage.ready #map[data-step="arrow"] .arw .hd { animation: arwHead 380ms cubic-bezier(.22, 1, .36, 1) 1450ms both; transform-box: fill-box; }
+/* 대립 단어 하이라이트 → 화살표 를 두 번 보여 줬다 지우고, 세 번째는 그대로 남김 */
+#map .hlw { position: absolute; top: 542.4px; height: 13.6px; border-radius: 2px; background: #d3e0fa; mix-blend-mode: multiply; opacity: 0; pointer-events: none; }
+#map .arw .hd { transform-box: fill-box; }
+#stage.ready #map[data-step="arrow"] .hlw { animation: hlLoop 1900ms linear 950ms 2 backwards, hlIn 1900ms linear 4750ms forwards; }
+#stage.ready #map[data-step="arrow"] .arw .h { animation: arwLoop 1900ms linear 950ms 2 backwards, arwIn 1900ms linear 4750ms forwards; }
+#stage.ready #map[data-step="arrow"] .arw .hd { animation: hdLoop 1900ms linear 950ms 2 backwards, hdIn 1900ms linear 4750ms forwards; }
 #map .arw .hd.l { transform-origin: 0 50%; } #map .arw .hd.r { transform-origin: 100% 50%; }
-@keyframes arwDraw { from { stroke-dashoffset: 10.5; } }
-@keyframes arwHead { from { opacity: 0; scale: .3; } }
+@keyframes hlLoop { 0% { opacity: 1; clip-path: inset(0 100% 0 0); animation-timing-function: cubic-bezier(.65, 0, .35, 1); } 18%, 80% { opacity: 1; clip-path: inset(0); animation-timing-function: ease; } 92%, 100% { opacity: 0; clip-path: inset(0); } }
+@keyframes hlIn { 0% { opacity: 1; clip-path: inset(0 100% 0 0); animation-timing-function: cubic-bezier(.65, 0, .35, 1); } 18%, 100% { opacity: 1; clip-path: inset(0); } }
+@keyframes arwLoop { 0%, 16% { opacity: 1; stroke-dashoffset: 10.5; animation-timing-function: cubic-bezier(.65, 0, .35, 1); } 42%, 80% { opacity: 1; stroke-dashoffset: 0; animation-timing-function: ease; } 92%, 100% { opacity: 0; stroke-dashoffset: 0; } }
+@keyframes arwIn { 0%, 16% { stroke-dashoffset: 10.5; animation-timing-function: cubic-bezier(.65, 0, .35, 1); } 42%, 100% { stroke-dashoffset: 0; } }
+@keyframes hdLoop { 0%, 36% { opacity: 0; scale: .3; animation-timing-function: cubic-bezier(.22, 1, .36, 1); } 54%, 80% { opacity: 1; scale: 1; animation-timing-function: ease; } 92%, 100% { opacity: 0; scale: 1; } }
+@keyframes hdIn { 0%, 36% { opacity: 0; scale: .3; animation-timing-function: cubic-bezier(.22, 1, .36, 1); } 54%, 100% { opacity: 1; scale: 1; } }
+#stage.ready #map.via[data-step="flowA"] .hlw { animation: hlOut 400ms ease both; }
+@keyframes hlOut { from { opacity: 1; } to { opacity: 0; } }
 /* 확대한 화살표 장 → 다음: 전체로 돌아왔다가 '실시간 확인하기' 클로즈업으로 */
-#stage.ready #map.via[data-step="flowA"] #dev { animation: camVia 1800ms cubic-bezier(.65, 0, .35, 1) both; }
-@keyframes camVia { 0% { transform: translate(-2113.5px, -1144.5px) scale(3); } 45% { transform: none; } 100% { transform: translate(-1698.7px, -1365.2px) scale(2.2); } }
-#stage.ready #map.via[data-step="flowA"] .glowRise { animation-delay: 1600ms; }
-#stage.ready #map.via[data-step="flowA"] .gPill { animation-delay: 2300ms; }
-#stage.ready #map.via[data-step="flowA"] .gText { animation-delay: 2520ms; }
+#stage.ready #map.via[data-step="flowA"] #dev { animation: camVia 3000ms both; } /* 전체로 빠졌다가 잠깐 머문 뒤 슥 확대 */
+@keyframes camVia { 0% { transform: translate(-2113.5px, -1144.5px) scale(3); animation-timing-function: cubic-bezier(.65, 0, .35, 1); } 30%, 50% { transform: none; animation-timing-function: cubic-bezier(.6, 0, .3, 1); } 100% { transform: translate(-1698.7px, -1365.2px) scale(2.2); } }
+#stage.ready #map.via[data-step="flowA"] .glowRise { animation-delay: 2800ms; }
+#stage.ready #map.via[data-step="flowA"] .gPill { animation-delay: 3500ms; }
+#stage.ready #map.via[data-step="flowA"] .gText { animation-delay: 3720ms; }
 #stage.ready #map.back[data-step="arrow"] #dev { animation: camArwBack 1100ms cubic-bezier(.65, 0, .35, 1) both; }
 @keyframes camArwBack { from { transform: translate(-1698.7px, -1365.2px) scale(2.2); } }
 #map .decor { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; opacity: 0; transition: opacity 300ms ease; pointer-events: none; will-change: opacity; } /* 곱하기 합성 대신 미리 그린 반투명 그림 — 첫 장면 버벅임 방지 */
@@ -912,6 +922,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
         <path class="hd l" d="M1009 560.75L1014.4 557.75V563.75Z" fill="#c0ceed"/><path class="hd r" d="M1038.75 560.75L1033.35 557.75V563.75Z" fill="#c0ceed"/>
       </svg>
       <img class="cardOn" src="assets/map/L_card_up.svg" style="left:1036.77px;top:500.31px;width:191px;height:126px" alt="">
+      <i class="hlw" style="left:858.8px;width:38.7px"></i><i class="hlw" style="left:1054.2px;width:37.8px"></i>
       <div class="abs" id="cur0"><img src="assets/map/cursor.svg" alt=""></div>
       <div class="abs" id="cur"><img src="assets/map/cursor.svg" alt=""></div>
     </div>
