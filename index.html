@@ -76,10 +76,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #lg { background: #f4f8fb; overflow: hidden; }
 /* 시연 영상 장 — 앞 장(AI Logic Design)처럼 왼쪽 글, 오른쪽 영상. 글 자리·글꼴은 피그마 앞 장 그대로 */
 #vd { background: #f4f8fb; overflow: hidden; }
-#vd p { position: absolute; left: 80px; margin: 0; white-space: nowrap; }
-#vd .eb { top: 81px; font-size: 24px; line-height: 1.4; letter-spacing: -.96px; color: #575757; }
-#vd .tt { top: 130px; font-weight: 600; font-size: 40px; line-height: 1.4; letter-spacing: -.8px; color: #000; }
-#vd .bd { top: 290px; font-size: 20px; line-height: 1.6; letter-spacing: -.28px; color: #616161; }
+#vd img { position: absolute; left: 0; width: 640px; display: block; }
 #vd video { position: absolute; left: 660px; top: 174px; width: 1180px; height: 732px; border-radius: 16px; object-fit: cover; background: #5b8be8; box-shadow: 0 0 0 1px #e1e7ef; } /* 영상 왼쪽 패널이 배경색과 비슷해 경계선 */
 #stage.ready #vd.enter > * { animation: rise 700ms var(--ease) both; animation-delay: var(--r, 0ms); }
 #lg img { position: absolute; display: block; max-width: none; }
@@ -714,9 +711,10 @@ html, body { height: 100%; background: #000; overflow: hidden; }
   </section>
 
   <section class="slide" id="vd">
-    <p class="eb">[ AI Logic Prototype ]</p>
-    <p class="tt" style="--r:80ms">맥락을 보존하는<br>온톨로지 시각화</p>
-    <p class="bd" style="--r:140ms">회의 내용을 노드와 관계로 쌓은 맵에서<br>질문의 근거가 되는 발언을 따라가며<br>답과 출처를 함께 보여줍니다.</p>
+    <!-- 글은 앞 장(left.png)처럼 같은 글꼴로 2배 렌더한 그림 — 화면을 줄여 볼 때도 앞 장과 똑같이 보이게 -->
+    <img src="assets/vd/eb.png" style="top:70px;height:56px" alt="[ AI Logic Prototype ]">
+    <img src="assets/vd/tt.png" style="top:126px;height:130px;--r:80ms" alt="맥락을 보존하는 온톨로지 시각화">
+    <img src="assets/vd/bd.png" style="top:284px;height:116px;--r:140ms" alt="">
     <video src="assets/vd/demo2.mp4" poster="assets/vd/poster2.jpg" muted playsinline loop preload="auto" disablepictureinpicture style="--r:180ms"></video>
   </section>
 
