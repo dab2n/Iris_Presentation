@@ -74,12 +74,13 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 @keyframes mockUp { from { opacity: 0; translate: 0 240px; } 40% { opacity: 1; } }
 /* ── AI Logic Design ── */
 #lg { background: #f4f8fb; overflow: hidden; }
-/* 시연 영상 장 — 머리말·제목은 다음 장(User Test & Coding)과 같은 자리·글꼴 */
+/* 시연 영상 장 — 앞 장(AI Logic Design)처럼 왼쪽 글, 오른쪽 영상. 글 자리·글꼴은 피그마 앞 장 그대로 */
 #vd { background: #f4f8fb; overflow: hidden; }
-#vd p { position: absolute; left: 0; right: 0; margin: 0; text-align: center; white-space: nowrap; }
-#vd .eb { top: 79px; font-size: 24px; line-height: 1.4; letter-spacing: -.96px; color: #575757; }
-#vd .tt { top: 129px; font-weight: 600; font-size: 40px; line-height: 1.6; letter-spacing: -.8px; color: #000; }
-#vd video { position: absolute; left: 347.5px; top: 244px; width: 1225px; height: 760px; border-radius: 16px; object-fit: cover; background: #5b8be8; }
+#vd p { position: absolute; left: 80px; margin: 0; white-space: nowrap; }
+#vd .eb { top: 81px; font-size: 24px; line-height: 1.4; letter-spacing: -.96px; color: #575757; }
+#vd .tt { top: 130px; font-weight: 600; font-size: 40px; line-height: 1.4; letter-spacing: -.8px; color: #000; }
+#vd .bd { top: 290px; font-size: 20px; line-height: 1.6; letter-spacing: -.28px; color: #616161; }
+#vd video { position: absolute; left: 660px; top: 174px; width: 1180px; height: 732px; border-radius: 16px; object-fit: cover; background: #5b8be8; box-shadow: 0 0 0 1px #e1e7ef; } /* 영상 왼쪽 패널이 배경색과 비슷해 경계선 */
 #stage.ready #vd.enter > * { animation: rise 700ms var(--ease) both; animation-delay: var(--r, 0ms); }
 #lg img { position: absolute; display: block; max-width: none; }
 #lg .col { position: absolute; inset: 0; transition: translate 1500ms cubic-bezier(.65, 0, .35, 1); }
@@ -713,8 +714,9 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 
   <section class="slide" id="vd">
     <p class="eb">[ AI Logic Prototype ]</p>
-    <p class="tt" style="--r:80ms">질문하면, 그래프를 따라 답을 찾아가는 로직</p>
-    <video src="assets/vd/demo.mp4" poster="assets/vd/poster.jpg" muted playsinline loop preload="auto" disablepictureinpicture style="--r:180ms"></video>
+    <p class="tt" style="--r:80ms">질문하면, 그래프를 따라<br>답을 찾아가는 로직</p>
+    <p class="bd" style="--r:140ms">회의 내용을 노드와 관계로 쌓은 맵에서<br>질문의 근거가 되는 발언을 따라가며<br>답과 출처를 함께 보여줍니다.</p>
+    <video src="assets/vd/demo2.mp4" poster="assets/vd/poster2.jpg" muted playsinline loop preload="auto" disablepictureinpicture style="--r:180ms"></video>
   </section>
 
   <!-- Concept Image: 목업이 아래에서 부드럽게 올라옴, 아래 경계 그라디언트는 고정 -->
@@ -1128,7 +1130,7 @@ let cur = reloaded ? 0 : Math.min(Math.max(+location.hash.slice(1) - 1 || 0, 0),
 const chartSlide = document.getElementById('chartSlide'), s3 = document.getElementById('s3'), map = document.getElementById('map');
 const SC_STEP = { 7: 'sA', 8: 'sB', 9: 'sC' }, TM_STEP = { 15: 'tA0', 16: 'tA', 17: 'tB', 18: 'tC', 19: 'tD' }, MAP_STEP = { 10: 'ov', 11: 'intro', 12: 'full', 12.5: 'arrow', 13: 'flowA', 14: 'flowB' }, GRID_STEP = { 4: 'g1', 5: 'g2', 6: 'g3' };
 const G3_TO_G4 = 1900; // 미리보기 카드가 다 놓이고 그리드가 사라진 뒤 클릭 없이 바로 디자인 입히기
-const VD = 14, vd = document.getElementById('vd'), vdv = vd.querySelector('video'); // 15번: 시연 영상(2배속, 무음)
+const VD = 14, vd = document.getElementById('vd'), vdv = vd.querySelector('video'); // 15번: 시연 영상(구간별 배속·질문 입력 8배, 무음)
 fetch(vdv.src).then(r => r.blob()).then(b => { // 발표 중 네트워크를 기다리지 않게 처음 열 때 통째로 받아 둠
   const t = vdv.currentTime, on = !vdv.paused; vdv.src = URL.createObjectURL(b);
   if (on) { vdv.currentTime = t; vdv.play().catch(() => {}); }
