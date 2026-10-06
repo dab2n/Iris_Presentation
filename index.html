@@ -1363,7 +1363,7 @@ function go(i, animate = true) {
   }
   if (PP_STEP[cur]) {
     pp.classList.remove('enter'); if (animate && cur === 8 && prev === 7) { pp.offsetWidth; pp.classList.add('enter'); }
-    setStep(pp, PP_STEP[cur], !animate);
+    setStep(pp, PP_STEP[cur], !animate || !PP_STEP[prev]); // 밖에서 들어올 땐 바로 그 상태로 — 안 그러면 이전 상태 글이 비쳤다 사라짐
   }
   st.querySelectorAll('.fx').forEach(e => e.remove());
   if (STATIC[cur]) st.style.background = ST_FX[cur]?.bg || '#000';
