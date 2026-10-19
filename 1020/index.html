@@ -399,30 +399,29 @@ function setStep(el, step, snap) {
   el.offsetWidth; requestAnimationFrame(() => el.classList.remove('snap'));
 }
 
-// ── UT 결과: 과제마다 걸린 시간 그래프(ut-figures 01) — 다섯 장 모두 같은 축(0~180초), 지금 과제만 진하게 ──
-const TIMES = [[10, 103, 27, 33.6], [8, 166, 22, 47.8], [9, 116, 20.5, 26.6], [8, 42, 13.5, 18.9], [32, 121, 53, 64.9]]; // 최단·최장·중앙값·평균(초)
+// ── UT 결과: 과제마다 걸린 시간 — 왼쪽 글(평균·표준편차·최단·최장)과 같은 숫자. 다섯 장 모두 같은 축(0~180초), 지금 과제만 진하게 ──
+const TIMES = [[33.5, 23.4, 10, 103], [47.8, 47.9, 8, 166], [26.5, 26.6, 9, 116], [18.8, 11.8, 8, 42], [64.7, 31.7, 32, 121]]; // 평균·표준편차·최단·최장(초)
 const X0 = 306, X1 = 606, sx = s => X0 + (X1 - X0) * s / 180, RY = i => 130 + 42 * i;
 function chart(t) {
   const W = 'rgba(255,255,255,', parts = [];
   [0, 60, 120, 180].forEach(s => parts.push(`<line x1="${sx(s)}" y1="108" x2="${sx(s)}" y2="316" stroke="${W}.07)" stroke-width="1"/>`,
     `<text x="${sx(s)}" y="338" fill="${W}.38)" font-size="15" text-anchor="middle">${s}${s === 180 ? '초' : ''}</text>`));
-  TIMES.forEach(([lo, hi, md, mn], i) => {
-    const on = i === t - 1, y = RY(i), l = sx(hi) - sx(lo);
-    parts.push(`<text x="262" y="${y + 5}" fill="${W}${on ? 1 : .32})" font-size="17" font-weight="700">T${i + 1}</text>`,
-      `<line class="rng" style="--i:${i};--l:${l.toFixed(1)}" x1="${sx(lo)}" y1="${y}" x2="${sx(hi)}" y2="${y}" stroke="${W}${on ? .42 : .13})" stroke-width="4" stroke-linecap="round"/>`);
-    if (!on) { parts.push(`<circle class="pt" style="--i:${i}" cx="${sx(md)}" cy="${y}" r="5" fill="rgba(91,133,227,.45)"/>`); return; }
-    const d = sx(mn);
-    parts.push(`<circle class="pt" style="--i:${i}" cx="${sx(lo)}" cy="${y}" r="4" fill="${W}.7)"/>`, `<circle class="pt" style="--i:${i}" cx="${sx(hi)}" cy="${y}" r="4" fill="${W}.7)"/>`,
-      `<path class="hl" d="M${d} ${y - 7}L${d + 7} ${y}L${d} ${y + 7}L${d - 7} ${y}Z" fill="#ACB577" stroke="#1c1c1c" stroke-width="2"/>`,
-      `<circle class="hl" cx="${sx(md)}" cy="${y}" r="7" fill="#5B85E3" stroke="#1c1c1c" stroke-width="2"/>`,
-      `<g class="lb" font-size="16"><text x="${sx(lo) - 9}" y="${y + 5}" fill="${W}.55)" text-anchor="end">${lo}</text>`,
+  TIMES.forEach(([mn, sd, lo, hi], i) => {
+    const on = i === t - 1, y = RY(i), l = sx(hi) - sx(lo), b0 = sx(Math.max(lo, mn - sd)), b1 = sx(Math.min(hi, mn + sd));
+    parts.push(`<text x="262" y="${y + 6}" fill="${W}${on ? 1 : .32})" font-size="17" font-weight="700">T${i + 1}</text>`,
+      `<line class="rng" style="--i:${i};--l:${l.toFixed(1)}" x1="${sx(lo)}" y1="${y}" x2="${sx(hi)}" y2="${y}" stroke="${W}${on ? .35 : .12})" stroke-width="2" stroke-linecap="round"/>`,
+      `<rect class="pt" style="--i:${i}" x="${b0}" y="${y - 5}" width="${b1 - b0}" height="10" rx="5" fill="rgba(91,133,227,${on ? .45 : .16})"/>`);
+    if (!on) { parts.push(`<circle class="pt" style="--i:${i}" cx="${sx(mn)}" cy="${y}" r="5" fill="rgba(91,133,227,.5)"/>`); return; }
+    parts.push(`<circle class="pt" style="--i:${i}" cx="${sx(lo)}" cy="${y}" r="4" fill="${W}.75)"/>`, `<circle class="pt" style="--i:${i}" cx="${sx(hi)}" cy="${y}" r="4" fill="${W}.75)"/>`,
+      `<circle class="hl" cx="${sx(mn)}" cy="${y}" r="7.5" fill="#5B85E3" stroke="#1c1c1c" stroke-width="2"/>`,
+      `<g class="lb" font-size="16"><text x="${sx(lo) - 9}" y="${y + 5}" fill="${W}.6)" text-anchor="end">${lo}</text>`,
       `<text x="${sx(hi) + 10}" y="${y + 5}" fill="${W}.9)" font-weight="600">${hi}초</text>`,
-      `<text x="${sx(md)}" y="${y - 14}" fill="#7EA2F0" font-weight="700" text-anchor="middle">${md}초</text></g>`);
+      `<text x="${sx(mn)}" y="${y - 15}" fill="#7EA2F0" font-weight="700" text-anchor="middle">${mn}초</text></g>`);
   });
   // 범례: '정량 데이터' 제목 줄 오른쪽
-  parts.push(`<g font-size="15" fill="${W}.55)"><line x1="384" y1="55" x2="410" y2="55" stroke="${W}.42)" stroke-width="4" stroke-linecap="round"/><text x="418" y="60">최단~최장</text>`,
-    `<circle cx="512" cy="55" r="6" fill="#5B85E3"/><text x="524" y="60">중앙값</text>`,
-    `<path d="M603 48L610 55L603 62L596 55Z" fill="#ACB577"/><text x="618" y="60">평균</text></g>`);
+  parts.push(`<g font-size="15" fill="${W}.55)"><line x1="362" y1="55" x2="386" y2="55" stroke="${W}.42)" stroke-width="2" stroke-linecap="round"/><text x="393" y="60">최단~최장</text>`,
+    `<rect x="478" y="50" width="24" height="10" rx="5" fill="rgba(91,133,227,.45)"/><text x="509" y="60">표준편차</text>`,
+    `<circle cx="590" cy="55" r="6" fill="#5B85E3"/><text x="602" y="60">평균</text></g>`);
   return `<svg class="chart" width="692" height="367" viewBox="0 0 692 367" font-family="KR, Pretendard, sans-serif">${parts.join('')}</svg>`;
 }
 ut.querySelectorAll('.pset').forEach(p => p.querySelector('.p1').insertAdjacentHTML('beforeend', chart(+p.dataset.t)));
