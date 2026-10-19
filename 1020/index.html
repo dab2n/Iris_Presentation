@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IRIS 발표 · 10.20</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* 피그마 폰트는 맥에 설치된 로컬 폰트를 그대로 쓴다 — 다른 컴퓨터는 Pretendard */
+@font-face { font-family: KR; font-weight: 400; src: local("SFProKR-Regular"), local("SFProKRDisplay-Regular"); }
+@font-face { font-family: KR; font-weight: 500; src: local("SFProKR-Medium"), local("SFProKRDisplay-Medium"); }
+@font-face { font-family: KR; font-weight: 600; src: local("SFProKR-Semibold"), local("SFProKRDisplay-Semibold"); }
+@font-face { font-family: KR; font-weight: 700; src: local("SFProKR-Bold"), local("SFProKRDisplay-Bold"); }
+
+:root { --ease: cubic-bezier(.22, 1, .36, 1); } /* 오버슈트 없이 부드럽게 감속 */
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; background: #000; overflow: hidden; }
+#stage {
+  position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px;
+  background: #0c0c0c; overflow: hidden;
+  transform: translate(-50%, -50%) scale(var(--s, 1));
+  font-family: KR, Pretendard, sans-serif; font-weight: 500; color: #0c0c0c;
+}
+.abs { position: absolute; }
+.slide { position: absolute; inset: 0; }
+.slide:not(.on) { visibility: hidden; }
+@keyframes rise { from { opacity: 0; translate: 0 40px; } }
+
+/* ── 그림 장: 배경이 같은 장으로 넘어오면 덩어리가 위→아래 차례로 올라옴 ── */
+#st { background: #0c0c0c; }
+#st img { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: none; }
+#st img.on { display: block; }
+#st .fx { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
+
+.subx { position: absolute; left: 0; width: 1920px; margin: 0; text-align: center; white-space: nowrap; font-weight: 500; font-size: 20px; line-height: 1.6; letter-spacing: -.28px; color: #616161; z-index: 3;
+  opacity: 0; translate: 0 14px; transition: opacity 400ms ease, translate 550ms var(--ease); }
+.subx.on { opacity: 1; translate: 0 0; transition-delay: 200ms; }
+#gs .subx { top: 174px; }
+#gs.snap .subx { transition: none !important; }
+/* ── 4~7: 그리드 시스템 (g1 대지 → 축 그리기 → g2 유동 그리드 → g3 미리보기 카드 → g4 실제 UI + 연결선) ── */
+#gs { background: #f4f8fb; }
+#gs img { position: absolute; display: block; max-width: none; }
+#gb { left: 448px; top: 280px; width: 1049.63px; height: 672.86px; border-radius: 30.24px; overflow: hidden; background: #fff; transition: left 900ms var(--ease), background-color 900ms ease; }
+#gs:is([data-step="g3"], [data-step="g4"]) #gb { background: #e9ecf0; } /* 미리보기부터 회색 대지 */
+#gb::after { content: ""; position: absolute; inset: 0; border: 1.512px solid #f0f0f0; border-radius: inherit; pointer-events: none; z-index: 5; }
+#gs:not([data-step="g1"]) #gb { left: 435px; }
+#gb .row, #gb .col { position: absolute; background: rgba(255, 148, 148, .16); }
+#gb .row { left: 0; width: 1050px; height: 138px; }
+#gb .col { top: 0; width: 236px; height: 672px; }
+#gs .r1 { top: 40px; } #gs .r2 { top: 190px; } #gs .r3 { top: 340px; } #gs .r4 { top: 490px; }
+#gs:not([data-step="g1"]) .r1 { top: 40px; height: 60px; } #gs:not([data-step="g1"]) .r2 { top: 113px; height: 151px; }
+#gs:not([data-step="g1"]) .r3 { top: 282px; height: 130px; } #gs:not([data-step="g1"]) .r4 { top: 430px; height: 130px; }
+#gs:is([data-step="g3"], [data-step="g4"]) :is(.row, .col) { opacity: 0; }
+#gb .pv { position: absolute; border-radius: 18.1px; background: rgba(100, 113, 133, .2); opacity: 0; }
+#gs[data-step="g3"] .pv { opacity: 1; }
+#gb .fin, #gb .ln, #gb .card { opacity: 0; }
+#gs[data-step="g4"] :is(.fin, .ln, .card) { opacity: 1; }
+#gb .card { position: absolute; }
+#gb .card img { position: absolute; }
+#gb .pv .sk { position: absolute; border-radius: 4px; }
+.axis { overflow: hidden; }
+.axis i { position: absolute; background: #bfc4c8; }
+.axis svg { position: absolute; }
+#gs .ax { left: 475px; top: 253.37px; width: 1024.8px; height: 13.26px; }
+#gs .ax i { left: 0; right: 7px; top: 5.73px; height: 1.8px; }
+#gs .ax svg { right: 0; top: 0; }
+#gs .ay { left: 421.37px; top: 320px; width: 13.26px; height: 633.8px; }
+#gs .ay i { top: 0; bottom: 7px; left: 5.73px; width: 1.8px; }
+#gs .ay svg { bottom: 0; left: 0; transform: rotate(90deg); transform-origin: 6.63px 6.63px; translate: 0 -0.63px; }
+#gs .axes { transition: opacity 300ms ease; }
+#gs:not([data-step="g1"]) .axes { opacity: 0; }
+@keyframes fadeOnly { from { opacity: 0; } }
+
+/* g1: 대지가 아래에서 밀려 들어온 뒤 → X 화살표가 그려지며 지나가는 칸마다 세로 칸이 아래로 → Y 와 가로 줄 */
+#stage.ready #gs[data-step="g1"] #gb { animation: boardIn 800ms var(--ease) both; }
+@keyframes boardIn { from { opacity: 0; translate: 0 120px; } }
+#stage.ready #gs[data-step="g1"] .lx { animation: fadeOnly 300ms ease 700ms both; }
+#stage.ready #gs[data-step="g1"] .ax { animation: drawX 1100ms linear 900ms both; }
+@keyframes drawX { from { width: 0; } }
+#stage.ready #gs[data-step="g1"] .col { animation: drop 700ms var(--ease) both; animation-delay: calc(var(--d) + 700ms); }
+@keyframes drop { from { height: 0; } }
+#stage.ready #gs[data-step="g1"] .ltime { animation: fadeOnly 300ms ease 2000ms both; }
+#stage.ready #gs[data-step="g1"] .ly { animation: fadeOnly 300ms ease 2700ms both; } /* X(시간의 흐름) 끝나고 0.5초 쉼 */
+#stage.ready #gs[data-step="g1"] .ay { animation: drawY 800ms linear 2800ms both; }
+@keyframes drawY { from { height: 0; } }
+#stage.ready #gs[data-step="g1"] .row { animation: spread 700ms var(--ease) both; animation-delay: calc(var(--d) + 1200ms); }
+@keyframes spread { from { width: 0; } }
+#stage.ready #gs[data-step="g1"] .ldepth { animation: fadeOnly 300ms ease 3600ms both; }
+
+/* g2: 완성된 그리드가 맥락에 따라 천천히 줄었다 늘었다 (쫀득한 ease-in-out) 하다가 2번 그리드로 */
+#stage.ready #gs[data-step="g2"] .row { animation: var(--k) 4200ms linear 200ms both; }
+#stage.ready #gs[data-step="g2"] .col { animation: var(--k) 4200ms linear 200ms both; } /* 가로·세로가 같은 박자로 바뀜 */
+@keyframes row1 {
+  0% { top: 40px; height: 138px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { top: 40px; height: 90px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { top: 40px; height: 170px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { top: 40px; height: 50px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { top: 40px; height: 60px; }
+}
+@keyframes row2 {
+  0% { top: 190px; height: 138px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { top: 142px; height: 190px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { top: 222px; height: 80px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { top: 102px; height: 160px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { top: 113px; height: 151px; }
+}
+@keyframes row3 {
+  0% { top: 340px; height: 138px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { top: 344px; height: 100px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { top: 314px; height: 180px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { top: 274px; height: 120px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { top: 282px; height: 130px; }
+}
+@keyframes row4 {
+  0% { top: 490px; height: 138px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { top: 456px; height: 160px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { top: 506px; height: 95px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { top: 406px; height: 150px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { top: 430px; height: 130px; }
+}
+@keyframes col1 {
+  0% { left: 27px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { left: 27px; width: 200px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { left: 27px; width: 270px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { left: 27px; width: 250px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { left: 27px; width: 236px; }
+}
+@keyframes col2 {
+  0% { left: 277px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { left: 241px; width: 272px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { left: 311px; width: 210px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { left: 291px; width: 226px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { left: 277px; width: 236px; }
+}
+@keyframes col3 {
+  0% { left: 527px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { left: 527px; width: 250px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { left: 535px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { left: 531px; width: 244px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { left: 527px; width: 236px; }
+}
+@keyframes col4 {
+  0% { left: 777px; width: 236px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  25% { left: 791px; width: 222px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  50% { left: 785px; width: 228px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  75% { left: 789px; width: 224px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
+  100% { left: 777px; width: 236px; }
+}
+
+/* g3: 2번 그리드가 남아 있는 채로 미리보기 카드가 왼쪽 위부터 → 그 뒤 그리드가 천천히 사라짐 */
+#stage.ready #gs[data-step="g3"] .pv { animation: pop 400ms var(--ease) both; animation-delay: calc(var(--d) * .7); }
+@keyframes pop { from { opacity: 0; scale: .9; } }
+#stage.ready #gs[data-step="g3"] :is(.row, .col) { animation: gridOut 1000ms ease-in-out 800ms both; }
+@keyframes gridOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* g4: 보드 무늬 → 카드 UI 가 차례로 입혀지고, 카드와 카드 사이 연결선이 흐름을 따라 그려짐 → 마지막 선은 아래로 길게 */
+#stage.ready #gs[data-step="g4"] .finBoard { animation: fadeOnly 500ms ease both; }
+#stage.ready #gs[data-step="g4"] .card { animation: dress 400ms var(--ease) both; animation-delay: var(--d); }
+#gb .card .ui { position: absolute; inset: 0; }
+/* 카드 안 UI: 부드러운 가장자리로 왼쪽에서 오른쪽으로 슥 스와이프되며 나타남 */
+#stage.ready #gs[data-step="g4"] .card .ui { animation: swipe 650ms cubic-bezier(.33, 1, .68, 1) both; animation-delay: calc(var(--d) + 60ms);
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 60%); mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  -webkit-mask-size: 250% 100%; mask-size: 250% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+@keyframes swipe {
+  from { -webkit-mask-position: 100% 0; mask-position: 100% 0; translate: -10px 0; }
+  to { -webkit-mask-position: 0 0; mask-position: 0 0; translate: 0 0; }
+}
+@keyframes dress { from { opacity: 0; scale: .97; } }
+#stage.ready #gs[data-step="g4"] .pv { animation: hand 500ms ease both; animation-delay: var(--e); }
+@keyframes hand { from { opacity: 1; } to { opacity: 0; } }
+#stage.ready #gs[data-step="g4"] .ln.v { animation: drawDown var(--t) ease-in-out both; animation-delay: var(--d); }
+#stage.ready #gs[data-step="g4"] .ln.h { animation: drawRight var(--t) ease-in-out both; animation-delay: var(--d); }
+@keyframes drawDown { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+@keyframes drawRight { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+#gs.snap, #gs.snap * { transition: none !important; animation: none !important; }
+/* g2: 논의 열기 데이터 — 그리드가 한 박자 바뀔 때마다 그 기준이 하나씩 (피그마 532:8525) */
+#gs .leg { position: absolute; opacity: 0; transition: opacity 300ms ease; }
+#gs[data-step="g2"] .leg { opacity: 1; }
+#stage.ready #gs[data-step="g2"] .leg.h { animation: fadeOnly 400ms ease 100ms both; }
+#stage.ready #gs[data-step="g2"] .leg.i { animation: legIn 500ms var(--ease) both; animation-delay: var(--d); }
+@keyframes legIn { from { opacity: 0; translate: -12px 0; } }
+
+/* ── 11~15 UT 결과: 왼쪽 시연 영상이 먼저 재생 → 끝나면 오른쪽 정량 데이터·인사이트 ── */
+#ut { background: #0c0c0c; }
+#ut img { position: absolute; display: block; max-width: none; }
+#ut .task { opacity: 0; translate: 0 12px; transition: opacity 200ms ease, translate 300ms ease; } /* 이전 과제는 먼저 빠지고 */
+#ut .task.on { opacity: 1; translate: 0 0; transition: opacity 400ms ease 250ms, translate 600ms var(--ease) 250ms; } /* 새 과제가 아래에서 */
+#ufr { left: 171px; top: 434.86px; width: 770.76px; height: 473.56px; border: 6.019px solid #8c8c8c; border-radius: 4.515px; overflow: hidden; background: #fff; }
+#ufr video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 350ms ease; }
+#ufr video.on { opacity: 1; }
+#ut .pset { position: absolute; inset: 0; opacity: 0; transition: opacity 300ms ease; pointer-events: none; }
+#ut.res .pset.on { opacity: 1; }
+#ut .pn { position: absolute; left: 1148px; width: 692px; border-radius: 12px; overflow: hidden; }
+#ut .p1 { top: 204.5px; height: 367px; background: #1c1c1c; }
+#ut .p2 { top: 588.5px; height: 411px; background: #292b2d; }
+#ut .pn > img.bg { left: 0; top: 0; width: 692px; }
+#ut .p1 > img.bg { height: 367px; } #ut .p2 > img.bg { height: 411px; }
+#ut .chart { position: absolute; left: 0; top: 0; overflow: visible; }
+#ut.snap, #ut.snap * { transition: none !important; animation: none !important; }
+/* 들어올 때: 머리말 → T 줄 → 화면 틀 차례로 */
+#stage.ready #ut.enter .uh { animation: rise 700ms var(--ease) both; }
+#stage.ready #ut.enter .task.on { animation: rise 700ms var(--ease) 120ms both; }
+#stage.ready #ut.enter #ufr { animation: rise 800ms var(--ease) 240ms both; }
+/* 결과: 위 패널 → 아래 패널, 안의 그래프는 패널이 자리 잡은 뒤 */
+#stage.ready #ut.res .pset.on .p1 { animation: rise 700ms var(--ease) both; }
+#stage.ready #ut.res .pset.on .p2 { animation: rise 700ms var(--ease) 260ms both; }
+#ut .rng { stroke-dasharray: var(--l) var(--l); }
+#stage.ready #ut.res .pset.on .rng { animation: draw 700ms cubic-bezier(.65, 0, .35, 1) both; animation-delay: calc(450ms + var(--i) * 70ms); }
+@keyframes draw { from { stroke-dashoffset: var(--l); } }
+#stage.ready #ut.res .pset.on .pt { animation: fadeOnly 300ms ease both; animation-delay: calc(900ms + var(--i) * 70ms); }
+#stage.ready #ut.res .pset.on .hl { animation: pop 450ms var(--ease) 1350ms both; transform-box: fill-box; transform-origin: center; }
+#stage.ready #ut.res .pset.on .lb { animation: fadeOnly 400ms ease 1500ms both; }
+#stage.ready #ut.res .pset.on .grow { animation: grow 900ms cubic-bezier(.65, 0, .35, 1) both; animation-delay: var(--d, 900ms); }
+@keyframes grow { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+#stage.ready #ut.res .pset.on .dot { animation: pop 400ms var(--ease) both; animation-delay: var(--d); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <section class="slide" id="st">
+    <img data-k="s01" src="assets/st/s01.webp" alt="">
+    <img data-k="s02" src="assets/st/s02.webp" alt="">
+    <img data-k="s03" src="assets/st/s03.webp" alt="">
+    <img data-k="s08" src="assets/st/s08.webp" alt="">
+    <img data-k="s09" src="assets/st/s09.webp" alt="">
+    <img data-k="s10" src="assets/st/s10.webp" alt="">
+    <img data-k="s16" src="assets/st/s16.webp" alt="">
+    <img data-k="s17" src="assets/st/s17.webp" alt="">
+    <img data-k="s18" src="assets/st/s18.webp" alt="">
+  </section>
+
+  <section class="slide" id="gs" data-step="g1">
+    <p class="subx" data-on="g1 g2">X축은 시간의 전개, Y축은 논의의 깊이와 위계를 나타내요</p>
+    <p class="subx" data-on="g3">콘텐츠 내용에 따라, 그리드는 유연하게 수정되고 -</p>
+    <p class="subx" data-on="g4">사용자는 좌상단부터 우하단으로, 자연스럽게 시선을 이동하며 확인해요.</p>
+    <img src="../assets/grid/head.png" style="left:0;top:0;width:1920px;height:200px" alt="">
+    <img class="leg h" src="assets/st/leg_h.png" style="left:87.75px;top:468.5px;width:170px;height:47px" alt="">
+    <img class="leg i" src="assets/st/leg0.png" style="left:87.75px;top:533px;width:154px;height:47px;--d:300ms" alt="">
+    <img class="leg i" src="assets/st/leg1.png" style="left:87.75px;top:580px;width:154px;height:47px;--d:1350ms" alt="">
+    <img class="leg i" src="assets/st/leg2.png" style="left:87.75px;top:627px;width:154px;height:47px;--d:2400ms" alt="">
+    <img class="leg i" src="assets/st/leg3.png" style="left:87.75px;top:674px;width:154px;height:47px;--d:3450ms" alt="">
+    <div class="abs" id="gb">
+      <div class="row r1" style="--d:1600ms;--k:row1"></div>
+      <div class="row r2" style="--d:1789ms;--k:row2"></div>
+      <div class="row r3" style="--d:1979ms;--k:row3"></div>
+      <div class="row r4" style="--d:2168ms;--k:row4"></div>
+      <div class="col" style="left:27px;--d:200ms;--k:col1"></div>
+      <div class="col" style="left:277px;--d:468ms;--k:col2"></div>
+      <div class="col" style="left:527px;--d:737ms;--k:col3"></div>
+      <div class="col" style="left:777px;--d:1005ms;--k:col4"></div>
+      <!-- 실제 보드 무늬는 미리보기 카드 아래에 깔림 -->
+      <img class="fin finBoard" src="../assets/grid/board.png" style="left:0;top:0;width:1050px;height:673px" alt="">
+      <div class="pv" style="left:27px;top:40px;width:236px;height:60px;background:rgba(74,87,108,.4);--d:250ms;--e:129ms"><i class="sk" style="left:12.0px;top:14.0px;width:44.5px;height:7px;background:rgba(255,255,255,.4)"></i><i class="sk" style="left:12.5px;top:33.2px;width:183.0px;height:9px;background:rgba(255,255,255,.4)"></i></div>
+      <div class="pv" style="left:27px;top:113px;width:236px;height:151px;--d:390ms;--e:129ms"><i class="sk" style="left:18.0px;top:18.5px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.0px;top:54.5px;width:170.0px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.0px;top:75.8px;width:84.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.5px;top:102.0px;width:189.5px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:18.5px;top:120.0px;width:61.0px;height:7px;background:rgba(100,113,133,.2)"></i></div>
+      <div class="pv" style="left:277px;top:113px;width:236px;height:151px;--d:530ms;--e:209ms"><i class="sk" style="left:20.0px;top:18.0px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:54.2px;width:179.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:75.8px;width:81.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:101.5px;width:177.5px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:119.8px;width:136.5px;height:7px;background:rgba(100,113,133,.2)"></i></div>
+      <div class="pv" style="left:277px;top:282px;width:236px;height:130px;--d:670ms;--e:209ms"><i class="sk" style="left:20.0px;top:18.0px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:21.0px;top:54.5px;width:190.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:80.5px;width:189.0px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:98.5px;width:166.0px;height:7px;background:rgba(100,113,133,.2)"></i></div>
+      <div class="pv" style="left:277px;top:430px;width:236px;height:130px;--d:810ms;--e:209ms"><i class="sk" style="left:20.0px;top:18.0px;width:24px;height:24px;border-radius:50%;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.0px;top:54.5px;width:83.5px;height:9px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:80.5px;width:194.0px;height:7px;background:rgba(100,113,133,.2)"></i><i class="sk" style="left:20.5px;top:98.8px;width:151.5px;height:7px;background:rgba(100,113,133,.2)"></i></div>
+      <div class="pv" style="left:777px;top:430px;width:236px;height:130px;background:rgba(83,122,185,.2);--d:950ms;--e:369ms"><i class="sk" style="left:19.0px;top:37.5px;width:25.0px;height:7px;background:rgba(83,122,185,.22)"></i><i class="sk" style="left:19.5px;top:65.2px;width:187.0px;height:9px;background:rgba(83,122,185,.22)"></i><i class="sk" style="left:19.5px;top:86.8px;width:95.5px;height:9px;background:rgba(83,122,185,.22)"></i></div>
+      <img class="ln v" src="../assets/grid/L1.png" style="left:143px;top:100px;width:12px;height:13px;--d:420ms;--t:150ms" alt="">
+      <img class="ln h" src="../assets/grid/L2.png" style="left:261px;top:181px;width:18px;height:14px;--d:480ms;--t:150ms" alt="">
+      <img class="ln v" src="../assets/grid/L3a.png" style="left:390px;top:263px;width:12px;height:19px;--d:540ms;--t:120ms" alt="">
+      <img class="ln v" src="../assets/grid/L3b.png" style="left:390px;top:411px;width:12px;height:19px;--d:600ms;--t:120ms" alt="">
+      <img class="ln h" src="../assets/grid/L4.png" style="left:515px;top:488px;width:261px;height:12px;--d:660ms;--t:220ms" alt="">
+      <img class="ln v" src="../assets/grid/L5.png" style="left:903px;top:551px;width:12px;height:122px;--d:820ms;--t:600ms" alt="">
+      <div class="card" style="left:25px;top:38px;width:240px;height:64px;--d:128ms">
+        <img class="shell" src="../assets/grid/issue_shell.png" style="left:0;top:0;width:240px;height:64px" alt="">
+        <div class="ui">
+          <img class="tl" src="../assets/grid/issue_t0.png" style="left:12.0px;top:11.5px;width:50.5px;height:16.0px" alt="">
+          <img class="tl" src="../assets/grid/issue_t1.png" style="left:12.5px;top:30.5px;width:189.0px;height:18.5px" alt="">
+        </div>
+      </div>
+      <div class="card" style="left:25px;top:111px;width:238.4px;height:155px;--d:128ms">
+        <img class="shell" src="../assets/grid/c1_shell.png" style="left:0;top:0;width:238.4px;height:155px" alt="">
+        <div class="ui">
+          <img class="av" src="../assets/grid/c1_av.png" style="left:18.0px;top:18.5px;width:28.5px;height:28.0px" alt="">
+          <img class="tl" src="../assets/grid/c1_t0.png" style="left:18.0px;top:52.0px;width:176.0px;height:18.0px" alt="">
+          <img class="tl" src="../assets/grid/c1_t1.png" style="left:18.0px;top:73.0px;width:90.5px;height:18.5px" alt="">
+          <img class="tl" src="../assets/grid/c1_t2.png" style="left:18.5px;top:99.5px;width:195.5px;height:16.0px" alt="">
+          <img class="tl" src="../assets/grid/c1_t3.png" style="left:18.5px;top:117.5px;width:67.0px;height:16.0px" alt="">
+        </div>
+      </div>
+      <div class="card" style="left:277px;top:111px;width:238.4px;height:154.6px;--d:209ms">
+        <img class="shell" src="../assets/grid/c2_shell.png" style="left:0;top:0;width:238.4px;height:154.6px" alt="">
+        <div class="ui">
+          <img class="av" src="../assets/grid/c2_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
+          <img class="tl" src="../assets/grid/c2_t0.png" style="left:18.5px;top:51.5px;width:185.5px;height:18.5px" alt="">
+          <img class="tl" src="../assets/grid/c2_t1.png" style="left:18.5px;top:73.0px;width:87.5px;height:18.5px" alt="">
+          <img class="tl" src="../assets/grid/c2_t2.png" style="left:18.5px;top:99.0px;width:183.5px;height:16.0px" alt="">
+          <img class="tl" src="../assets/grid/c2_t3.png" style="left:18.5px;top:117.0px;width:142.5px;height:16.5px" alt="">
+        </div>
+      </div>
+      <div class="card" style="left:277px;top:280px;width:238.4px;height:133.6px;--d:209ms">
+        <img class="shell" src="../assets/grid/c3_shell.png" style="left:0;top:0;width:238.4px;height:133.6px" alt="">
+        <div class="ui">
+          <img class="av" src="../assets/grid/c3_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
+          <img class="tl" src="../assets/grid/c3_t0.png" style="left:19.0px;top:51.5px;width:196.5px;height:19.0px" alt="">
+          <img class="tl" src="../assets/grid/c3_t1.png" style="left:18.5px;top:78.0px;width:195.0px;height:16.0px" alt="">
+          <img class="tl" src="../assets/grid/c3_t2.png" style="left:18.5px;top:96.0px;width:172.0px;height:16.0px" alt="">
+        </div>
+      </div>
+      <div class="card" style="left:277px;top:428px;width:238.4px;height:133.6px;--d:209ms">
+        <img class="shell" src="../assets/grid/c4_shell.png" style="left:0;top:0;width:238.4px;height:133.6px" alt="">
+        <div class="ui">
+          <img class="av" src="../assets/grid/c4_av.png" style="left:18.0px;top:18.0px;width:28.5px;height:28.5px" alt="">
+          <img class="tl" src="../assets/grid/c4_t0.png" style="left:18.0px;top:51.5px;width:89.5px;height:19.0px" alt="">
+          <img class="tl" src="../assets/grid/c4_t1.png" style="left:18.5px;top:78.0px;width:200.0px;height:16.0px" alt="">
+          <img class="tl" src="../assets/grid/c4_t2.png" style="left:18.5px;top:96.0px;width:157.5px;height:16.5px" alt="">
+        </div>
+      </div>
+      <div class="card" style="left:776px;top:439px;width:238.4px;height:112.5px;--d:368ms">
+        <img class="shell" src="../assets/grid/concl_shell.png" style="left:0;top:0;width:238.4px;height:112.5px" alt="">
+        <div class="ui">
+          <img class="tl" src="../assets/grid/concl_t0.png" style="left:18.0px;top:24.0px;width:31.0px;height:16.0px" alt="">
+          <img class="tl" src="../assets/grid/concl_t1.png" style="left:18.5px;top:51.5px;width:193.0px;height:18.5px" alt="">
+          <img class="tl" src="../assets/grid/concl_t2.png" style="left:18.5px;top:73.0px;width:101.5px;height:18.5px" alt="">
+        </div>
+      </div>
+    </div>
+        <div class="axes">
+      <img class="lx" src="../assets/grid/lx.png" style="left:470px;top:200px;width:30px;height:50px" alt="">
+      <img class="ltime" src="../assets/grid/ltime.png" style="left:1508px;top:242px;width:102px;height:34px" alt="">
+      <img class="ly" src="../assets/grid/ly.png" style="left:384px;top:305px;width:30px;height:50px" alt="">
+      <img class="ldepth" src="../assets/grid/ldepth.png" style="left:318px;top:925px;width:86px;height:37px" alt="">
+      <div class="abs axis ax"><i></i><svg width="8" height="13.26" viewBox="1017 0 8 13.2551"><path d="M1024.54 7.26396C1024.89 6.91249 1024.89 6.34264 1024.54 5.99117L1018.81 0.263604C1018.46 -0.0878682 1017.89 -0.0878682 1017.54 0.263604C1017.18 0.615076 1017.18 1.18492 1017.54 1.5364L1022.63 6.62756L1017.54 11.7187C1017.18 12.0702 1017.18 12.6401 1017.54 12.9915C1017.89 13.343 1018.46 13.343 1018.81 12.9915Z" fill="#BFC4C8"/></svg></div>
+      <div class="abs axis ay"><i></i><svg width="8" height="13.26" viewBox="1017 0 8 13.2551"><path d="M1024.54 7.26396C1024.89 6.91249 1024.89 6.34264 1024.54 5.99117L1018.81 0.263604C1018.46 -0.0878682 1017.89 -0.0878682 1017.54 0.263604C1017.18 0.615076 1017.18 1.18492 1017.54 1.5364L1022.63 6.62756L1017.54 11.7187C1017.18 12.0702 1017.18 12.6401 1017.54 12.9915C1017.89 13.343 1018.46 13.343 1018.81 12.9915Z" fill="#BFC4C8"/></svg></div>
+    </div>
+  </section>
+
+  <section class="slide" id="ut">
+    <img class="uh" src="assets/ut/head.png" style="left:74px;top:74px;width:138px;height:118px" alt="">
+    <img class="task" data-t="1" src="assets/ut/task1.png" style="left:74px;top:196px;width:926px;height:88px" alt="">
+    <img class="task" data-t="2" src="assets/ut/task2.png" style="left:74px;top:196px;width:926px;height:88px" alt="">
+    <img class="task" data-t="3" src="assets/ut/task3.png" style="left:74px;top:196px;width:926px;height:88px" alt="">
+    <img class="task" data-t="4" src="assets/ut/task4.png" style="left:74px;top:196px;width:926px;height:88px" alt="">
+    <img class="task" data-t="5" src="assets/ut/task5.png" style="left:74px;top:196px;width:926px;height:88px" alt="">
+    <div class="abs" id="ufr">
+      <video data-src="assets/ut/t1.mp4" muted playsinline preload="auto"></video>
+      <video data-src="assets/ut/t2.mp4" muted playsinline preload="auto"></video>
+      <video data-src="assets/ut/t3.mp4" muted playsinline preload="auto"></video>
+      <video data-src="assets/ut/t4.mp4" muted playsinline preload="auto"></video>
+      <video data-src="assets/ut/t5.mp4" muted playsinline preload="auto"></video>
+    </div>
+    <div class="pset" data-t="1">
+      <div class="pn p1"><img class="bg" src="assets/ut/p1_1.png" alt=""></div>
+      <div class="pn p2"><img class="bg" src="assets/ut/p2_1.png" alt=""></div>
+    </div>
+    <div class="pset" data-t="2">
+      <div class="pn p1"><img class="bg" src="assets/ut/p1_2.png" alt=""></div>
+      <div class="pn p2"><img class="bg" src="assets/ut/p2_2.png" alt=""><img class="grow" src="assets/ut/bar_fill.png" style="left:38px;top:264.46px;width:210.5px;height:115px" alt=""></div>
+    </div>
+    <div class="pset" data-t="3">
+      <div class="pn p1"><img class="bg" src="assets/ut/p1_3.png" alt=""></div>
+      <div class="pn p2"><img class="bg" src="assets/ut/p2_3.png" alt=""><img class="grow" src="assets/ut/blk_snb.png" style="left:40px;top:268px;width:282.5px;height:115.5px;--d:700ms" alt=""><img class="grow" src="assets/ut/blk_home.png" style="left:331.5px;top:268px;width:316px;height:115.5px;--d:950ms" alt=""></div>
+    </div>
+    <div class="pset" data-t="4">
+      <div class="pn p1"><img class="bg" src="assets/ut/p1_4.png" alt=""></div>
+      <div class="pn p2"><img class="bg" src="assets/ut/p2_4.png" alt=""></div>
+    </div>
+    <div class="pset" data-t="5">
+      <div class="pn p1"><img class="bg" src="assets/ut/p1_5.png" alt=""></div>
+      <div class="pn p2"><img class="bg" src="assets/ut/p2_5.png" alt=""><img class="dot" src="assets/ut/dot0.png" style="left:40.00px;top:320.69px;width:56.25px;height:56.5px;--d:700ms" alt=""><img class="dot" src="assets/ut/dot1.png" style="left:96.24px;top:320.69px;width:56.25px;height:56.5px;--d:790ms" alt=""><img class="dot" src="assets/ut/dot2.png" style="left:152.49px;top:320.69px;width:56.25px;height:56.5px;--d:880ms" alt=""><img class="dot" src="assets/ut/dot3.png" style="left:208.73px;top:320.69px;width:56.25px;height:56.5px;--d:970ms" alt=""><img class="dot" src="assets/ut/dot4.png" style="left:264.97px;top:320.69px;width:56.25px;height:56.5px;--d:1060ms" alt=""><img class="dot" src="assets/ut/dot5.png" style="left:321.22px;top:320.69px;width:56.25px;height:56.5px;--d:1150ms" alt=""><img class="dot" src="assets/ut/dot6.png" style="left:377.46px;top:320.69px;width:56.25px;height:56.5px;--d:1240ms" alt=""><img class="dot" src="assets/ut/dot7.png" style="left:433.70px;top:320.69px;width:56.25px;height:56.5px;--d:1330ms" alt=""><img class="dot" src="assets/ut/dot8.png" style="left:489.95px;top:320.69px;width:56.25px;height:56.5px;--d:1420ms" alt=""></div>
+    </div>
+  </section>
+</div>
+<script>
+// 피그마 '1020발표' 섹션(529:1535) 18장 순서. st = 그림 장, gs = 그리드(기존 장표와 같은 애니메이션, 단계마다 클릭), ut = UT 결과
+const SL = [{"k":"st","img":"s01"},{"k":"st","img":"s02"},{"k":"st","img":"s03","fade":1},{"k":"gs","g":"g1"},{"k":"gs","g":"g2"},{"k":"gs","g":"g3"},{"k":"gs","g":"g4"},{"k":"st","img":"s08"},{"k":"st","img":"s09"},{"k":"st","img":"s10"},{"k":"ut","t":1},{"k":"ut","t":2},{"k":"ut","t":3},{"k":"ut","t":4},{"k":"ut","t":5},{"k":"st","img":"s16"},{"k":"st","img":"s17"},{"k":"st","img":"s18"}];
+const ST_FX = {"s02":[[60,100,660,1010],[660,100,1260,1010],[1260,100,1860,1010]],"s09":[[77,88,317,182],[77,232,783,321],[0,483,1920,1080]],"s10":[[76,0,732,1046],[1144,0,1844,1046]],"s16":[[77,88,222,179],[0,211,1920,1080]],"s17":[[77,88,329,179],[0,211,1920,1080]],"s18":[[102,445,496,654],[1578,445,1818,654]]}; // 덩어리 띠(1x 좌표) — 앞 장과 배경이 같을 때 위→아래 차례로
+const stage = document.getElementById('stage'), st = document.getElementById('st'), grid = document.getElementById('gs'), ut = document.getElementById('ut');
+// 새로고침하면 맨 첫 장, 주소의 #번호로 열면 그 장
+let cur = performance.getEntriesByType('navigation')[0]?.type === 'reload' ? 0 : Math.min(Math.max((+location.hash.slice(1) || 1) - 1, 0), 17);
+
+function stFx(n) {
+  st.querySelectorAll('.fx').forEach(e => e.remove());
+  const key = SL[n].img, src = `assets/st/${key}.webp`, imgs = st.querySelectorAll('img[data-k]');
+  if (SL[n].fade) { // 같은 화면에서 바뀐 부분만 — 앞 장 위로 겹쳐 서서히
+    imgs.forEach(im => im.classList.toggle('on', im.dataset.k === SL[n - 1].img));
+    const im = document.createElement('img'); im.className = 'fx'; im.src = src; st.append(im);
+    im.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, easing: 'ease-in-out', fill: 'both' });
+    setTimeout(() => { if (cur !== n) return; imgs.forEach(i => i.classList.toggle('on', i.dataset.k === key)); im.remove(); }, 750);
+    return;
+  }
+  imgs.forEach(im => im.classList.remove('on'));
+  let end = 0;
+  ST_FX[key].forEach(([x0, y0, x1, y1], k) => {
+    const im = document.createElement('img'); im.className = 'fx'; im.src = src;
+    im.style.clipPath = `inset(${y0}px ${1920 - x1}px ${1080 - y1}px ${x0}px)`;
+    st.append(im);
+    im.animate([{ opacity: 0, translate: '0 36px' }, { opacity: 1, translate: '0 0' }], { duration: 650, delay: 120 + k * 110, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'both' });
+    end = Math.max(end, 120 + k * 110 + 650);
+  });
+  setTimeout(() => { if (cur !== n) return; imgs.forEach(im => im.classList.toggle('on', im.dataset.k === key)); st.querySelectorAll('.fx').forEach(e => e.remove()); }, end + 50);
+}
+function setStep(el, step, snap) {
+  el.classList.toggle('snap', snap);
+  if (el.dataset.step === step) { el.classList.add('snap'); el.dataset.step = ''; el.offsetWidth; }
+  el.dataset.step = step;
+  el.querySelectorAll(':scope > .subx').forEach(p => p.classList.toggle('on', p.dataset.on.split(' ').includes(step)));
+  el.offsetWidth; requestAnimationFrame(() => el.classList.remove('snap'));
+}
+
+// ── UT 결과: 과제마다 걸린 시간 그래프(ut-figures 01) — 다섯 장 모두 같은 축(0~180초), 지금 과제만 진하게 ──
+const TIMES = [[10, 103, 27, 33.6], [8, 166, 22, 47.8], [9, 116, 20.5, 26.6], [8, 42, 13.5, 18.9], [32, 121, 53, 64.9]]; // 최단·최장·중앙값·평균(초)
+const X0 = 306, X1 = 606, sx = s => X0 + (X1 - X0) * s / 180, RY = i => 130 + 42 * i;
+function chart(t) {
+  const W = 'rgba(255,255,255,', parts = [];
+  [0, 60, 120, 180].forEach(s => parts.push(`<line x1="${sx(s)}" y1="108" x2="${sx(s)}" y2="316" stroke="${W}.07)" stroke-width="1"/>`,
+    `<text x="${sx(s)}" y="338" fill="${W}.38)" font-size="15" text-anchor="middle">${s}${s === 180 ? '초' : ''}</text>`));
+  TIMES.forEach(([lo, hi, md, mn], i) => {
+    const on = i === t - 1, y = RY(i), l = sx(hi) - sx(lo);
+    parts.push(`<text x="262" y="${y + 5}" fill="${W}${on ? 1 : .32})" font-size="17" font-weight="700">T${i + 1}</text>`,
+      `<line class="rng" style="--i:${i};--l:${l.toFixed(1)}" x1="${sx(lo)}" y1="${y}" x2="${sx(hi)}" y2="${y}" stroke="${W}${on ? .42 : .13})" stroke-width="4" stroke-linecap="round"/>`);
+    if (!on) { parts.push(`<circle class="pt" style="--i:${i}" cx="${sx(md)}" cy="${y}" r="5" fill="rgba(91,133,227,.45)"/>`); return; }
+    const d = sx(mn);
+    parts.push(`<circle class="pt" style="--i:${i}" cx="${sx(lo)}" cy="${y}" r="4" fill="${W}.7)"/>`, `<circle class="pt" style="--i:${i}" cx="${sx(hi)}" cy="${y}" r="4" fill="${W}.7)"/>`,
+      `<path class="hl" d="M${d} ${y - 7}L${d + 7} ${y}L${d} ${y + 7}L${d - 7} ${y}Z" fill="#ACB577" stroke="#1c1c1c" stroke-width="2"/>`,
+      `<circle class="hl" cx="${sx(md)}" cy="${y}" r="7" fill="#5B85E3" stroke="#1c1c1c" stroke-width="2"/>`,
+      `<g class="lb" font-size="16"><text x="${sx(lo) - 9}" y="${y + 5}" fill="${W}.55)" text-anchor="end">${lo}</text>`,
+      `<text x="${sx(hi) + 10}" y="${y + 5}" fill="${W}.9)" font-weight="600">${hi}초</text>`,
+      `<text x="${sx(md)}" y="${y - 14}" fill="#7EA2F0" font-weight="700" text-anchor="middle">${md}초</text></g>`);
+  });
+  // 범례: '정량 데이터' 제목 줄 오른쪽
+  parts.push(`<g font-size="15" fill="${W}.55)"><line x1="384" y1="55" x2="410" y2="55" stroke="${W}.42)" stroke-width="4" stroke-linecap="round"/><text x="418" y="60">최단~최장</text>`,
+    `<circle cx="512" cy="55" r="6" fill="#5B85E3"/><text x="524" y="60">중앙값</text>`,
+    `<path d="M603 48L610 55L603 62L596 55Z" fill="#ACB577"/><text x="618" y="60">평균</text></g>`);
+  return `<svg class="chart" width="692" height="367" viewBox="0 0 692 367" font-family="KR, Pretendard, sans-serif">${parts.join('')}</svg>`;
+}
+ut.querySelectorAll('.pset').forEach(p => p.querySelector('.p1').insertAdjacentHTML('beforeend', chart(+p.dataset.t)));
+
+const vids = [...ut.querySelectorAll('video')];
+vids.forEach(v => fetch(v.dataset.src).then(r => r.blob()).then(b => { v.src = URL.createObjectURL(b); }).catch(() => { v.src = v.dataset.src; })); // 발표 중 네트워크를 기다리지 않게 미리 받아 둠
+let utTimer = 0;
+function utGo(t, fwd, fromUT) {
+  clearTimeout(utTimer);
+  ut.classList.toggle('snap', !fwd);
+  ut.classList.remove('res', 'enter');
+  ut.querySelectorAll('.task').forEach(e => e.classList.toggle('on', +e.dataset.t === t));
+  ut.querySelectorAll('.pset').forEach(e => e.classList.toggle('on', +e.dataset.t === t));
+  vids.forEach((v, i) => { v.classList.toggle('on', i === t - 1); if (i !== t - 1) v.pause(); v.onended = null; });
+  const v = vids[t - 1];
+  const done = () => { ut.classList.add('res'); };
+  if (!fwd) { // 뒤로·건너뛰기: 다 끝난 상태로 (영상은 마지막 장면)
+    const end = () => { v.currentTime = Math.max(0, v.duration - .05); };
+    v.pause(); v.readyState ? end() : v.addEventListener('loadedmetadata', end, { once: true });
+    done(); ut.offsetWidth; requestAnimationFrame(() => ut.classList.remove('snap')); return;
+  }
+  if (!fromUT) { ut.offsetWidth; ut.classList.add('enter'); }
+  v.pause(); v.currentTime = 0;
+  v.onended = () => { if (SL[cur].t === t) done(); };
+  utTimer = setTimeout(() => v.play().catch(done), fromUT ? 500 : 800);
+}
+
+function go(i, animate = true) {
+  const prev = cur;
+  cur = Math.min(Math.max(i, 0), SL.length - 1);
+  const s = SL[cur], p = SL[prev], fwd = animate && prev === cur - 1;
+  ['st', 'gs', 'ut'].forEach(k => document.getElementById(k).classList.toggle('on', s.k === k));
+  st.querySelectorAll('.fx').forEach(e => e.remove());
+  if (s.k === 'st') {
+    st.querySelectorAll('img[data-k]').forEach(im => im.classList.toggle('on', im.dataset.k === s.img));
+    if (fwd && p.k === 'st' && (s.fade || ST_FX[s.img])) stFx(cur);
+  }
+  if (s.k === 'gs') setStep(grid, s.g, !fwd);
+  if (s.k === 'ut') utGo(s.t, fwd, p.k === 'ut'); else { clearTimeout(utTimer); vids.forEach(v => v.pause()); }
+  history.replaceState(null, '', '#' + (cur + 1));
+}
+go(cur, false);
+
+addEventListener('click', () => { stage.classList.add('ready'); go(cur + 1); });
+addEventListener('keydown', e => {
+  if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { stage.classList.add('ready'); go(cur + 1); }
+  else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) go(cur - 1);
+  else if (e.key === 'f') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+});
+const fit = () => stage.style.setProperty('--s', Math.min(innerWidth / 1920, innerHeight / 1080));
+addEventListener('resize', fit); fit();
+</script>
+</body>
+</html>
