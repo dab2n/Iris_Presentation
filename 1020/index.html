@@ -213,7 +213,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #ut .row.on :is(.end, .lb) { opacity: 1; transition: opacity 450ms ease 300ms; }
 /* 아래 그래프: T2 막대(채움+바탕) ↔ T3 두 칸은 같은 도형이 자리·폭·색을 바꿔 이어짐 */
 #ut .sh { position: absolute; left: 38px; top: 264.46px; width: 0; height: 115.08px; border-radius: 12px 0 0 12px; opacity: 0;
-  transition: left 800ms cubic-bezier(.65, 0, .35, 1), top 800ms cubic-bezier(.65, 0, .35, 1), width 800ms cubic-bezier(.65, 0, .35, 1), border-radius 800ms ease, background-color 800ms ease, opacity 400ms ease; }
+  transition: left 800ms cubic-bezier(.65, 0, .35, 1), top 800ms cubic-bezier(.65, 0, .35, 1), width 800ms cubic-bezier(.65, 0, .35, 1), height 800ms cubic-bezier(.65, 0, .35, 1), border-radius 800ms ease, background-color 800ms ease, opacity 400ms ease; }
 #ut .sh.a { background: #5b85e3; }
 #ut .sh.b { width: 609.09px; border-radius: 12px; background: #464849; }
 #ut[data-r="2"] .sh { opacity: 1; }
@@ -221,6 +221,12 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #ut[data-r="3"] .sh { opacity: 1; top: 268.11px; border-radius: 12px; }
 #ut[data-r="3"] .sh.a { left: 40px; width: 282.33px; }
 #ut[data-r="3"] .sh.b { left: 331.38px; width: 315.71px; background: #c0ceed; }
+/* T5 두 번째 장: 같은 도형이 '확대하기까지 27초 : 확대 후 13.5초' 두 칸 막대로 */
+#ut[data-r="5"] .sh { left: 40px; top: 274px; height: 104px; }
+#ut[data-r="5"] .sh.a { left: 448px; }
+#ut[data-r="6"] .sh { opacity: 1; top: 274px; height: 104px; }
+#ut[data-r="6"] .sh.b { left: 40px; width: 408px; border-radius: 12px 0 0 12px; }
+#ut[data-r="6"] .sh.a { left: 448px; width: 204px; border-radius: 0 12px 12px 0; }
 #ut .dot { opacity: 0; scale: .6; transition: opacity 250ms ease, scale 250ms ease; }
 #ut .dots.on .dot { opacity: 1; scale: 1; transition: opacity 300ms ease calc(250ms + var(--d)), scale 450ms var(--ease) calc(250ms + var(--d)); }
 #ut.snap, #ut.snap * { transition: none !important; animation: none !important; }
@@ -360,7 +366,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <img class="sw" data-t="2" src="assets/ut/p1_2.png" style="left:0;top:0;width:692px;height:367px" alt="">
       <img class="sw" data-t="3" src="assets/ut/p1_3.png" style="left:0;top:0;width:692px;height:367px" alt="">
       <img class="sw" data-t="4" src="assets/ut/p1_4.png" style="left:0;top:0;width:692px;height:367px" alt="">
-      <img class="sw" data-t="5" src="assets/ut/p1_5.png" style="left:0;top:0;width:692px;height:367px" alt="">
+      <img class="sw" data-t="5 6" src="assets/ut/p1_5.png" style="left:0;top:0;width:692px;height:367px" alt="">
       <img src="assets/ut/p1_title.png" style="left:30px;top:34px;width:270px;height:42px" alt="">
     </div>
     <div class="pn p2">
@@ -369,7 +375,9 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <img class="sw" data-t="3" src="assets/ut/p2_3.png" style="left:0;top:0;width:692px;height:411px" alt="">
       <img class="sw" data-t="4" src="assets/ut/p2_4.png" style="left:0;top:0;width:692px;height:411px" alt="">
       <img class="sw" data-t="5" src="assets/ut/p2_5.png" style="left:0;top:0;width:692px;height:411px" alt="">
+      <img class="sw" data-t="6" src="assets/ut/p2_6.png" style="left:0;top:0;width:692px;height:411px" alt="">
       <i class="sh b"></i><i class="sh a"></i>
+      <img class="sw lab" data-t="6" src="assets/ut/lab6.png" style="left:0;top:0;width:692px;height:411px" alt="">
       <img src="assets/ut/p2_title.png" style="left:30px;top:34px;width:110px;height:42px" alt="">
       <img class="sw lab" data-t="2" src="assets/ut/lab2.png" style="left:50px;top:314px;width:130px;height:62px" alt="">
       <img class="sw lab" data-t="3" src="assets/ut/lab3s.png" style="left:48px;top:320px;width:268px;height:54px" alt="">
@@ -380,11 +388,11 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 </div>
 <script>
 // 피그마 '1020발표' 섹션(529:1535) 18장 순서. st = 그림 장, gs = 그리드(기존 장표와 같은 애니메이션, 단계마다 클릭), ut = UT 결과
-const SL = [{"k":"st","img":"s01"},{"k":"st","img":"s02"},{"k":"st","img":"s03"},{"k":"gs","g":"g1"},{"k":"gs","g":"g2"},{"k":"gs","g":"g3"},{"k":"gs","g":"g4"},{"k":"st","img":"s08"},{"k":"st","img":"s09"},{"k":"st","img":"s10"},{"k":"ut","t":1},{"k":"ut","t":2},{"k":"ut","t":3},{"k":"ut","t":4},{"k":"ut","t":5},{"k":"st","img":"s16"},{"k":"st","img":"s17"},{"k":"st","img":"s18"}];
+const SL = [{"k":"st","img":"s01"},{"k":"st","img":"s02"},{"k":"st","img":"s03"},{"k":"gs","g":"g1"},{"k":"gs","g":"g2"},{"k":"gs","g":"g3"},{"k":"gs","g":"g4"},{"k":"st","img":"s08"},{"k":"st","img":"s09"},{"k":"st","img":"s10"},{"k":"ut","t":1},{"k":"ut","t":2},{"k":"ut","t":3},{"k":"ut","t":4},{"k":"ut","t":5},{"k":"ut","t":5,"r":6},{"k":"st","img":"s16"},{"k":"st","img":"s17"},{"k":"st","img":"s18"}];
 const ST_FX = {"s02":[[60,100,660,1010],[660,100,1260,1010],[1260,100,1860,1010]],"s09":[[77,88,317,182],[77,232,783,321],[0,483,1920,1080]],"s10":[[76,0,732,1046],[1144,0,1844,1046]],"s16":[[77,88,222,179],[0,211,1920,1080]],"s17":[[77,88,329,179],[0,211,1920,1080]],"s18":[[102,445,496,654],[1578,445,1818,654]]}; // 덩어리 띠(1x 좌표) — 앞 장과 배경이 같을 때 위→아래 차례로
 const stage = document.getElementById('stage'), st = document.getElementById('st'), grid = document.getElementById('gs'), ut = document.getElementById('ut');
 // 새로고침하면 맨 첫 장, 주소의 #번호로 열면 그 장
-let cur = performance.getEntriesByType('navigation')[0]?.type === 'reload' ? 0 : Math.min(Math.max((+location.hash.slice(1) || 1) - 1, 0), 17);
+let cur = performance.getEntriesByType('navigation')[0]?.type === 'reload' ? 0 : Math.min(Math.max((+location.hash.slice(1) || 1) - 1, 0), SL.length - 1);
 
 function stFx(n) {
   st.querySelectorAll('.fx').forEach(e => e.remove());
@@ -437,8 +445,8 @@ ut.querySelector('.p1').insertAdjacentHTML('beforeend', chart());
 function setR(t, snap) {
   if (snap) ut.classList.add('snap');
   ut.dataset.r = t;
-  ut.querySelectorAll('.sw, .dots').forEach(e => e.classList.toggle('on', +e.dataset.t === t));
-  ut.querySelectorAll('.row').forEach(e => e.classList.toggle('on', +e.dataset.i === t - 1));
+  ut.querySelectorAll('.sw, .dots').forEach(e => e.classList.toggle('on', e.dataset.t.split(' ').includes(String(t))));
+  ut.querySelectorAll('.row').forEach(e => e.classList.toggle('on', +e.dataset.i === Math.min(t, 5) - 1)); // 6 = T5 두 번째 장(시선 이동)
   if (snap) { ut.offsetWidth; requestAnimationFrame(() => ut.classList.remove('snap')); }
 }
 
@@ -459,8 +467,8 @@ function utGo(t, fwd, fromUT) {
   ut.classList.remove('enter', 'res');
   if (!fromUT) { ut.classList.add('snap', 'big'); ut.offsetWidth; ut.classList.remove('snap'); ut.classList.add('enter'); }
   else ut.classList.add('big');
-  const finish = () => {
-    if (SL[cur].t !== t) return;
+  const me = cur, finish = () => {
+    if (cur !== me) return; // 다른 장으로 넘어갔으면 그만
     ut.classList.remove('big');
     utTimer = setTimeout(() => { setR(t, !fromUT); ut.classList.add('res'); }, 550);
   };
@@ -480,7 +488,8 @@ function go(i, animate = true) {
     if (fwd && p.k === 'st' && ST_FX[s.img]) stFx(cur);
   }
   if (s.k === 'gs') setStep(grid, s.g, !fwd);
-  if (s.k === 'ut') utGo(s.t, fwd, p.k === 'ut'); else { clearTimeout(utTimer); vids.forEach(v => v.pause()); }
+  if (s.k === 'ut' && s.r && fwd && p.t === s.t) setR(s.r, false); // 같은 과제의 두 번째 장: 영상·카드 그대로, 아래 카드 내용만
+  else if (s.k === 'ut') { utGo(s.t, fwd, p.k === 'ut'); if (!fwd) setR(s.r || s.t, true); } else { clearTimeout(utTimer); vids.forEach(v => v.pause()); }
   history.replaceState(null, '', '#' + (cur + 1));
 }
 go(cur, false);
