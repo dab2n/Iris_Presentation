@@ -481,6 +481,13 @@ function utGo(t, fwd, fromUT) {
   utTimer = setTimeout(() => v.play().catch(finish), fromUT ? 850 : 900);
 }
 
+// 같은 과제의 두 번째 장 — 앞 장 영상이 아직 크게 재생 중이었어도 바로 자리로 돌려 카드를 띄움
+function utMore(r) {
+  clearTimeout(utTimer); vids.forEach(v => { v.ontimeupdate = null; });
+  if (ut.classList.contains('res')) return setR(r, false);
+  ut.classList.remove('big');
+  utTimer = setTimeout(() => { setR(r, true); ut.classList.add('res'); }, 550);
+}
 function go(i, animate = true) {
   const prev = cur;
   cur = Math.min(Math.max(i, 0), SL.length - 1);
@@ -492,7 +499,7 @@ function go(i, animate = true) {
     if (fwd && p.k === 'st' && ST_FX[s.img]) stFx(cur);
   }
   if (s.k === 'gs') setStep(grid, s.g, !fwd);
-  if (s.k === 'ut' && s.r && fwd && p.t === s.t) setR(s.r, false); // 같은 과제의 두 번째 장: 영상·카드 그대로, 아래 카드 내용만
+  if (s.k === 'ut' && s.r && fwd && p.t === s.t) utMore(s.r); // 같은 과제의 두 번째 장: 영상·카드 그대로, 아래 카드 내용만
   else if (s.k === 'ut') { utGo(s.t, fwd, p.k === 'ut'); if (!fwd) setR(s.r || s.t, true); } else { clearTimeout(utTimer); vids.forEach(v => v.pause()); }
   history.replaceState(null, '', '#' + (cur + 1));
 }
