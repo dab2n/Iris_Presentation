@@ -188,31 +188,44 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #ufr { left: 171px; top: 434.86px; width: 770.76px; height: 473.56px; border: 6.019px solid #8c8c8c; border-radius: 4.515px; overflow: hidden; background: #fff; }
 #ufr video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 350ms ease; }
 #ufr video.on { opacity: 1; }
-#ut .pset { position: absolute; inset: 0; opacity: 0; transition: opacity 300ms ease; pointer-events: none; }
-#ut.res .pset.on { opacity: 1; }
-#ut .pn { position: absolute; left: 1148px; width: 692px; border-radius: 12px; overflow: hidden; }
+#ut .pn { position: absolute; left: 1148px; width: 692px; border-radius: 12px; overflow: hidden; opacity: 0; transition: opacity 300ms ease; }
+#ut.res .pn { opacity: 1; }
 #ut .p1 { top: 204.5px; height: 367px; background: #1c1c1c; }
 #ut .p2 { top: 588.5px; height: 411px; background: #292b2d; }
-#ut .pn > img.bg { left: 0; top: 0; width: 692px; }
-#ut .p1 > img.bg { height: 367px; } #ut .p2 > img.bg { height: 411px; }
 #ut .chart { position: absolute; left: 0; top: 0; overflow: visible; }
+/* 과제가 바뀌어도 카드는 그대로 — 글은 빠졌다가 다시 들어오고(디졸브), 그래프는 강조 줄만 옮겨 감 */
+#ut .sw { opacity: 0; transition: opacity 300ms ease; }
+#ut .sw.on { opacity: 1; transition: opacity 450ms ease 250ms; }
+#ut .row .tl { fill: rgba(255,255,255,.32); transition: fill 600ms ease; }
+#ut .row .rng { stroke: rgba(255,255,255,.12); transition: stroke 600ms ease; }
+#ut .row .band { fill: rgba(91,133,227,.16); transition: fill 600ms ease; }
+#ut .row .mean { r: 5px; fill: rgba(91,133,227,.5); stroke: #1c1c1c; stroke-width: 0; transition: r 600ms cubic-bezier(.65, 0, .35, 1), fill 600ms ease, stroke-width 600ms ease; }
+#ut .row :is(.end, .lb) { opacity: 0; transition: opacity 300ms ease; }
+#ut .row.on .tl { fill: #fff; }
+#ut .row.on .rng { stroke: rgba(255,255,255,.35); }
+#ut .row.on .band { fill: rgba(91,133,227,.45); }
+#ut .row.on .mean { r: 7.5px; fill: #5B85E3; stroke-width: 2px; }
+#ut .row.on :is(.end, .lb) { opacity: 1; transition: opacity 450ms ease 300ms; }
+/* 아래 그래프: T2 막대(채움+바탕) ↔ T3 두 칸은 같은 도형이 자리·폭·색을 바꿔 이어짐 */
+#ut .sh { position: absolute; left: 38px; top: 264.46px; width: 0; height: 115.08px; border-radius: 12px 0 0 12px; opacity: 0;
+  transition: left 800ms cubic-bezier(.65, 0, .35, 1), top 800ms cubic-bezier(.65, 0, .35, 1), width 800ms cubic-bezier(.65, 0, .35, 1), border-radius 800ms ease, background-color 800ms ease, opacity 400ms ease; }
+#ut .sh.a { background: #5b85e3; }
+#ut .sh.b { width: 609.09px; border-radius: 12px; background: #464849; }
+#ut[data-r="2"] .sh { opacity: 1; }
+#ut[data-r="2"] .sh.a { width: 210.47px; }
+#ut[data-r="3"] .sh { opacity: 1; top: 268.11px; border-radius: 12px; }
+#ut[data-r="3"] .sh.a { left: 40px; width: 282.33px; }
+#ut[data-r="3"] .sh.b { left: 331.38px; width: 315.71px; background: #c0ceed; }
+#ut .dot { opacity: 0; scale: .6; transition: opacity 250ms ease, scale 250ms ease; }
+#ut .dots.on .dot { opacity: 1; scale: 1; transition: opacity 300ms ease calc(250ms + var(--d)), scale 450ms var(--ease) calc(250ms + var(--d)); }
 #ut.snap, #ut.snap * { transition: none !important; animation: none !important; }
 /* 들어올 때: 머리말 → T 줄 → 화면 틀 차례로 */
 #stage.ready #ut.enter .uh { animation: rise 700ms var(--ease) both; }
 #stage.ready #ut.enter .task.on { animation: rise 700ms var(--ease) 120ms both; }
 #stage.ready #ut.enter #ufr { animation: rise 800ms var(--ease) 240ms both; }
-/* 결과: 위 패널 → 아래 패널, 안의 그래프는 패널이 자리 잡은 뒤 */
-#stage.ready #ut.res .pset.on .p1 { animation: rise 700ms var(--ease) both; }
-#stage.ready #ut.res .pset.on .p2 { animation: rise 700ms var(--ease) 150ms both; }
-#ut .rng { stroke-dasharray: var(--l) var(--l); }
-#stage.ready #ut.res .pset.on .rng { animation: draw 700ms cubic-bezier(.65, 0, .35, 1) both; animation-delay: calc(200ms + var(--i) * 50ms); }
-@keyframes draw { from { stroke-dashoffset: var(--l); } }
-#stage.ready #ut.res .pset.on .pt { animation: fadeOnly 300ms ease both; animation-delay: calc(550ms + var(--i) * 50ms); }
-#stage.ready #ut.res .pset.on .hl { animation: pop 450ms var(--ease) 800ms both; transform-box: fill-box; transform-origin: center; }
-#stage.ready #ut.res .pset.on .lb { animation: fadeOnly 400ms ease 900ms both; }
-#stage.ready #ut.res .pset.on .grow { animation: grow 900ms cubic-bezier(.65, 0, .35, 1) both; animation-delay: var(--d, 450ms); }
-@keyframes grow { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
-#stage.ready #ut.res .pset.on .dot { animation: pop 400ms var(--ease) both; animation-delay: var(--d); }
+/* 결과가 처음 나올 때만: 위 카드 → 아래 카드 */
+#stage.ready #ut.rise .p1 { animation: rise 700ms var(--ease) both; }
+#stage.ready #ut.rise .p2 { animation: rise 700ms var(--ease) 150ms both; }
 </style>
 </head>
 <body>
@@ -340,25 +353,25 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <video data-src="assets/ut/t4.mp4" muted playsinline preload="auto"></video>
       <video data-src="assets/ut/t5.mp4" muted playsinline preload="auto"></video>
     </div>
-    <div class="pset" data-t="1">
-      <div class="pn p1"><img class="bg" src="assets/ut/p1_1.png" alt=""></div>
-      <div class="pn p2"><img class="bg" src="assets/ut/p2_1.png" alt=""></div>
+    <div class="pn p1">
+      <img class="sw" data-t="1" src="assets/ut/p1_1.png" style="left:0;top:0;width:692px;height:367px" alt="">
+      <img class="sw" data-t="2" src="assets/ut/p1_2.png" style="left:0;top:0;width:692px;height:367px" alt="">
+      <img class="sw" data-t="3" src="assets/ut/p1_3.png" style="left:0;top:0;width:692px;height:367px" alt="">
+      <img class="sw" data-t="4" src="assets/ut/p1_4.png" style="left:0;top:0;width:692px;height:367px" alt="">
+      <img class="sw" data-t="5" src="assets/ut/p1_5.png" style="left:0;top:0;width:692px;height:367px" alt="">
+      <img src="assets/ut/p1_title.png" style="left:30px;top:34px;width:270px;height:42px" alt="">
     </div>
-    <div class="pset" data-t="2">
-      <div class="pn p1"><img class="bg" src="assets/ut/p1_2.png" alt=""></div>
-      <div class="pn p2"><img class="bg" src="assets/ut/p2_2.png" alt=""><img class="grow" src="assets/ut/bar_fill.png" style="left:38px;top:264.46px;width:210.5px;height:115px" alt=""></div>
-    </div>
-    <div class="pset" data-t="3">
-      <div class="pn p1"><img class="bg" src="assets/ut/p1_3.png" alt=""></div>
-      <div class="pn p2"><img class="bg" src="assets/ut/p2_3.png" alt=""><img class="grow" src="assets/ut/blk_snb.png" style="left:40px;top:268px;width:282.5px;height:115.5px;--d:450ms" alt=""><img class="grow" src="assets/ut/blk_home.png" style="left:331.5px;top:268px;width:316px;height:115.5px;--d:650ms" alt=""></div>
-    </div>
-    <div class="pset" data-t="4">
-      <div class="pn p1"><img class="bg" src="assets/ut/p1_4.png" alt=""></div>
-      <div class="pn p2"><img class="bg" src="assets/ut/p2_4.png" alt=""></div>
-    </div>
-    <div class="pset" data-t="5">
-      <div class="pn p1"><img class="bg" src="assets/ut/p1_5.png" alt=""></div>
-      <div class="pn p2"><img class="bg" src="assets/ut/p2_5.png" alt=""><img class="dot" src="assets/ut/dot0.png" style="left:40.00px;top:320.69px;width:56.25px;height:56.5px;--d:450ms" alt=""><img class="dot" src="assets/ut/dot1.png" style="left:96.24px;top:320.69px;width:56.25px;height:56.5px;--d:510ms" alt=""><img class="dot" src="assets/ut/dot2.png" style="left:152.49px;top:320.69px;width:56.25px;height:56.5px;--d:570ms" alt=""><img class="dot" src="assets/ut/dot3.png" style="left:208.73px;top:320.69px;width:56.25px;height:56.5px;--d:630ms" alt=""><img class="dot" src="assets/ut/dot4.png" style="left:264.97px;top:320.69px;width:56.25px;height:56.5px;--d:690ms" alt=""><img class="dot" src="assets/ut/dot5.png" style="left:321.22px;top:320.69px;width:56.25px;height:56.5px;--d:750ms" alt=""><img class="dot" src="assets/ut/dot6.png" style="left:377.46px;top:320.69px;width:56.25px;height:56.5px;--d:810ms" alt=""><img class="dot" src="assets/ut/dot7.png" style="left:433.70px;top:320.69px;width:56.25px;height:56.5px;--d:870ms" alt=""><img class="dot" src="assets/ut/dot8.png" style="left:489.95px;top:320.69px;width:56.25px;height:56.5px;--d:930ms" alt=""></div>
+    <div class="pn p2">
+      <img class="sw" data-t="1" src="assets/ut/p2_1.png" style="left:0;top:0;width:692px;height:411px" alt="">
+      <img class="sw" data-t="2" src="assets/ut/p2_2.png" style="left:0;top:0;width:692px;height:411px" alt="">
+      <img class="sw" data-t="3" src="assets/ut/p2_3.png" style="left:0;top:0;width:692px;height:411px" alt="">
+      <img class="sw" data-t="4" src="assets/ut/p2_4.png" style="left:0;top:0;width:692px;height:411px" alt="">
+      <img class="sw" data-t="5" src="assets/ut/p2_5.png" style="left:0;top:0;width:692px;height:411px" alt="">
+      <i class="sh b"></i><i class="sh a"></i>
+      <img class="sw" data-t="2" src="assets/ut/lab2.png" style="left:50px;top:314px;width:130px;height:62px" alt="">
+      <img class="sw" data-t="3" src="assets/ut/lab3s.png" style="left:48px;top:320px;width:268px;height:54px" alt="">
+      <img class="sw" data-t="3" src="assets/ut/lab3h.png" style="left:338px;top:320px;width:302px;height:54px" alt="">
+      <div class="dots" data-t="5"><img class="dot" src="assets/ut/dot0.png" style="left:40.00px;top:320.69px;width:56.25px;height:56.5px;--d:0ms" alt=""><img class="dot" src="assets/ut/dot1.png" style="left:96.24px;top:320.69px;width:56.25px;height:56.5px;--d:60ms" alt=""><img class="dot" src="assets/ut/dot2.png" style="left:152.49px;top:320.69px;width:56.25px;height:56.5px;--d:120ms" alt=""><img class="dot" src="assets/ut/dot3.png" style="left:208.73px;top:320.69px;width:56.25px;height:56.5px;--d:180ms" alt=""><img class="dot" src="assets/ut/dot4.png" style="left:264.97px;top:320.69px;width:56.25px;height:56.5px;--d:240ms" alt=""><img class="dot" src="assets/ut/dot5.png" style="left:321.22px;top:320.69px;width:56.25px;height:56.5px;--d:300ms" alt=""><img class="dot" src="assets/ut/dot6.png" style="left:377.46px;top:320.69px;width:56.25px;height:56.5px;--d:360ms" alt=""><img class="dot" src="assets/ut/dot7.png" style="left:433.70px;top:320.69px;width:56.25px;height:56.5px;--d:420ms" alt=""><img class="dot" src="assets/ut/dot8.png" style="left:489.95px;top:320.69px;width:56.25px;height:56.5px;--d:480ms" alt=""></div>
     </div>
   </section>
 </div>
@@ -395,21 +408,20 @@ function setStep(el, step, snap) {
 // ── UT 결과: 과제마다 걸린 시간 — 왼쪽 글(평균·표준편차·최단·최장)과 같은 숫자. 다섯 장 모두 같은 축(0~180초), 지금 과제만 진하게 ──
 const TIMES = [[33.5, 23.4, 10, 103], [47.8, 47.9, 8, 166], [26.5, 26.6, 9, 116], [18.8, 11.8, 8, 42], [64.7, 31.7, 32, 121]]; // 평균·표준편차·최단·최장(초)
 const X0 = 306, X1 = 606, sx = s => X0 + (X1 - X0) * s / 180, RY = i => 130 + 42 * i;
-function chart(t) {
+function chart() {
   const W = 'rgba(255,255,255,', parts = [];
   [0, 60, 120, 180].forEach(s => parts.push(`<line x1="${sx(s)}" y1="108" x2="${sx(s)}" y2="316" stroke="${W}.07)" stroke-width="1"/>`,
     `<text x="${sx(s)}" y="338" fill="${W}.38)" font-size="15" text-anchor="middle">${s}${s === 180 ? '초' : ''}</text>`));
   TIMES.forEach(([mn, sd, lo, hi], i) => {
-    const on = i === t - 1, y = RY(i), l = sx(hi) - sx(lo), b0 = sx(Math.max(lo, mn - sd)), b1 = sx(Math.min(hi, mn + sd));
-    parts.push(`<text x="262" y="${y + 6}" fill="${W}${on ? 1 : .32})" font-size="17" font-weight="700">T${i + 1}</text>`,
-      `<line class="rng" style="--i:${i};--l:${l.toFixed(1)}" x1="${sx(lo)}" y1="${y}" x2="${sx(hi)}" y2="${y}" stroke="${W}${on ? .35 : .12})" stroke-width="2" stroke-linecap="round"/>`,
-      `<rect class="pt" style="--i:${i}" x="${b0}" y="${y - 5}" width="${b1 - b0}" height="10" rx="5" fill="rgba(91,133,227,${on ? .45 : .16})"/>`);
-    if (!on) { parts.push(`<circle class="pt" style="--i:${i}" cx="${sx(mn)}" cy="${y}" r="5" fill="rgba(91,133,227,.5)"/>`); return; }
-    parts.push(`<circle class="pt" style="--i:${i}" cx="${sx(lo)}" cy="${y}" r="4" fill="${W}.75)"/>`, `<circle class="pt" style="--i:${i}" cx="${sx(hi)}" cy="${y}" r="4" fill="${W}.75)"/>`,
-      `<circle class="hl" cx="${sx(mn)}" cy="${y}" r="7.5" fill="#5B85E3" stroke="#1c1c1c" stroke-width="2"/>`,
+    const y = RY(i), b0 = sx(Math.max(lo, mn - sd)), b1 = sx(Math.min(hi, mn + sd));
+    parts.push(`<g class="row" data-i="${i}"><text class="tl" x="262" y="${y + 6}" font-size="17" font-weight="700">T${i + 1}</text>`,
+      `<line class="rng" x1="${sx(lo)}" y1="${y}" x2="${sx(hi)}" y2="${y}" stroke-width="2" stroke-linecap="round"/>`,
+      `<rect class="band" x="${b0}" y="${y - 5}" width="${b1 - b0}" height="10" rx="5"/>`,
+      `<circle class="end" cx="${sx(lo)}" cy="${y}" r="4" fill="${W}.75)"/><circle class="end" cx="${sx(hi)}" cy="${y}" r="4" fill="${W}.75)"/>`,
+      `<circle class="mean" cx="${sx(mn)}" cy="${y}"/>`,
       `<g class="lb" font-size="16"><text x="${sx(lo) - 9}" y="${y + 5}" fill="${W}.6)" text-anchor="end">${lo}</text>`,
       `<text x="${sx(hi) + 10}" y="${y + 5}" fill="${W}.9)" font-weight="600">${hi}초</text>`,
-      `<text x="${sx(mn)}" y="${y - 15}" fill="#7EA2F0" font-weight="700" text-anchor="middle">${mn}초</text></g>`);
+      `<text x="${sx(mn)}" y="${y - 15}" fill="#7EA2F0" font-weight="700" text-anchor="middle">${mn}초</text></g></g>`);
   });
   // 범례: '정량 데이터' 제목 줄 오른쪽
   parts.push(`<g font-size="15" fill="${W}.55)"><line x1="362" y1="55" x2="386" y2="55" stroke="${W}.42)" stroke-width="2" stroke-linecap="round"/><text x="393" y="60">최단~최장</text>`,
@@ -417,28 +429,35 @@ function chart(t) {
     `<circle cx="590" cy="55" r="6" fill="#5B85E3"/><text x="602" y="60">평균</text></g>`);
   return `<svg class="chart" width="692" height="367" viewBox="0 0 692 367" font-family="KR, Pretendard, sans-serif">${parts.join('')}</svg>`;
 }
-ut.querySelectorAll('.pset').forEach(p => p.querySelector('.p1').insertAdjacentHTML('beforeend', chart(+p.dataset.t)));
+ut.querySelector('.p1').insertAdjacentHTML('beforeend', chart());
+// 오른쪽 카드에 t 번 과제의 결과를 띄움 (snap = 전환 없이 바로)
+function setR(t, snap) {
+  if (snap) ut.classList.add('snap');
+  ut.dataset.r = t;
+  ut.querySelectorAll('.sw, .dots').forEach(e => e.classList.toggle('on', +e.dataset.t === t));
+  ut.querySelectorAll('.row').forEach(e => e.classList.toggle('on', +e.dataset.i === t - 1));
+  if (snap) { ut.offsetWidth; requestAnimationFrame(() => ut.classList.remove('snap')); }
+}
 
 const vids = [...ut.querySelectorAll('video')];
 vids.forEach(v => fetch(v.dataset.src).then(r => r.blob()).then(b => { v.src = URL.createObjectURL(b); }).catch(() => { v.src = v.dataset.src; })); // 발표 중 네트워크를 기다리지 않게 미리 받아 둠
 let utTimer = 0;
 function utGo(t, fwd, fromUT) {
   clearTimeout(utTimer);
-  ut.classList.toggle('snap', !fwd);
-  ut.classList.remove('res', 'enter');
   ut.querySelectorAll('.task').forEach(e => e.classList.toggle('on', +e.dataset.t === t));
-  ut.querySelectorAll('.pset').forEach(e => e.classList.toggle('on', +e.dataset.t === t));
   vids.forEach((v, i) => { v.classList.toggle('on', i === t - 1); if (i !== t - 1) v.pause(); v.ontimeupdate = null; });
   const v = vids[t - 1];
-  const done = () => { ut.classList.add('res'); };
   if (!fwd) { // 뒤로·건너뛰기: 다 끝난 상태로 (영상은 마지막 장면)
     const end = () => { v.currentTime = Math.max(0, v.duration - .05); };
     v.pause(); v.readyState ? end() : v.addEventListener('loadedmetadata', end, { once: true });
-    done(); ut.offsetWidth; requestAnimationFrame(() => ut.classList.remove('snap')); return;
+    ut.classList.add('snap'); ut.classList.remove('enter', 'rise'); ut.classList.add('res'); setR(t, true); return;
   }
-  if (!fromUT) { ut.offsetWidth; ut.classList.add('enter'); }
+  ut.classList.remove('enter');
+  if (!fromUT) { ut.classList.remove('res', 'rise'); ut.offsetWidth; ut.classList.add('enter'); }
+  // 영상이 끝나면(끝의 멈춘 1초는 기다리지 않음) 결과 — 처음이면 카드가 올라오고, 이어지는 과제면 카드는 그대로 두고 안만 바뀜
+  const done = () => { if (ut.classList.contains('res')) setR(t, false); else { setR(t, true); ut.classList.add('res', 'rise'); } };
   v.pause(); v.currentTime = 0;
-  v.ontimeupdate = () => { if (SL[cur].t === t && v.currentTime > v.duration - 1.2) { v.ontimeupdate = null; done(); } }; // 영상 끝의 멈춘 1초를 기다리지 않고
+  v.ontimeupdate = () => { if (SL[cur].t === t && v.currentTime > v.duration - 1.2) { v.ontimeupdate = null; done(); } };
   utTimer = setTimeout(() => v.play().catch(done), fromUT ? 500 : 800);
 }
 
