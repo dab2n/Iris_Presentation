@@ -88,8 +88,8 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #stage.ready #gs[data-step="g1"] .ldepth { animation: fadeOnly 300ms ease 3600ms both; }
 
 /* g2: 완성된 그리드가 맥락에 따라 천천히 줄었다 늘었다 (쫀득한 ease-in-out) 하다가 2번 그리드로 */
-#stage.ready #gs[data-step="g2"] .row { animation: var(--k) 4200ms linear 200ms both; }
-#stage.ready #gs[data-step="g2"] .col { animation: var(--k) 4200ms linear 200ms both; } /* 가로·세로가 같은 박자로 바뀜 */
+#stage.ready #gs[data-step="g2"] .row { animation: var(--k) 4200ms linear 650ms both; }
+#stage.ready #gs[data-step="g2"] .col { animation: var(--k) 4200ms linear 650ms both; } /* 가로·세로가 같은 박자로 바뀜 */
 @keyframes row1 {
   0% { top: 40px; height: 138px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
   25% { top: 40px; height: 90px; animation-timing-function: cubic-bezier(.83, 0, .17, 1); }
@@ -176,9 +176,9 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 /* g2: 논의 열기 데이터 — 그리드가 한 박자 바뀔 때마다 그 기준이 하나씩 (피그마 532:8525) */
 #gs .leg { position: absolute; opacity: 0; transition: opacity 300ms ease; }
 #gs[data-step="g2"] .leg { opacity: 1; }
-#stage.ready #gs[data-step="g2"] .leg.h { animation: fadeOnly 400ms ease 100ms both; }
+#stage.ready #gs[data-step="g2"] .leg.h { animation: fadeOnly 300ms ease both; }
 #stage.ready #gs[data-step="g2"] .leg.i { animation: legIn 500ms var(--ease) both; animation-delay: var(--d); }
-@keyframes legIn { from { opacity: 0; translate: -12px 0; } }
+@keyframes legIn { from { opacity: 0; translate: -10px 0; } } /* 목록이 먼저 빠르게 다 나온 뒤 그리드가 움직임 */
 
 /* ── 11~15 UT 결과: 왼쪽 시연 영상이 먼저 재생 → 끝나면 오른쪽 정량 데이터·인사이트 ── */
 #ut { background: #0c0c0c; }
@@ -203,14 +203,14 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #stage.ready #ut.enter #ufr { animation: rise 800ms var(--ease) 240ms both; }
 /* 결과: 위 패널 → 아래 패널, 안의 그래프는 패널이 자리 잡은 뒤 */
 #stage.ready #ut.res .pset.on .p1 { animation: rise 700ms var(--ease) both; }
-#stage.ready #ut.res .pset.on .p2 { animation: rise 700ms var(--ease) 260ms both; }
+#stage.ready #ut.res .pset.on .p2 { animation: rise 700ms var(--ease) 150ms both; }
 #ut .rng { stroke-dasharray: var(--l) var(--l); }
-#stage.ready #ut.res .pset.on .rng { animation: draw 700ms cubic-bezier(.65, 0, .35, 1) both; animation-delay: calc(450ms + var(--i) * 70ms); }
+#stage.ready #ut.res .pset.on .rng { animation: draw 700ms cubic-bezier(.65, 0, .35, 1) both; animation-delay: calc(200ms + var(--i) * 50ms); }
 @keyframes draw { from { stroke-dashoffset: var(--l); } }
-#stage.ready #ut.res .pset.on .pt { animation: fadeOnly 300ms ease both; animation-delay: calc(900ms + var(--i) * 70ms); }
-#stage.ready #ut.res .pset.on .hl { animation: pop 450ms var(--ease) 1350ms both; transform-box: fill-box; transform-origin: center; }
-#stage.ready #ut.res .pset.on .lb { animation: fadeOnly 400ms ease 1500ms both; }
-#stage.ready #ut.res .pset.on .grow { animation: grow 900ms cubic-bezier(.65, 0, .35, 1) both; animation-delay: var(--d, 900ms); }
+#stage.ready #ut.res .pset.on .pt { animation: fadeOnly 300ms ease both; animation-delay: calc(550ms + var(--i) * 50ms); }
+#stage.ready #ut.res .pset.on .hl { animation: pop 450ms var(--ease) 800ms both; transform-box: fill-box; transform-origin: center; }
+#stage.ready #ut.res .pset.on .lb { animation: fadeOnly 400ms ease 900ms both; }
+#stage.ready #ut.res .pset.on .grow { animation: grow 900ms cubic-bezier(.65, 0, .35, 1) both; animation-delay: var(--d, 450ms); }
 @keyframes grow { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 #stage.ready #ut.res .pset.on .dot { animation: pop 400ms var(--ease) both; animation-delay: var(--d); }
 </style>
@@ -235,10 +235,10 @@ html, body { height: 100%; background: #000; overflow: hidden; }
     <p class="subx" data-on="g4">사용자는 좌상단부터 우하단으로, 자연스럽게 시선을 이동하며 확인해요.</p>
     <img src="../assets/grid/head.png" style="left:0;top:0;width:1920px;height:200px" alt="">
     <img class="leg h" src="assets/st/leg_h.png" style="left:87.75px;top:468.5px;width:170px;height:47px" alt="">
-    <img class="leg i" src="assets/st/leg0.png" style="left:87.75px;top:533px;width:154px;height:47px;--d:300ms" alt="">
-    <img class="leg i" src="assets/st/leg1.png" style="left:87.75px;top:580px;width:154px;height:47px;--d:1350ms" alt="">
-    <img class="leg i" src="assets/st/leg2.png" style="left:87.75px;top:627px;width:154px;height:47px;--d:2400ms" alt="">
-    <img class="leg i" src="assets/st/leg3.png" style="left:87.75px;top:674px;width:154px;height:47px;--d:3450ms" alt="">
+    <img class="leg i" src="assets/st/leg0.png" style="left:87.75px;top:533px;width:154px;height:47px;--d:100ms" alt="">
+    <img class="leg i" src="assets/st/leg1.png" style="left:87.75px;top:580px;width:154px;height:47px;--d:170ms" alt="">
+    <img class="leg i" src="assets/st/leg2.png" style="left:87.75px;top:627px;width:154px;height:47px;--d:240ms" alt="">
+    <img class="leg i" src="assets/st/leg3.png" style="left:87.75px;top:674px;width:154px;height:47px;--d:310ms" alt="">
     <div class="abs" id="gb">
       <div class="row r1" style="--d:1600ms;--k:row1"></div>
       <div class="row r2" style="--d:1789ms;--k:row2"></div>
@@ -350,7 +350,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
     </div>
     <div class="pset" data-t="3">
       <div class="pn p1"><img class="bg" src="assets/ut/p1_3.png" alt=""></div>
-      <div class="pn p2"><img class="bg" src="assets/ut/p2_3.png" alt=""><img class="grow" src="assets/ut/blk_snb.png" style="left:40px;top:268px;width:282.5px;height:115.5px;--d:700ms" alt=""><img class="grow" src="assets/ut/blk_home.png" style="left:331.5px;top:268px;width:316px;height:115.5px;--d:950ms" alt=""></div>
+      <div class="pn p2"><img class="bg" src="assets/ut/p2_3.png" alt=""><img class="grow" src="assets/ut/blk_snb.png" style="left:40px;top:268px;width:282.5px;height:115.5px;--d:450ms" alt=""><img class="grow" src="assets/ut/blk_home.png" style="left:331.5px;top:268px;width:316px;height:115.5px;--d:650ms" alt=""></div>
     </div>
     <div class="pset" data-t="4">
       <div class="pn p1"><img class="bg" src="assets/ut/p1_4.png" alt=""></div>
@@ -358,13 +358,13 @@ html, body { height: 100%; background: #000; overflow: hidden; }
     </div>
     <div class="pset" data-t="5">
       <div class="pn p1"><img class="bg" src="assets/ut/p1_5.png" alt=""></div>
-      <div class="pn p2"><img class="bg" src="assets/ut/p2_5.png" alt=""><img class="dot" src="assets/ut/dot0.png" style="left:40.00px;top:320.69px;width:56.25px;height:56.5px;--d:700ms" alt=""><img class="dot" src="assets/ut/dot1.png" style="left:96.24px;top:320.69px;width:56.25px;height:56.5px;--d:790ms" alt=""><img class="dot" src="assets/ut/dot2.png" style="left:152.49px;top:320.69px;width:56.25px;height:56.5px;--d:880ms" alt=""><img class="dot" src="assets/ut/dot3.png" style="left:208.73px;top:320.69px;width:56.25px;height:56.5px;--d:970ms" alt=""><img class="dot" src="assets/ut/dot4.png" style="left:264.97px;top:320.69px;width:56.25px;height:56.5px;--d:1060ms" alt=""><img class="dot" src="assets/ut/dot5.png" style="left:321.22px;top:320.69px;width:56.25px;height:56.5px;--d:1150ms" alt=""><img class="dot" src="assets/ut/dot6.png" style="left:377.46px;top:320.69px;width:56.25px;height:56.5px;--d:1240ms" alt=""><img class="dot" src="assets/ut/dot7.png" style="left:433.70px;top:320.69px;width:56.25px;height:56.5px;--d:1330ms" alt=""><img class="dot" src="assets/ut/dot8.png" style="left:489.95px;top:320.69px;width:56.25px;height:56.5px;--d:1420ms" alt=""></div>
+      <div class="pn p2"><img class="bg" src="assets/ut/p2_5.png" alt=""><img class="dot" src="assets/ut/dot0.png" style="left:40.00px;top:320.69px;width:56.25px;height:56.5px;--d:450ms" alt=""><img class="dot" src="assets/ut/dot1.png" style="left:96.24px;top:320.69px;width:56.25px;height:56.5px;--d:510ms" alt=""><img class="dot" src="assets/ut/dot2.png" style="left:152.49px;top:320.69px;width:56.25px;height:56.5px;--d:570ms" alt=""><img class="dot" src="assets/ut/dot3.png" style="left:208.73px;top:320.69px;width:56.25px;height:56.5px;--d:630ms" alt=""><img class="dot" src="assets/ut/dot4.png" style="left:264.97px;top:320.69px;width:56.25px;height:56.5px;--d:690ms" alt=""><img class="dot" src="assets/ut/dot5.png" style="left:321.22px;top:320.69px;width:56.25px;height:56.5px;--d:750ms" alt=""><img class="dot" src="assets/ut/dot6.png" style="left:377.46px;top:320.69px;width:56.25px;height:56.5px;--d:810ms" alt=""><img class="dot" src="assets/ut/dot7.png" style="left:433.70px;top:320.69px;width:56.25px;height:56.5px;--d:870ms" alt=""><img class="dot" src="assets/ut/dot8.png" style="left:489.95px;top:320.69px;width:56.25px;height:56.5px;--d:930ms" alt=""></div>
     </div>
   </section>
 </div>
 <script>
 // 피그마 '1020발표' 섹션(529:1535) 18장 순서. st = 그림 장, gs = 그리드(기존 장표와 같은 애니메이션, 단계마다 클릭), ut = UT 결과
-const SL = [{"k":"st","img":"s01"},{"k":"st","img":"s02"},{"k":"st","img":"s03","fade":1},{"k":"gs","g":"g1"},{"k":"gs","g":"g2"},{"k":"gs","g":"g3"},{"k":"gs","g":"g4"},{"k":"st","img":"s08"},{"k":"st","img":"s09"},{"k":"st","img":"s10"},{"k":"ut","t":1},{"k":"ut","t":2},{"k":"ut","t":3},{"k":"ut","t":4},{"k":"ut","t":5},{"k":"st","img":"s16"},{"k":"st","img":"s17"},{"k":"st","img":"s18"}];
+const SL = [{"k":"st","img":"s01"},{"k":"st","img":"s02"},{"k":"st","img":"s03"},{"k":"gs","g":"g1"},{"k":"gs","g":"g2"},{"k":"gs","g":"g3"},{"k":"gs","g":"g4"},{"k":"st","img":"s08"},{"k":"st","img":"s09"},{"k":"st","img":"s10"},{"k":"ut","t":1},{"k":"ut","t":2},{"k":"ut","t":3},{"k":"ut","t":4},{"k":"ut","t":5},{"k":"st","img":"s16"},{"k":"st","img":"s17"},{"k":"st","img":"s18"}];
 const ST_FX = {"s02":[[60,100,660,1010],[660,100,1260,1010],[1260,100,1860,1010]],"s09":[[77,88,317,182],[77,232,783,321],[0,483,1920,1080]],"s10":[[76,0,732,1046],[1144,0,1844,1046]],"s16":[[77,88,222,179],[0,211,1920,1080]],"s17":[[77,88,329,179],[0,211,1920,1080]],"s18":[[102,445,496,654],[1578,445,1818,654]]}; // 덩어리 띠(1x 좌표) — 앞 장과 배경이 같을 때 위→아래 차례로
 const stage = document.getElementById('stage'), st = document.getElementById('st'), grid = document.getElementById('gs'), ut = document.getElementById('ut');
 // 새로고침하면 맨 첫 장, 주소의 #번호로 열면 그 장
@@ -373,13 +373,6 @@ let cur = performance.getEntriesByType('navigation')[0]?.type === 'reload' ? 0 :
 function stFx(n) {
   st.querySelectorAll('.fx').forEach(e => e.remove());
   const key = SL[n].img, src = `assets/st/${key}.webp`, imgs = st.querySelectorAll('img[data-k]');
-  if (SL[n].fade) { // 같은 화면에서 바뀐 부분만 — 앞 장 위로 겹쳐 서서히
-    imgs.forEach(im => im.classList.toggle('on', im.dataset.k === SL[n - 1].img));
-    const im = document.createElement('img'); im.className = 'fx'; im.src = src; st.append(im);
-    im.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, easing: 'ease-in-out', fill: 'both' });
-    setTimeout(() => { if (cur !== n) return; imgs.forEach(i => i.classList.toggle('on', i.dataset.k === key)); im.remove(); }, 750);
-    return;
-  }
   imgs.forEach(im => im.classList.remove('on'));
   let end = 0;
   ST_FX[key].forEach(([x0, y0, x1, y1], k) => {
@@ -435,7 +428,7 @@ function utGo(t, fwd, fromUT) {
   ut.classList.remove('res', 'enter');
   ut.querySelectorAll('.task').forEach(e => e.classList.toggle('on', +e.dataset.t === t));
   ut.querySelectorAll('.pset').forEach(e => e.classList.toggle('on', +e.dataset.t === t));
-  vids.forEach((v, i) => { v.classList.toggle('on', i === t - 1); if (i !== t - 1) v.pause(); v.onended = null; });
+  vids.forEach((v, i) => { v.classList.toggle('on', i === t - 1); if (i !== t - 1) v.pause(); v.ontimeupdate = null; });
   const v = vids[t - 1];
   const done = () => { ut.classList.add('res'); };
   if (!fwd) { // 뒤로·건너뛰기: 다 끝난 상태로 (영상은 마지막 장면)
@@ -445,7 +438,7 @@ function utGo(t, fwd, fromUT) {
   }
   if (!fromUT) { ut.offsetWidth; ut.classList.add('enter'); }
   v.pause(); v.currentTime = 0;
-  v.onended = () => { if (SL[cur].t === t) done(); };
+  v.ontimeupdate = () => { if (SL[cur].t === t && v.currentTime > v.duration - 1.2) { v.ontimeupdate = null; done(); } }; // 영상 끝의 멈춘 1초를 기다리지 않고
   utTimer = setTimeout(() => v.play().catch(done), fromUT ? 500 : 800);
 }
 
@@ -457,7 +450,7 @@ function go(i, animate = true) {
   st.querySelectorAll('.fx').forEach(e => e.remove());
   if (s.k === 'st') {
     st.querySelectorAll('img[data-k]').forEach(im => im.classList.toggle('on', im.dataset.k === s.img));
-    if (fwd && p.k === 'st' && (s.fade || ST_FX[s.img])) stFx(cur);
+    if (fwd && p.k === 'st' && ST_FX[s.img]) stFx(cur);
   }
   if (s.k === 'gs') setStep(grid, s.g, !fwd);
   if (s.k === 'ut') utGo(s.t, fwd, p.k === 'ut'); else { clearTimeout(utTimer); vids.forEach(v => v.pause()); }
