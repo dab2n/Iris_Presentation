@@ -196,6 +196,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 /* 과제가 바뀌어도 카드는 그대로 — 글은 빠졌다가 다시 들어오고(디졸브), 그래프는 강조 줄만 옮겨 감 */
 #ut .sw { opacity: 0; transition: opacity 300ms ease; }
 #ut .sw.on { opacity: 1; transition: opacity 450ms ease 250ms; }
+#ut .sw.lab.on { transition-delay: 800ms; } /* 막대 글자는 도형이 자리 잡은 뒤 */
 #ut .row .tl { fill: rgba(255,255,255,.32); transition: fill 600ms ease; }
 #ut .row .rng { stroke: rgba(255,255,255,.12); transition: stroke 600ms ease; }
 #ut .row .band { fill: rgba(91,133,227,.16); transition: fill 600ms ease; }
@@ -368,9 +369,10 @@ html, body { height: 100%; background: #000; overflow: hidden; }
       <img class="sw" data-t="4" src="assets/ut/p2_4.png" style="left:0;top:0;width:692px;height:411px" alt="">
       <img class="sw" data-t="5" src="assets/ut/p2_5.png" style="left:0;top:0;width:692px;height:411px" alt="">
       <i class="sh b"></i><i class="sh a"></i>
-      <img class="sw" data-t="2" src="assets/ut/lab2.png" style="left:50px;top:314px;width:130px;height:62px" alt="">
-      <img class="sw" data-t="3" src="assets/ut/lab3s.png" style="left:48px;top:320px;width:268px;height:54px" alt="">
-      <img class="sw" data-t="3" src="assets/ut/lab3h.png" style="left:338px;top:320px;width:302px;height:54px" alt="">
+      <img src="assets/ut/p2_title.png" style="left:30px;top:34px;width:110px;height:42px" alt="">
+      <img class="sw lab" data-t="2" src="assets/ut/lab2.png" style="left:50px;top:314px;width:130px;height:62px" alt="">
+      <img class="sw lab" data-t="3" src="assets/ut/lab3s.png" style="left:48px;top:320px;width:268px;height:54px" alt="">
+      <img class="sw lab" data-t="3" src="assets/ut/lab3h.png" style="left:338px;top:320px;width:302px;height:54px" alt="">
       <div class="dots" data-t="5"><img class="dot" src="assets/ut/dot0.png" style="left:40.00px;top:320.69px;width:56.25px;height:56.5px;--d:0ms" alt=""><img class="dot" src="assets/ut/dot1.png" style="left:96.24px;top:320.69px;width:56.25px;height:56.5px;--d:60ms" alt=""><img class="dot" src="assets/ut/dot2.png" style="left:152.49px;top:320.69px;width:56.25px;height:56.5px;--d:120ms" alt=""><img class="dot" src="assets/ut/dot3.png" style="left:208.73px;top:320.69px;width:56.25px;height:56.5px;--d:180ms" alt=""><img class="dot" src="assets/ut/dot4.png" style="left:264.97px;top:320.69px;width:56.25px;height:56.5px;--d:240ms" alt=""><img class="dot" src="assets/ut/dot5.png" style="left:321.22px;top:320.69px;width:56.25px;height:56.5px;--d:300ms" alt=""><img class="dot" src="assets/ut/dot6.png" style="left:377.46px;top:320.69px;width:56.25px;height:56.5px;--d:360ms" alt=""><img class="dot" src="assets/ut/dot7.png" style="left:433.70px;top:320.69px;width:56.25px;height:56.5px;--d:420ms" alt=""><img class="dot" src="assets/ut/dot8.png" style="left:489.95px;top:320.69px;width:56.25px;height:56.5px;--d:480ms" alt=""></div>
     </div>
   </section>
@@ -454,11 +456,12 @@ function utGo(t, fwd, fromUT) {
   }
   ut.classList.remove('enter');
   if (!fromUT) { ut.classList.remove('res', 'rise'); ut.offsetWidth; ut.classList.add('enter'); }
-  // 영상이 끝나면(끝의 멈춘 1초는 기다리지 않음) 결과 — 처음이면 카드가 올라오고, 이어지는 과제면 카드는 그대로 두고 안만 바뀜
+  // 처음이면 영상이 끝날 때(끝의 멈춘 1초는 기다리지 않음) 카드가 올라오고, 이어지는 과제면 카드는 그대로 두고 안만 바뀜
   const done = () => { if (ut.classList.contains('res')) setR(t, false); else { setR(t, true); ut.classList.add('res', 'rise'); } };
   v.pause(); v.currentTime = 0;
-  v.ontimeupdate = () => { if (SL[cur].t === t && v.currentTime > v.duration - 1.2) { v.ontimeupdate = null; done(); } };
-  utTimer = setTimeout(() => v.play().catch(done), fromUT ? 500 : 800);
+  const now = ut.classList.contains('res'); // T2 부터(카드가 이미 떠 있으면) 영상과 같은 때 바뀜, 처음(T1)은 영상이 끝난 뒤
+  if (!now) v.ontimeupdate = () => { if (SL[cur].t === t && v.currentTime > v.duration - 1.2) { v.ontimeupdate = null; done(); } };
+  utTimer = setTimeout(() => { v.play().catch(() => {}); if (now) done(); }, fromUT ? 500 : 800);
 }
 
 function go(i, animate = true) {
