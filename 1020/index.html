@@ -229,7 +229,7 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #ut[data-r="6"] .sh.a { left: 448px; width: 204px; border-radius: 0 12px 12px 0; }
 #ut .dot { opacity: 0; scale: .6; transition: opacity 250ms ease, scale 250ms ease; }
 #ut .dots.on .dot { opacity: 1; scale: 1; transition: opacity 300ms ease calc(250ms + var(--d)), scale 450ms var(--ease) calc(250ms + var(--d)); }
-#ut.snap, #ut.snap * { transition: none !important; animation: none !important; }
+#ut.snap, #ut.snap *, #ut .pn.snap * { transition: none !important; animation: none !important; }
 /* 들어올 때: 머리말 → T 줄 → 화면 틀 차례로 */
 #stage.ready #ut.enter .uh { animation: rise 700ms var(--ease) both; }
 #stage.ready #ut.enter .task.on { animation: rise 700ms var(--ease) 120ms both; }
@@ -443,11 +443,12 @@ function chart() {
 ut.querySelector('.p1').insertAdjacentHTML('beforeend', chart());
 // 오른쪽 카드에 t 번 과제의 결과를 띄움 (snap = 전환 없이 바로)
 function setR(t, snap) {
-  if (snap) ut.classList.add('snap');
+  const pn = ut.querySelectorAll('.pn');
+  if (snap) pn.forEach(e => e.classList.add('snap')); // 카드 안쪽만 멈춤 — 장 전체를 멈추면 작아지던 영상이 튐
   ut.dataset.r = t;
   ut.querySelectorAll('.sw, .dots').forEach(e => e.classList.toggle('on', e.dataset.t.split(' ').includes(String(t))));
   ut.querySelectorAll('.row').forEach(e => e.classList.toggle('on', +e.dataset.i === Math.min(t, 5) - 1)); // 6 = T5 두 번째 장(시선 이동)
-  if (snap) { ut.offsetWidth; requestAnimationFrame(() => ut.classList.remove('snap')); }
+  if (snap) { ut.offsetWidth; requestAnimationFrame(() => pn.forEach(e => e.classList.remove('snap'))); }
 }
 
 const vids = [...ut.querySelectorAll('video')];
@@ -461,7 +462,7 @@ function utGo(t, fwd, fromUT) {
   if (!fwd) { // 뒤로·건너뛰기: 다 끝난 상태로 (영상은 왼쪽 자리 마지막 장면, 카드 보임)
     const end = () => { v.currentTime = Math.max(0, v.duration - .05); };
     v.pause(); v.readyState ? end() : v.addEventListener('loadedmetadata', end, { once: true });
-    ut.classList.add('snap'); ut.classList.remove('enter', 'big'); ut.classList.add('res'); setR(t, true); return;
+    ut.classList.add('snap'); ut.classList.remove('enter', 'big'); ut.classList.add('res'); setR(t, true); ut.offsetWidth; requestAnimationFrame(() => ut.classList.remove('snap')); return;
   }
   // 카드는 빠지고 영상이 가운데에서 크게 재생 → 끝(멈춘 마지막 1초 전)에 왼쪽 자리로 작아진 뒤 그 옆에 카드가 나타남
   ut.classList.remove('enter', 'res');
